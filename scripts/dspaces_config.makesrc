@@ -4,7 +4,7 @@ DSPACES_INC="-I%incdir%  "
 DSPACES_LIB="-L%libdir% -ldspaces -ldscommon -ldart   -lm    "
 DSPACES_VER="1.6.5"
 DSPACES_ARG="dataspaces 1.6.5 
-              'CC=mpicc' 'FC=mpif90' 'CFLAGS=-DHAVE_INFINIBAND -lrdmacm' '--with-ib-interface=ib0'"
+              'CC=mpicc' 'FC=mpif90' 'CFLAGS=-DHAVE_INFINIBAND -lrdmacm -DDS_HAVE_DSPACES_LOCATION_AWARE_WRITE' '--with-ib-interface=ib0'"
 
 OPTIND=1
 

@@ -319,6 +319,9 @@ int common_dspaces_put(const char *var_name,
         // set global dimension
         set_global_dimension(&dcg->gdim_list, var_name, &dcg->default_gdim,
                              &od->gdim); 
+
+        uloga("%s(Yubo) I am in normal common_dspaces_put\n",__func__);
+
         err = dcg_obj_put(od);
         if (err < 0) {
             obj_data_free(od);
@@ -375,26 +378,36 @@ int common_dspaces_put_location_aware(const char *var_name,
         set_global_dimension(&dcg->gdim_list, var_name, &dcg->default_gdim,
                              &od->gdim); 
 
+/*
         // find dataspaces servers running on local compute node
         struct node_id* peer_tab[MAX_NUM_PEER_PER_NODE];
         int local_server_ids[MAX_NUM_PEER_PER_NODE];
         int num_space_srv = 0, num_local_peer = 0, num_local_server = 0;
-        num_space_srv = dcg_get_num_space_peers(dcg);
+        num_space_srv = dcg_get_num_space_peers(dcg); //total number of server 
         rpc_server_find_local_peers(dcg->dc->rpc_s, peer_tab,
             &num_local_peer, MAX_NUM_PEER_PER_NODE);
         int i, j;
+        //Why the first few ptlmap.id are server?
         for (i = j = 0; i < num_local_peer; i++) {
             if (peer_tab[i]->ptlmap.id < num_space_srv) {
                 local_server_ids[j++] = peer_tab[i]->ptlmap.id;
                 num_local_server++;        
             }
         }
+       // uloga("%s(Yubo) I am in common_dspaces_put_location_aware, num_space_srv=%d, num_local_peer=%d, num_local_server=%d\n",\
+            __func__, num_space_srv, num_local_peer, num_local_server);
+*/
+        dcg_find_local_server(dcg, MAX_NUM_PEER_PER_NODE);
 
-        if (num_local_server == 0) {
+        uloga("%s(Yubo) I am in common_dspaces_put_location_aware, I have num_local_server=%d\n",\
+            __func__, dcg->dc->num_local_server);
+
+
+        if (dcg->dc->num_local_server == 0) {
             err = dcg_obj_put(od);
         } else {
             // select on local server to put the data
-            int server_id = local_server_ids[dcg->dc->rpc_s->ptlmap.id % num_local_server];
+            int server_id = dcg->dc->local_server_ids[dcg->dc->rpc_s->ptlmap.id % dcg->dc->num_local_server];
             // Application can use dspaces_get() to fetch the data.
             err = dcg_obj_put_to_server(od, server_id);
         }

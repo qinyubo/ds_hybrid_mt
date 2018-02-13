@@ -134,13 +134,13 @@ static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type ty
 	//allocate data
 	double *data = NULL;
 	for(i = 0; i < num_vars; i++){
-		data = allocate_nd(dims);
+		data = allocate_nd(dims); //allocate memory space
 		if(data == NULL){
 			uloga("%s(): allocate_nd() failed.\n", __func__);
             return -1; // TODO: free buffers
 		}
 		
-		generate_nd(data, ts, dims);
+		generate_nd(data, ts, dims); //generate data
 		data_tab[i] = data;
 	}
 

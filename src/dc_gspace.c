@@ -2005,6 +2005,32 @@ int dcg_get_num_space_peers(struct dcg_space *dcg)
 	return dcg->dc->num_sp;
 }
 
+/* Update client's local server information */
+
+void dcg_find_local_server(struct dcg_space *dcg, int max_num_peer)
+{
+    int num_space_srv = 0; //number of server in the DataSpaces
+    int num_local_peer = 0; //number of peers on the same node
+    int num_local_server = 0; //number of local server
+    struct node_id* peer_tab[max_num_peer];
+    int i,j;
+
+    num_space_srv = dcg_get_num_space_peers(dcg); //total number of server 
+    rpc_server_find_local_peers(dcg->dc->rpc_s, peer_tab,
+            &num_local_peer, max_num_peer);
+
+    //Find local server, since server's ptlmap.id is from 0 to num_space_srv
+        for (i = j = 0; i < num_local_peer; i++) {
+            if (peer_tab[i]->ptlmap.id < num_space_srv) {
+                dcg->dc->local_server_ids[j] = peer_tab[i]->ptlmap.id;
+                dcg->dc->local_server_peer_tab[j++] = peer_tab[i];
+                num_local_server++;      
+            }
+        }    
+        dcg->dc->num_local_server = num_local_server;
+
+}
+
 /* 
    Routine     to    log    the     timer    values.      Format    is
    "node_id,timer1[,timer2,...]"   the  sequence  and the  values  are

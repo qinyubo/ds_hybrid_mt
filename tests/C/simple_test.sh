@@ -27,7 +27,7 @@ lock_type = 2
 #./test_writer DATASPACES 64 3 4 4 4 256 256 256 2 1 > test_writer.out 2>&1 & 
 #./test_reader DATASPACES 8 3 4 2 1 256 512 1024 2 2 > test_reader.out 2>&1 &
 
-mpirun -n 1 $DIR/dataspaces_server -s 1 -c 2 >&$DIR/server_$CONF_DIMS.log & sleep 2
+mpirun -n 2 $DIR/dataspaces_server -s 2 -c 2 >&$DIR/server_$CONF_DIMS.log & sleep 2
 
 mpirun -n 1 $DIR/test_writer DATASPACES 1 2 1 1 $CONF_DIMS $CONF_DIMS 2 1 1 > $DIR/writer_$CONF_DIMS.log 2>&1 &
 mpirun -n 1 $DIR/test_reader DATASPACES 1 2 1 1 $CONF_DIMS $CONF_DIMS 2 2 1 > $DIR/reader_$CONF_DIMS.log 2>&1 &

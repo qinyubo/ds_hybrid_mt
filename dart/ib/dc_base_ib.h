@@ -35,6 +35,15 @@ struct dart_client {
 	void *dart_ref;
 
 	int num_posted;
+
+	/* Number of local server */
+	int num_local_server;
+
+	/* local server information */
+	struct node_id* local_server_peer_tab[128];
+	int local_server_ids[128];
+
+
 };
 
 
