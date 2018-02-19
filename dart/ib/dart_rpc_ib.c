@@ -56,6 +56,24 @@ static struct {
 	rpc_service rpc_func;
 } rpc_commands[64];
 
+
+//Yubo use for profilling
+double timer_timestamp_0(void)
+{
+        double ret;
+
+#ifdef XT3
+        ret = dclock();
+#else
+        struct timeval tv;
+
+        gettimeofday( &tv, 0 );
+        ret = (double) tv.tv_usec + tv.tv_sec * 1.e6;
+#endif
+        return ret;
+}
+
+
 static int sys_send(struct rpc_server *rpc_s, struct node_id *to, struct hdr_sys *hs);
 /* =====================================================
 	Fabric:
@@ -1571,7 +1589,8 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
     struct ibv_wc wc;
     struct rpc_request *rr;
 
-
+//data transfer between ibv_get_cq_event and ibv_ack_cq_events
+    //uloga("%s(Yubo) before ibv_get_cq_event, at time=%f\n",__func__, timer_timestamp_0());
     err = ibv_get_cq_event(peer->rpc_conn.comp_channel, &ev_cq, &ev_ctx);
     if(err == -1 && errno == EAGAIN) {
         return 0;
@@ -1582,7 +1601,10 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
         goto err_out;
     }
     ibv_ack_cq_events(ev_cq, 1);
+    
+
     err = ibv_req_notify_cq(ev_cq, 0);
+   //uloga("%s(Yubo) after ibv_req_notify_cq, at time=%f\n",__func__, timer_timestamp_0());
     if(err != 0) {
         printf("Failed to ibv_req_notify_cq.\n");
         fprintf(stderr, "Failed to ibv_req_notify_cq.\n");
@@ -1596,6 +1618,9 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
             fprintf(stderr, "Failed to ibv_poll_cq.\n");
             goto err_out;
         }
+
+        //uloga("%s(Yubo) ret = %d\n", __func__, ret);
+
         if(ret == 0) {
             continue;
         }
@@ -1610,7 +1635,9 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
             goto err_out;
         }
         if(wc.opcode & IBV_WC_RECV) {
+        	//uloga("%s(Yubo) before rpc_cb_decode, at time=%f\n",__func__, timer_timestamp_0());
             rpc_cb_decode(rpc_s, &wc);
+           // uloga("%s(Yubo) after rpc_cb_decode, at time=%f\n",__func__, timer_timestamp_0());
 
             peer->num_recv_buf--;
 

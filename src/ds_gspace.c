@@ -48,6 +48,22 @@
 
 #define DSG_ID                  dsg->ds->self->ptlmap.id
 
+double timer_timestamp_1(void)
+{
+        double ret;
+
+#ifdef XT3
+        ret = dclock();
+#else
+        struct timeval tv;
+
+        gettimeofday( &tv, 0 );
+        ret = (double) tv.tv_usec + tv.tv_sec * 1.e6;
+#endif
+        return ret;
+}
+
+
 struct cont_query {
         int                     cq_id;
         int                     cq_rank;
@@ -1290,9 +1306,14 @@ static int dsgrpc_obj_put(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         uloga("'%s()': server %d start receiving %s, version %d.\n", 
             __func__, DSG_ID, odsc->name, odsc->version);
 #endif
+
+       // uloga("%s(Yubo), before ds server obj put, at time=%f\n",__func__, timer_timestamp_1());
+
         rpc_mem_info_cache(peer, msg, cmd); 
         err = rpc_receive_direct(rpc_s, peer, msg);
         rpc_mem_info_reset(peer, msg, cmd);
+
+       // uloga("%s(Yubo), after ds server obj put, at time=%f\n",__func__, timer_timestamp_1());
 
         if (err < 0)
                 goto err_free_msg;

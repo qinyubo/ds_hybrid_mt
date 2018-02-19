@@ -81,8 +81,8 @@ AUTOMAKE = ${SHELL} /home1/yq47/code/dataspace/ds_hybrid_mt/config/missing --run
 AWK = gawk
 CC = mpicc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -DHAVE_INFINIBAND -lrdmacm -DDS_HAVE_DSPACES_LOCATION_AWARE_WRITE
-CONFIG_ARG =  'CC=mpicc' 'FC=mpif90' 'CFLAGS=-DHAVE_INFINIBAND -lrdmacm -DDS_HAVE_DSPACES_LOCATION_AWARE_WRITE' '--with-ib-interface=ib0'
+CFLAGS = -DHAVE_INFINIBAND -lrdmacm
+CONFIG_ARG =  'CC=mpicc' 'FC=mpif90' 'CFLAGS=-DHAVE_INFINIBAND -lrdmacm' '--with-ib-interface=ib0'
 CPP = mpicc -E
 CPPFLAGS = 
 CXX = g++
