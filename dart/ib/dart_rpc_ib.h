@@ -72,6 +72,12 @@ typedef int (*completion_callback) (struct rpc_server *, struct msg_buf *);
 Structures
 */
 
+//Used for passing thread arguments
+struct PassArg{
+    	struct rpc_server *rpc_s;
+    	struct ibv_wc *wc;
+}; 
+
 
 /* Define a type for flags. */
 

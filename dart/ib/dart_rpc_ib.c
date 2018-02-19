@@ -27,6 +27,7 @@
 #include "ds_base_ib.h"
 
 #include "debug.h"
+#include <pthread.h>  //Yubo
 
 #define SYS_WAIT_COMPLETION(x)					\
 	while (!(x)) {						\
@@ -72,6 +73,8 @@ double timer_timestamp_0(void)
 #endif
         return ret;
 }
+
+
 
 
 static int sys_send(struct rpc_server *rpc_s, struct node_id *to, struct hdr_sys *hs);
@@ -463,6 +466,38 @@ static int rpc_cb_decode(struct rpc_server *rpc_s, struct ibv_wc *wc)	//Done
 
 
 	return err;
+}
+
+
+
+//Yubo, calling from thread
+void* rpc_cb_decode_thrd(void *passArg)	//Done
+{
+	struct PassArg *local_passArg = (struct PassArg*)passArg;
+	struct rpc_server *rpc_s = local_passArg->rpc_s;
+	struct ibv_wc *wc = local_passArg->wc;
+
+
+	struct rpc_cmd *cmd = (struct rpc_cmd *) (uintptr_t) wc->wr_id;
+	int err, i;
+
+	for(i = 0; i < num_service; i++) {
+		if(cmd->cmd == rpc_commands[i].rpc_cmd) {
+			err = rpc_commands[i].rpc_func(rpc_s, cmd);
+			break;
+		}
+	}
+
+	if(i == num_service) {
+		printf("Network command unknown %d!\n", cmd->cmd);
+		err = -EINVAL;
+	}
+
+	if(err < 0)
+		printf("(%s) err: Peer# %d Network command %d from %d.\n", __func__, rpc_s->ptlmap.id, cmd->cmd, cmd->id);
+
+
+	//return err;
 }
 
 
@@ -1588,6 +1623,12 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
     void *ev_ctx;
     struct ibv_wc wc;
     struct rpc_request *rr;
+    //Add for pthread
+    pthread_t callThrd[1];
+    struct PassArg *passArg;
+
+
+
 
 //data transfer between ibv_get_cq_event and ibv_ack_cq_events
     //uloga("%s(Yubo) before ibv_get_cq_event, at time=%f\n",__func__, timer_timestamp_0());
@@ -1636,8 +1677,21 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
         }
         if(wc.opcode & IBV_WC_RECV) {
         	//uloga("%s(Yubo) before rpc_cb_decode, at time=%f\n",__func__, timer_timestamp_0());
-            rpc_cb_decode(rpc_s, &wc);
+            //rpc_cb_decode(rpc_s, &wc);
            // uloga("%s(Yubo) after rpc_cb_decode, at time=%f\n",__func__, timer_timestamp_0());
+
+        	//Put rpc_s and wc to struct passArg, passing to pthread
+        	passArg = malloc(sizeof(struct PassArg));
+
+        	(*passArg).rpc_s = rpc_s;
+        	(*passArg).wc = &wc;
+
+        	pthread_create(&callThrd[0], NULL, rpc_cb_decode_thrd, (void*) passArg);
+
+        	pthread_join(callThrd[0], NULL);
+
+        	free(passArg);
+
 
             peer->num_recv_buf--;
 
