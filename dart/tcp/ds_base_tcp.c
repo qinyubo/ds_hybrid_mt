@@ -661,6 +661,10 @@ err_out:
 struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm) {
     size_t size = sizeof(struct dart_server) + sizeof(struct node_id) * (size_t)(num_sp + num_cp);
     struct dart_server *ds = (struct dart_server *)malloc(size);
+    struct queue tasks_queue;
+
+    queue_init(&tasks_queue);
+
     if (ds == NULL) {
         printf("[%s]: allocate DART server failed!\n", __func__);
         goto err_out;
@@ -685,7 +689,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     }
 
     char *interface = getenv("DATASPACES_TCP_INTERFACE");
-    ds->rpc_s = rpc_server_init(interface, ds->size_sp, ds, DART_SERVER);
+    ds->rpc_s = rpc_server_init(interface, ds->size_sp, ds, DART_SERVER, &tasks_queue);
     if (ds->rpc_s == NULL) {
         printf("[%s]: initialize RPC server failed!\n", __func__);
         goto err_out;

@@ -7,6 +7,7 @@
 
 #include "dart_rpc_tcp.h"
 #include "debug.h"
+//#include "queue.h"
 
 /* It may be better to store these values in rpc_server struct */
 /* Best size of bytes to be written in a single socket write call */
@@ -209,7 +210,7 @@ static int rpc_server_init_socket(struct rpc_server *rpc_s) {
     return -1;
 }
 
-struct rpc_server* rpc_server_init(const char *interface, int app_num_peers, void *dart_ref, enum rpc_component cmp_type) {
+struct rpc_server* rpc_server_init(const char *interface, int app_num_peers, void *dart_ref, enum rpc_component cmp_type, struct queue *tasks_q) {
     struct rpc_server *rpc_s = (struct rpc_server *)malloc(sizeof(struct rpc_server));
     if (rpc_s == NULL) {
         printf("[%s]: allocate RPC server failed!\n", __func__);
@@ -227,6 +228,7 @@ struct rpc_server* rpc_server_init(const char *interface, int app_num_peers, voi
     rpc_s->app_num_peers = app_num_peers;
     rpc_s->thread_alive = 0; /* Should be set to 1 before creating the thread */
     rpc_s->dart_ref = dart_ref;
+    rpc_s->tasks_q = tasks_q; //tasks queue
 
     if (rpc_server_init_socket(rpc_s) < 0) {
         printf("[%s]: initialize socket for RPC server failed!\n", __func__);
@@ -358,8 +360,8 @@ int rpc_connect(struct rpc_server *rpc_s, struct node_id *peer) {
 }
 
 static int rpc_process_cmd(struct rpc_server *rpc_s, struct rpc_cmd *cmd) {
-    ulog("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
-        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
+    //uloga("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
+    //    rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
     int i;
     for (i = 0; i < num_service; ++i) {
         if (cmd->cmd == rpc_commands[i].rpc_cmd) {
@@ -394,8 +396,8 @@ static int rpc_process_event_peer(struct rpc_server *rpc_s, struct node_id *peer
             break;
         }
 
-        ulog("[%s YUBO]: peer %d (%s) receive RPC command from peer %d.\n", __func__,
-        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", peer->ptlmap.id);
+       // uloga("[%s YUBO]: peer %d (%s) receive RPC command from peer %d.\n", __func__,
+       // rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", peer->ptlmap.id);
 
         /* It is more convenient to set id here */
         cmd.id = peer->ptlmap.id;

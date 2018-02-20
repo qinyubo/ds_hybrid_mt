@@ -29,5 +29,5 @@ mpirun -n 1 $DIR/test_reader DATASPACES 1 2 1 1 256 256 2 2 > $DIR/reader_$CONF_
 #mpirun -n 1 $DIR/test_reader DATASPACES 1 2 1 1 1024 1024 5 2 > $DIR/reader_$CONF_DIMS.log 2>&1 &
 
 wait $READER_PID
-
+sleep 3
 kill -9 $SERVER_PID

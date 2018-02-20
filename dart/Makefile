@@ -45,19 +45,19 @@ host_triplet = x86_64-unknown-linux-gnu
 #					portals/ds_base_portals.h \
 #					portals/dc_base_portals.h
 
-#am__append_3 = -I./../include -I./ib_cpp/include
-#am__append_4 = -lmpi
-#am__append_5 = ib_cpp/include/dart_rpc_ib.h \
-#                   ib_cpp/include/ds_base_ib.h \
-#                   ib_cpp/include/dc_base_ib.h \
-#                   ib_cpp/include/dart_rdma_ib.h \
-#                   ib_cpp/include/patch_ib.h \
-#                   ib_cpp/include/patch_ib_cpp.h
+##am__append_3 = -I./../include -I./ib_cpp/include
+##am__append_4 = -lmpi
+##am__append_5 = ib_cpp/include/dart_rpc_ib.h \
+##                   ib_cpp/include/ds_base_ib.h \
+##                   ib_cpp/include/dc_base_ib.h \
+##                   ib_cpp/include/dart_rdma_ib.h \
+##                   ib_cpp/include/patch_ib.h \
+##                   ib_cpp/include/patch_ib_cpp.h
 
-am__append_6 = ib/dart_rpc_ib.h \
-        					ib/dc_base_ib.h \
-        					ib/ds_base_ib.h \
-        					ib/dart_rdma_ib.h
+#am__append_6 = ib/dart_rpc_ib.h \
+#        					ib/dc_base_ib.h \
+#        					ib/ds_base_ib.h \
+#        					ib/dart_rdma_ib.h
 
 #am__append_7 = dcmf/dart_rpc_dcmf.h \
 #					dcmf/ds_base_dcmf.h \
@@ -69,9 +69,9 @@ am__append_6 = ib/dart_rpc_ib.h \
 #                                        pami/dc_base_pami.h \
 #                                        pami/dart_rdma_pami.h
 
-#am__append_9 = tcp/dart_rpc_tcp.h \
-#					tcp/ds_base_tcp.h \
-#					tcp/dc_base_tcp.h
+am__append_9 = tcp/dart_rpc_tcp.h \
+					tcp/ds_base_tcp.h \
+					tcp/dc_base_tcp.h
 
 subdir = dart
 DIST_COMMON = $(am__noinst_HEADERS_DIST) $(srcdir)/Makefile.am \
@@ -131,33 +131,33 @@ am__libdart_a_SOURCES_DIST = ib/dart_rpc_ib.c ib/ds_base_ib.c \
 	tcp/dc_base_tcp.c gni/dart_rpc_gni.c gni/ds_base_gni.c \
 	gni/dc_base_gni.c gni/dart_rdma_gni.c
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libdart_a_OBJECTS = ib/dart_rpc_ib.$(OBJEXT) \
-	ib/ds_base_ib.$(OBJEXT) \
-	ib/dc_base_ib.$(OBJEXT) \
-	ib/dart_rdma_ib.$(OBJEXT)
-#am_libdart_a_OBJECTS = ib_cpp/dart_rpc_ib_.$(OBJEXT) \
-#	ib_cpp/ds_base_ib_.$(OBJEXT) \
-#	ib_cpp/dc_base_ib_.$(OBJEXT) \
-#	ib_cpp/dart_rdma_ib_.$(OBJEXT) \
-#	ib_cpp/patch_ib_cpp.$(OBJEXT)
+#am_libdart_a_OBJECTS = ib/dart_rpc_ib.$(OBJEXT) \
+#	ib/ds_base_ib.$(OBJEXT) \
+#	ib/dc_base_ib.$(OBJEXT) \
+#	ib/dart_rdma_ib.$(OBJEXT)
+##am_libdart_a_OBJECTS = ib_cpp/dart_rpc_ib_.$(OBJEXT) \
+##	ib_cpp/ds_base_ib_.$(OBJEXT) \
+##	ib_cpp/dc_base_ib_.$(OBJEXT) \
+##	ib_cpp/dart_rdma_ib_.$(OBJEXT) \
+##	ib_cpp/patch_ib_cpp.$(OBJEXT)
 ##am_libdart_a_OBJECTS = gni/dart_rpc_gni.$(OBJEXT) \
 ##	gni/ds_base_gni.$(OBJEXT) \
 ##	gni/dc_base_gni.$(OBJEXT) \
 ##	gni/dart_rdma_gni.$(OBJEXT)
-##am_libdart_a_OBJECTS = tcp/dart_rpc_tcp.$(OBJEXT) \
-##	tcp/ds_base_tcp.$(OBJEXT) \
-##	tcp/dc_base_tcp.$(OBJEXT)
-##am_libdart_a_OBJECTS = portals/dart_rpc_portals.$(OBJEXT) \
-##	portals/ds_base_portals.$(OBJEXT) \
-##	portals/dc_base_portals.$(OBJEXT)
-##am_libdart_a_OBJECTS = pami/dart_rpc_pami.$(OBJEXT) \
-##	pami/ds_base_pami.$(OBJEXT) \
-##	pami/dc_base_pami.$(OBJEXT) \
-##	pami/dart_rdma_pami.$(OBJEXT)
-##am_libdart_a_OBJECTS = dcmf/dart_rpc_dcmf.$(OBJEXT) \
-##	dcmf/ds_base_dcmf.$(OBJEXT) \
-##	dcmf/dc_base_dcmf.$(OBJEXT) \
-##	dcmf/dart_rdma_dcmf.$(OBJEXT)
+am_libdart_a_OBJECTS = tcp/dart_rpc_tcp.$(OBJEXT) \
+	tcp/ds_base_tcp.$(OBJEXT) \
+	tcp/dc_base_tcp.$(OBJEXT)
+#am_libdart_a_OBJECTS = portals/dart_rpc_portals.$(OBJEXT) \
+#	portals/ds_base_portals.$(OBJEXT) \
+#	portals/dc_base_portals.$(OBJEXT)
+#am_libdart_a_OBJECTS = pami/dart_rpc_pami.$(OBJEXT) \
+#	pami/ds_base_pami.$(OBJEXT) \
+#	pami/dc_base_pami.$(OBJEXT) \
+#	pami/dart_rdma_pami.$(OBJEXT)
+#am_libdart_a_OBJECTS = dcmf/dart_rpc_dcmf.$(OBJEXT) \
+#	dcmf/ds_base_dcmf.$(OBJEXT) \
+#	dcmf/dc_base_dcmf.$(OBJEXT) \
+#	dcmf/dart_rdma_dcmf.$(OBJEXT)
 libdart_a_OBJECTS = $(am_libdart_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -191,16 +191,16 @@ HEADERS = $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home1/yq47/code/dataspace/ds_hybrid_mt/config/missing --run aclocal-1.11
-AMTAR = ${SHELL} /home1/yq47/code/dataspace/ds_hybrid_mt/config/missing --run tar
-AUTOCONF = ${SHELL} /home1/yq47/code/dataspace/ds_hybrid_mt/config/missing --run autoconf
-AUTOHEADER = ${SHELL} /home1/yq47/code/dataspace/ds_hybrid_mt/config/missing --run autoheader
-AUTOMAKE = ${SHELL} /home1/yq47/code/dataspace/ds_hybrid_mt/config/missing --run automake-1.11
+ACLOCAL = ${SHELL} /cac/u01/yq47/Documents/ds_hybrid_mt/config/missing --run aclocal-1.11
+AMTAR = ${SHELL} /cac/u01/yq47/Documents/ds_hybrid_mt/config/missing --run tar
+AUTOCONF = ${SHELL} /cac/u01/yq47/Documents/ds_hybrid_mt/config/missing --run autoconf
+AUTOHEADER = ${SHELL} /cac/u01/yq47/Documents/ds_hybrid_mt/config/missing --run autoheader
+AUTOMAKE = ${SHELL} /cac/u01/yq47/Documents/ds_hybrid_mt/config/missing --run automake-1.11
 AWK = gawk
 CC = mpicc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -DHAVE_INFINIBAND -lrdmacm
-CONFIG_ARG =  'CC=mpicc' 'FC=mpif90' 'CFLAGS=-DHAVE_INFINIBAND -lrdmacm' '--with-ib-interface=ib0'
+CFLAGS = -g -O2
+CONFIG_ARG =  'CC=mpicc' 'FC=mpif90' '--enable-dart-tcp' 'LIBS=-lpthread -lm'
 CPP = mpicc -E
 CPPFLAGS = 
 CXX = g++
@@ -215,13 +215,13 @@ DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DRC_CPPFLAGS = 
 DRC_LIBS = 
-DSPACESLIB_CFLAGS = $  
-DSPACESLIB_CPPFLAGS =   
-DSPACESLIB_LDADD =  -lm    -lrdmacm
+DSPACESLIB_CFLAGS =  
+DSPACESLIB_CPPFLAGS =  
+DSPACESLIB_LDADD =  -lm  
 DSPACESLIB_LDFLAGS =  
-DSPACES_EXT_CFLAGS = 
+DSPACES_EXT_CFLAGS =  
 DSPACES_EXT_CPPFLAGS = 
-DSPACES_EXT_LDADD =  -lm 
+DSPACES_EXT_LDADD =  -lm  
 DSPACES_EXT_LDFLAGS = 
 ECHO_C = 
 ECHO_N = -n
@@ -230,12 +230,12 @@ EGREP = /bin/grep -E
 EXEEXT = 
 FC = mpif90
 FCFLAGS = -g -O2
-FCLIBS =  -L/opt/openmpi/1.10.1/lib -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. -lmpi_usempi -lmpi_mpifh -lmpi -lgfortranbegin -lgfortran -lm -lpthread
+FCLIBS =  -L/usr/mpi/gcc/openmpi-1.10.5a1/lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. -lpthread -lgfortranbegin -lgfortran -lm -lmpi_usempi -lmpi_mpifh -lmpi
 GREP = /bin/grep
 INFINIBAND_CFLAGS =  
 INFINIBAND_CPPFLAGS =  
 INFINIBAND_LDFLAGS = 
-INFINIBAND_LIBS =  
+INFINIBAND_LIBS =  -libverbs 
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -243,9 +243,9 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS =  
 LIBOBJS = 
-LIBS = 
+LIBS = -lpthread -lm
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home1/yq47/code/dataspace/ds_hybrid_mt/config/missing --run makeinfo
+MAKEINFO = ${SHELL} /cac/u01/yq47/Documents/ds_hybrid_mt/config/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = dataspaces
@@ -284,10 +284,10 @@ UGNI_CPPFLAGS =
 UGNI_LDLAGS = 
 UGNI_LIBS = -lugni
 VERSION = 1.6.5
-abs_builddir = /home1/yq47/code/dataspace/ds_hybrid_mt/dart
-abs_srcdir = /home1/yq47/code/dataspace/ds_hybrid_mt/dart
-abs_top_builddir = /home1/yq47/code/dataspace/ds_hybrid_mt
-abs_top_srcdir = /home1/yq47/code/dataspace/ds_hybrid_mt
+abs_builddir = /cac/u01/yq47/Documents/ds_hybrid_mt/dart
+abs_srcdir = /cac/u01/yq47/Documents/ds_hybrid_mt/dart
+abs_top_builddir = /cac/u01/yq47/Documents/ds_hybrid_mt
+abs_top_srcdir = /cac/u01/yq47/Documents/ds_hybrid_mt
 ac_ct_CC = mpicc
 ac_ct_CXX = g++
 ac_ct_FC = 
@@ -316,7 +316,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home1/yq47/code/dataspace/ds_hybrid_mt/config/install-sh
+install_sh = ${SHELL} /cac/u01/yq47/Documents/ds_hybrid_mt/config/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -343,16 +343,16 @@ lib_LIBRARIES = libdart.a
 noinst_HEADERS = dart.h debug.h list.h $(am__append_1) $(am__append_2) \
 	$(am__append_5) $(am__append_6) $(am__append_7) \
 	$(am__append_8) $(am__append_9)
-libdart_a_SOURCES = ib/dart_rpc_ib.c \
-          					ib/ds_base_ib.c \
-          					ib/dc_base_ib.c \
-          					ib/dart_rdma_ib.c
+#libdart_a_SOURCES = ib/dart_rpc_ib.c \
+#          					ib/ds_base_ib.c \
+#          					ib/dc_base_ib.c \
+#          					ib/dart_rdma_ib.c
 
-#libdart_a_SOURCES = ib_cpp/dart_rpc_ib_.cpp \
-#                    ib_cpp/ds_base_ib_.cpp \
-#                    ib_cpp/dc_base_ib_.cpp \
-#                    ib_cpp/dart_rdma_ib_.cpp \
-#                    ib_cpp/patch_ib_cpp.cpp
+##libdart_a_SOURCES = ib_cpp/dart_rpc_ib_.cpp \
+##                    ib_cpp/ds_base_ib_.cpp \
+##                    ib_cpp/dc_base_ib_.cpp \
+##                    ib_cpp/dart_rdma_ib_.cpp \
+##                    ib_cpp/patch_ib_cpp.cpp
 
 #libdart_a_SOURCES = dcmf/dart_rpc_dcmf.c \
 #					dcmf/ds_base_dcmf.c \
@@ -368,9 +368,9 @@ libdart_a_SOURCES = ib/dart_rpc_ib.c \
 #					portals/ds_base_portals.c \
 #					portals/dc_base_portals.c
 
-#libdart_a_SOURCES = tcp/dart_rpc_tcp.c \
-#					tcp/ds_base_tcp.c \
-#					tcp/dc_base_tcp.c 
+libdart_a_SOURCES = tcp/dart_rpc_tcp.c \
+					tcp/ds_base_tcp.c \
+					tcp/dc_base_tcp.c 
 
 #libdart_a_SOURCES = gni/dart_rpc_gni.c \
 #					gni/ds_base_gni.c \

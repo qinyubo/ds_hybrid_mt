@@ -1,10 +1,10 @@
 #!/bin/bash
 
-DSPACES_INC="-I/usr/local/include  "
-DSPACES_LIB="-L/usr/local/lib -ldspaces -ldscommon -ldart   -lm    "
+DSPACES_INC="-I/usr/local/include   "
+DSPACES_LIB="-L/usr/local/lib -ldspaces -ldscommon -ldart   -lm     -lpthread -lm"
 DSPACES_VER="1.6.5"
 DSPACES_ARG="dataspaces 1.6.5 
-              'CC=mpicc' 'FC=mpif90' 'CFLAGS=-DHAVE_INFINIBAND -lrdmacm -DDS_HAVE_DSPACES_LOCATION_AWARE_WRITE' '--with-ib-interface=ib0'"
+              'CC=mpicc' 'FC=mpif90' '--enable-dart-tcp' 'LIBS=-lpthread -lm'"
 
 OPTIND=1
 

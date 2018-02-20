@@ -215,7 +215,7 @@ struct dart_client *dc_alloc(int num_peers, int appid, void *dart_ref, void *com
     dc->cp_in_job = num_peers;
 
     char *interface = getenv("DATASPACES_TCP_INTERFACE");
-    dc->rpc_s = rpc_server_init(interface, dc->cp_in_job, dc, DART_CLIENT);
+    dc->rpc_s = rpc_server_init(interface, dc->cp_in_job, dc, DART_CLIENT, NULL); //did not create tasks queue for client
     dc->rpc_s->ptlmap.appid = appid;
     if (dc->rpc_s == NULL) {
         printf("[%s]: initialize RPC server failed!\n", __func__);
