@@ -2015,9 +2015,11 @@ void dcg_find_local_server(struct dcg_space *dcg, int max_num_peer)
     struct node_id* peer_tab[max_num_peer];
     int i,j;
 
+/* Command out for TCP version !!!!!!!!
     num_space_srv = dcg_get_num_space_peers(dcg); //total number of server 
     rpc_server_find_local_peers(dcg->dc->rpc_s, peer_tab,
             &num_local_peer, max_num_peer);
+
 
     //Find local server, since server's ptlmap.id is from 0 to num_space_srv
         for (i = j = 0; i < num_local_peer; i++) {
@@ -2028,6 +2030,7 @@ void dcg_find_local_server(struct dcg_space *dcg, int max_num_peer)
             }
         }    
         dcg->dc->num_local_server = num_local_server;
+*/
 
 }
 

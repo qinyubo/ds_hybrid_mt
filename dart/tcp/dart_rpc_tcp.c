@@ -394,6 +394,9 @@ static int rpc_process_event_peer(struct rpc_server *rpc_s, struct node_id *peer
             break;
         }
 
+        ulog("[%s YUBO]: peer %d (%s) receive RPC command from peer %d.\n", __func__,
+        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", peer->ptlmap.id);
+
         /* It is more convenient to set id here */
         cmd.id = peer->ptlmap.id;
         if (rpc_process_cmd(rpc_s, &cmd) < 0) {
