@@ -661,9 +661,10 @@ err_out:
 struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm) {
     size_t size = sizeof(struct dart_server) + sizeof(struct node_id) * (size_t)(num_sp + num_cp);
     struct dart_server *ds = (struct dart_server *)malloc(size);
-    struct queue tasks_queue;
+    //struct queue tasks_queue;
 
-    queue_init(&tasks_queue);
+    //queue_init(&tasks_queue);
+    //uloga("%s(YUbo) server queue_init\n", __func__);
 
     if (ds == NULL) {
         printf("[%s]: allocate DART server failed!\n", __func__);
@@ -689,7 +690,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     }
 
     char *interface = getenv("DATASPACES_TCP_INTERFACE");
-    ds->rpc_s = rpc_server_init(interface, ds->size_sp, ds, DART_SERVER, &tasks_queue);
+    ds->rpc_s = rpc_server_init(interface, ds->size_sp, ds, DART_SERVER);
     if (ds->rpc_s == NULL) {
         printf("[%s]: initialize RPC server failed!\n", __func__);
         goto err_out;
@@ -748,6 +749,17 @@ void ds_free(struct dart_server* ds) {
         free(ds->comm);
     }
 
+    /*
+    uloga("%s(Yubo) Debug #5\n",__func__);
+    //Print content in tasks_queue for debuging purpose
+    while(!queue_is_empty(ds->rpc_s->tasks_q)){
+        struct rpc_cmd *tmp_cmd;
+        tmp_cmd = queue_dequeue(ds->rpc_s->tasks_q);
+        uloga("%s(Yubo) server has rpc_cmd=%d\n",__func__, tmp_cmd->cmd);
+        free(tmp_cmd);
+    }
+    uloga("%s(Yubo) Debug #6\n",__func__);
+    */
     free(ds);
 }
 

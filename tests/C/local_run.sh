@@ -21,8 +21,8 @@ mpirun -n 1 ./dataspaces_server -s 1 -c 2 >& $DIR/server_$CONF_DIMS.log & SERVER
 echo "SERVER_PID: $SERVER_PID"
 sleep 2
 
-mpirun -n 1 $DIR/test_writer DATASPACES 1 2 1 1 256 256 2 1 > $DIR/writer_$CONF_DIMS.log 2>&1 &
-mpirun -n 1 $DIR/test_reader DATASPACES 1 2 1 1 256 256 2 2 > $DIR/reader_$CONF_DIMS.log 2>&1 & READER_PID=$!
+mpirun -n 1 $DIR/test_writer DATASPACES 1 2 1 1 256 256 1 1 > $DIR/writer_$CONF_DIMS.log 2>&1 &
+mpirun -n 1 $DIR/test_reader DATASPACES 1 2 1 1 256 256 1 2 > $DIR/reader_$CONF_DIMS.log 2>&1 & READER_PID=$!
 #mpirun -n 4 $DIR/test_writer DATASPACES 4 2 4 1 512 2048 5 1 > $DIR/writer_$CONF_DIMS.log 2>&1 &
 #mpirun -n 1 $DIR/test_reader DATASPACES 1 2 1 1 2048 2048 5 2 > $DIR/reader_$CONF_DIMS.log 2>&1 &
 #mpirun -n 4 $DIR/test_writer DATASPACES 4 2 4 1 256 1024 5 1 > $DIR/writer_$CONF_DIMS.log 2>&1 &

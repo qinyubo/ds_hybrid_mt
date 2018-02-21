@@ -55,18 +55,38 @@ static void queue_init(struct queue *q)
 static void queue_enqueue(struct queue *q, void *obj)
 {
         struct queue_node *qn;
+        struct queue_node *tmp;
 
+        printf("Debug #7\n");
         qn = malloc(sizeof(struct queue_node));
+         printf("Debug #8\n");
         qn->obj = obj;
         qn->next = NULL;
+         printf("Debug #9\n");
 
-        if (q->num_elem == 0)
+        if (q->num_elem == 0){
+                printf("Debug #10\n");
                 q->head = q->tail = qn;
+                printf("Debug #11\n");
+        }
         else {
+                printf("Debug #12.0 q->num_elem=%d\n", q->num_elem);
+                printf("Debug #12.1\n");
+                tmp = q->tail;
+                printf("Debug #12.1.2\n");
+                tmp = q->tail->next;
+                printf("Debug #12.1.3\n");
+                q->tail->next = NULL;
+                printf("Debug #12.2\n");
+                tmp = qn;
+                printf("Debug #12.3\n");
                 q->tail->next = qn;
+                printf("Debug #13\n");
                 q->tail = qn;
+                printf("Debug #14\n");
         }
         q->num_elem++;
+         printf("Debug #15\n");
 }
 
 static void * queue_dequeue(struct queue *q)

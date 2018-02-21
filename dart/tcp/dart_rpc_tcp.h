@@ -298,7 +298,7 @@ void rpc_add_service(enum cmd_type rpc_cmd, rpc_service rpc_func);
 int rpc_send_connection_info(struct rpc_server *rpc_s, struct node_id *peer);
 int rpc_recv_connection_info(int sockfd, struct connection_info *info);
 
-struct rpc_server* rpc_server_init(const char *interface, int app_num_peers, void *dart_ref, enum rpc_component cmp_type, struct queue *tasks_q);
+struct rpc_server* rpc_server_init(const char *interface, int app_num_peers, void *dart_ref, enum rpc_component cmp_type);
 void rpc_server_set_peer_ref(struct rpc_server *rpc_s, struct node_id *peer_tab, int num_peers);
 int rpc_write_config(struct rpc_server *rpc_s, const char *filename);
 int rpc_read_config(struct sockaddr_in *address, const char *filename);
