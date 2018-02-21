@@ -367,8 +367,8 @@ int rpc_connect(struct rpc_server *rpc_s, struct node_id *peer) {
 }
 
 static int rpc_process_cmd(struct rpc_server *rpc_s, struct rpc_cmd *cmd) {
-    //uloga("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
-    //    rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
+    uloga("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
+        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
     int i;
             
     for (i = 0; i < num_service; ++i) {
@@ -396,16 +396,12 @@ static int rpc_process_event_peer(struct rpc_server *rpc_s, struct node_id *peer
     while (1) {
         //struct rpc_cmd cmd;
         //Allocate space for rpc_cmd and will store it to the tasks queue
-        //uloga("%s(Yubo) Debug 1\n",__func__);
         struct rpc_cmd *cmd = (struct rpc_cmd *)malloc(sizeof(struct rpc_cmd));
         memset(cmd, 0, sizeof(struct rpc_cmd));
-        //uloga("%s(Yubo) Debug 2\n",__func__);
         struct tasks_request *tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
         memset(tasks_req, 0, sizeof(struct tasks_request));
-       // uloga("%s(Yubo) Debug 3\n",__func__);
 
         INIT_LIST_HEAD(&tasks_req->tasks_entry);
-
 
         int ret = socket_recv_rpc_cmd(peer->sockfd, cmd);
         if (ret < 0) {
@@ -417,15 +413,11 @@ static int rpc_process_event_peer(struct rpc_server *rpc_s, struct node_id *peer
             break;
         }
 
-
         /* It is more convenient to set id here */
         cmd->id = peer->ptlmap.id;
-        //uloga("%s(Yubo) Debug 4\n",__func__);
-        //tasks_req->rpc_s = rpc_s;
         tasks_req->cmd = cmd;
-        //uloga("%s(Yubo) Debug 5\n",__func__);
-        list_add(&tasks_req->tasks_entry, &rpc_s->tasks_list);
-        //uloga("%s(Yubo) Debug 6\n",__func__);
+        list_add_tail(&tasks_req->tasks_entry, &rpc_s->tasks_list);
+
 
         if (rpc_process_cmd(rpc_s, cmd) < 0) {
             printf("[%s]: process RPC command failed!\n", __func__);

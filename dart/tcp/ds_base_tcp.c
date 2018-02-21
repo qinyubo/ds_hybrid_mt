@@ -732,6 +732,8 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
 }
 
 void ds_free(struct dart_server* ds) {
+    int ds_id = ds->rpc_s->ptlmap.id;
+
     ds->rpc_s->thread_alive = 0;
     pthread_cancel(ds->rpc_s->comm_thread);
 
@@ -749,17 +751,14 @@ void ds_free(struct dart_server* ds) {
         free(ds->comm);
     }
 
-    /*
-    uloga("%s(Yubo) Debug #5\n",__func__);
-    //Print content in tasks_queue for debuging purpose
-    while(!queue_is_empty(ds->rpc_s->tasks_q)){
-        struct rpc_cmd *tmp_cmd;
-        tmp_cmd = queue_dequeue(ds->rpc_s->tasks_q);
-        uloga("%s(Yubo) server has rpc_cmd=%d\n",__func__, tmp_cmd->cmd);
-        free(tmp_cmd);
+    
+    struct tasks_request *tmp_tr;
+    list_for_each_entry(tmp_tr, &ds->rpc_s->tasks_list, struct tasks_request, tasks_entry)
+    {
+        uloga("%s(Yubo) server %d has rpc_cmd=%d\n",__func__,ds_id, tmp_tr->cmd->cmd);
     }
-    uloga("%s(Yubo) Debug #6\n",__func__);
-    */
+
+    
     free(ds);
 }
 
