@@ -130,6 +130,12 @@ struct rpc_request{
     request_callback cb;
 };
 
+struct tasks_request{
+    struct list_head tasks_entry;
+    //struct rpc_server *rpc_s;
+    struct rpc_cmd *cmd;
+};
+
 struct msg_buf{
     struct list_head msg_entry;
     struct rpc_cmd  *msg_rpc;
@@ -167,7 +173,8 @@ struct rpc_server {
     int thread_alive;
 
     void *dart_ref; /* Points to dart_server or dart_client struct */
-    struct queue *tasks_q; /* Tasks queue of received RPC requests */
+    //struct queue *tasks_q; /* Tasks queue of received RPC requests */
+    struct list_head tasks_list;
 };
 
 struct node_id {

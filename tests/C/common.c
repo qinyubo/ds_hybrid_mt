@@ -229,7 +229,6 @@ int common_run_server(int num_sp, int num_cp, enum transport_type type, void* gc
                         return -1;
 
                 while (!dsg_complete(dsg)){
-                        uloga("%s(Yubo) dsg->ds->rpc_s->tasks_q->num_elem=%d\n",__func__, dsg->ds->rpc_s->tasks_q->num_elem);
                         err = dsg_process(dsg);
                         if(err<0)
                                 break;
