@@ -285,7 +285,7 @@ static int dc_unregister(struct dart_client *dc) {
 }
 
 void dc_free(struct dart_client *dc) {
-    int dc_id = dc->rpc_s->ptlmap.id;
+    //int dc_id = dc->rpc_s->ptlmap.id;
     dc_unregister(dc);
 
     dc->rpc_s->thread_alive = 0;
@@ -303,12 +303,14 @@ void dc_free(struct dart_client *dc) {
         free(dc->comm);
     }
     
+    /*
     //Print content in tasks_list for debuging purpose
     struct tasks_request *tmp_tr;
     list_for_each_entry(tmp_tr, &dc->rpc_s->tasks_list, struct tasks_request, tasks_entry)
     {
         uloga("%s(Yubo) client %d has rpc_cmd=%d\n",__func__,dc_id, tmp_tr->cmd->cmd);
     }
+    */
 
     free(dc);
 }

@@ -522,7 +522,7 @@ int ds_boot_master(struct dart_server *ds) {
     ds->self = &ds->peer_tab[0];
     ds->self->ptlmap = ds->rpc_s->ptlmap;
     while (!ds->f_reg) {
-        rpc_process_event(ds->rpc_s);
+        rpc_process_event_mt(ds->rpc_s);
     }
     int i;
     for (i = 0; i < ds->peer_size; ++i) {
@@ -557,7 +557,7 @@ int ds_boot_slave(struct dart_server *ds) {
     msg = NULL;
 
     while (!ds->f_reg) {
-        rpc_process_event(ds->rpc_s);
+        rpc_process_event_mt(ds->rpc_s);
     }
     int i;
     for (i = 0; i < ds->peer_size; ++i) {
@@ -585,9 +585,16 @@ static int ds_boot(struct dart_server *ds)
 	struct stat stat_buf;
 	int ret;
 
+
     ds->rpc_s->thread_alive = 1;
     if (pthread_create(&ds->rpc_s->comm_thread, NULL, ds_listen, (void *)ds) != 0) {
         printf("[%s]: create pthread failed!\n", __func__);
+        goto err_out;
+    }
+
+    //create thread_handle
+    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle, (void*)ds->rpc_s) != 0){
+        printf("[%s]: create pthread_handle failed!\n", __func__);
         goto err_out;
     }
 
@@ -732,10 +739,14 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
 }
 
 void ds_free(struct dart_server* ds) {
-    int ds_id = ds->rpc_s->ptlmap.id;
+    //int ds_id = ds->rpc_s->ptlmap.id;
 
     ds->rpc_s->thread_alive = 0;
     pthread_cancel(ds->rpc_s->comm_thread);
+    pthread_join(ds->rpc_s->comm_thread, NULL);
+    pthread_cancel(ds->rpc_s->task_thread);
+    pthread_join(ds->rpc_s->task_thread, NULL);
+
 
     if (rpc_server_free(ds->rpc_s) < 0) {
         printf("[%s]: free RPC server for peer %d (server) failed, skip!\n", __func__, ds->self->ptlmap.id);
@@ -751,17 +762,19 @@ void ds_free(struct dart_server* ds) {
         free(ds->comm);
     }
 
-    
+    /*
+    //Print content in tasks_list for debuging purpose
     struct tasks_request *tmp_tr;
     list_for_each_entry(tmp_tr, &ds->rpc_s->tasks_list, struct tasks_request, tasks_entry)
     {
         uloga("%s(Yubo) server %d has rpc_cmd=%d\n",__func__,ds_id, tmp_tr->cmd->cmd);
     }
+    */
 
     
     free(ds);
 }
 
 int ds_process(struct dart_server* ds) {
-    return rpc_process_event(ds->rpc_s);
+    return rpc_process_event_mt(ds->rpc_s);
 }

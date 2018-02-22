@@ -20,6 +20,7 @@ extern "C" {
 
 #include "config.h"
 #include "list.h"
+//#include "ds_base_tcp.h"
 
 #define ALIGN_ADDR_QUAD_BYTES(a)                                \
         unsigned long _a = (unsigned long) (a);                 \
@@ -132,7 +133,7 @@ struct rpc_request{
 
 struct tasks_request{
     struct list_head tasks_entry;
-    //struct rpc_server *rpc_s;
+    struct rpc_server *rpc_s;
     struct rpc_cmd *cmd;
 };
 
@@ -170,6 +171,7 @@ struct rpc_server {
     int app_num_peers; /* Number of peers in app */
 
     pthread_t comm_thread; /* Thread for managing connections */
+    pthread_t task_thread; /* Thread for listening tasks list */
     int thread_alive;
 
     void *dart_ref; /* Points to dart_server or dart_client struct */
@@ -311,6 +313,7 @@ int rpc_write_config(struct rpc_server *rpc_s, const char *filename);
 int rpc_read_config(struct sockaddr_in *address, const char *filename);
 int rpc_connect(struct rpc_server *rpc_s, struct node_id *peer);
 int rpc_process_event(struct rpc_server *rpc_s);
+int rpc_process_event_mt(struct rpc_server *rpc_s);
 int rpc_barrier(struct rpc_server *rpc_s, void *comm);
 int rpc_send(struct rpc_server *rpc_s, struct node_id *peer, struct msg_buf *msg);
 int rpc_send_direct(struct rpc_server *rpc_s, struct node_id *peer, struct msg_buf *msg);
@@ -326,6 +329,7 @@ int rpc_send_directv(struct rpc_server *, struct node_id *, struct msg_buf *); /
 // void rpc_mem_info_reset(struct node_id *peer, struct msg_buf *msg, struct rpc_cmd *cmd);
 
 // void rpc_report_md_usage(struct rpc_server *);
+void* thread_handle(void* attr);
 
 #ifdef __cplusplus
 }

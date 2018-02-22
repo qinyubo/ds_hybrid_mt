@@ -8,12 +8,17 @@
 #include "dart_rpc_tcp.h"
 #include "debug.h"
 //#include "queue.h"
+#include <pthread.h>
 
 /* It may be better to store these values in rpc_server struct */
 /* Best size of bytes to be written in a single socket write call */
 static uint64_t socket_best_write_size = 16384;
 /* Best size of bytes to be read in a single socket read call */
 static uint64_t socket_best_read_size = 87380;
+
+pthread_mutex_t task_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t task_cond = PTHREAD_COND_INITIALIZER;
+
 
 static uint64_t str_to_uint64(const char *s) {
     uint64_t res = 0;
@@ -394,6 +399,199 @@ static int rpc_process_cmd(struct rpc_server *rpc_s, struct rpc_cmd *cmd) {
 /* Process the RPC requests from a specific peer */
 static int rpc_process_event_peer(struct rpc_server *rpc_s, struct node_id *peer) {
     while (1) {
+        struct rpc_cmd cmd;
+        /*
+        //Allocate space for rpc_cmd and will store it to the tasks queue
+        struct rpc_cmd *cmd = (struct rpc_cmd *)malloc(sizeof(struct rpc_cmd));
+        memset(cmd, 0, sizeof(struct rpc_cmd));
+        struct tasks_request *tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
+        memset(tasks_req, 0, sizeof(struct tasks_request));
+
+        INIT_LIST_HEAD(&tasks_req->tasks_entry);
+        */
+
+        int ret = socket_recv_rpc_cmd(peer->sockfd, &cmd);
+        if (ret < 0) {
+            printf("[%s]: receive RPC command from peer %d failed!\n", __func__, peer->ptlmap.id);
+            goto err_out;
+        }
+        if (ret == 1) {
+            /* No event to process */
+            break;
+        }
+
+        /* It is more convenient to set id here */
+        cmd.id = peer->ptlmap.id;
+        /*
+        tasks_req->rpc_s = rpc_s;
+        tasks_req->cmd = cmd;
+        list_add_tail(&tasks_req->tasks_entry, &rpc_s->tasks_list);
+        */
+
+        if (rpc_process_cmd(rpc_s, &cmd) < 0) {
+            printf("[%s]: process RPC command failed!\n", __func__);
+            goto err_out;
+        }
+    }
+    return 0;
+
+    err_out:
+    return -1;
+}
+
+int rpc_process_event(struct rpc_server *rpc_s) {
+    int i;
+    for (i = 0; i < rpc_s->num_peers; ++i) {
+        struct node_id *peer = &rpc_s->peer_tab[i];
+        if (!peer->f_connected) {
+            /* Not connected yet, no need for processing event */
+            continue;
+        }
+
+        if (rpc_process_event_peer(rpc_s, peer) < 0) {
+            printf("[%s]: process event for peer %d failed, skip!\n", __func__, peer->ptlmap.id);
+            continue;
+        }
+    }
+    return 0;
+}
+
+//Thread process RPC cmd
+void* rpc_process_cmd_mt(void *tasks_request)
+{
+    struct tasks_request *local_tr = (struct tasks_request*)tasks_request;
+    struct rpc_server *rpc_s = local_tr->rpc_s;
+    struct rpc_cmd *cmd = local_tr->cmd;
+    uloga("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
+        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
+    int i;
+            
+    for (i = 0; i < num_service; ++i) {
+        if (cmd->cmd == rpc_commands[i].rpc_cmd) {
+
+            if (rpc_commands[i].rpc_func(rpc_s, cmd) < 0) {
+                printf("[%s]: call RPC command function failed!\n", __func__);
+                goto err_out;
+            }
+            break;
+        }
+    }
+    if (i == num_service) {
+        printf("[%s]: unknown RPC command %d!\n", __func__, (int)cmd->cmd);
+        goto err_out;
+    }
+    exit(0);
+
+    err_out:
+    exit(-1);
+
+}
+
+void* thread_process_rpc_cmd(void *tasks_request){
+
+    struct tasks_request *tmp_tr = (struct tasks_request*) tasks_request;
+    struct rpc_server *local_rpc_s = tmp_tr->rpc_s;
+    struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));;
+
+    uloga("%s(Yubo) Debug 3, I am pthread %d\n",__func__, pthread_self());
+
+    pthread_mutex_lock(&task_mutex);
+
+
+    if(list_empty(&local_rpc_s->tasks_list)){
+        uloga("%s(Yubo) Debug 4\n",__func__);
+        pthread_cond_wait(&task_cond, &task_mutex);
+        uloga("%s(Yubo) Debug 5\n",__func__);
+    }
+    else{
+        uloga("%s(Yubo) Debug 6\n",__func__);
+        local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
+        uloga("%s(Yubo) Debug 7\n",__func__);
+
+        if (rpc_process_cmd(local_tasks_req->rpc_s, local_tasks_req->cmd) < 0){
+            uloga("%s process RPC command failed!\n", __func__);
+            exit(-1);
+            }
+        uloga("%s(Yubo) Debug 8\n",__func__);
+
+        //tmp put at here, move up after this function work
+        list_del(&local_tasks_req->tasks_entry);
+        uloga("%s(Yubo) Debug 9\n",__func__);
+        pthread_mutex_unlock(&task_mutex);
+    }
+
+
+}
+
+
+void* thread_handle(void* attr){ //attr here is dart_server
+
+    int err = 0;
+    int i;
+    struct rpc_server *local_rpc_s = (struct rpc_server*)attr;
+    struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
+
+
+    local_tasks_req->rpc_s = local_rpc_s;
+    local_tasks_req->cmd = NULL;
+
+    
+    pthread_t threadid[2]; //tmp create two worker threads
+
+    //create worker threads
+    for (i = 0; i<1; i++){ //Need to predefine this number of threads here
+        uloga("%s(Yubo) Debug 1\n",__func__);
+        err = pthread_create(&threadid[i], NULL, thread_process_rpc_cmd, (void*) local_tasks_req);
+        uloga("%s(Yubo) Debug 2\n",__func__);
+        if(err == EAGAIN){
+            uloga("%s(Yubo) pthread create error EAGAIN\n",__func__);
+        }
+        else if(err == EINVAL){
+            uloga("%s(Yubo) pthread create error EINVAL\n",__func__);
+        }
+        else if(err == EPERM){
+            uloga("%s(Yubo) pthread create error EPERM\n",__func__);
+        }
+        
+    }
+
+    if(err < 0){
+        uloga("%s() Error in create worker threads\n", __func__);
+        exit(-1);
+    }
+    
+
+    //Need to pass rpc_s
+    //while (!local_rpc_s->dart_ref->f_stop){ //using rpc_s find its dart_server, f_stop=1 when dart server stop
+    while(1){
+        pthread_mutex_lock(&task_mutex);
+        if(!list_empty(&local_rpc_s->tasks_list))
+        {
+        //There is task request in the task list, wake up all workers to check it out
+            pthread_cond_broadcast(&task_cond);
+            uloga("%s(Yubo) pthread_cond_broadcast\n",__func__);
+        }
+        //uloga("%s(Yubo) tasks list empty\n",__func__);
+        pthread_mutex_unlock(&task_mutex);
+
+    }
+    //Finalizae worker threads
+    for (i=0; i<1; i++){
+        pthread_cancel(threadid[i]);
+        pthread_join(threadid[i], NULL);
+    }
+    pthread_mutex_destroy(&task_mutex);
+    pthread_cond_destroy(&task_cond);
+
+}
+
+
+
+
+
+/* Process the RPC requests from a specific peer */
+static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *peer) {
+    while (1) {
         //struct rpc_cmd cmd;
         //Allocate space for rpc_cmd and will store it to the tasks queue
         struct rpc_cmd *cmd = (struct rpc_cmd *)malloc(sizeof(struct rpc_cmd));
@@ -415,14 +613,16 @@ static int rpc_process_event_peer(struct rpc_server *rpc_s, struct node_id *peer
 
         /* It is more convenient to set id here */
         cmd->id = peer->ptlmap.id;
+        tasks_req->rpc_s = rpc_s;
         tasks_req->cmd = cmd;
         list_add_tail(&tasks_req->tasks_entry, &rpc_s->tasks_list);
 
-
+/*
         if (rpc_process_cmd(rpc_s, cmd) < 0) {
             printf("[%s]: process RPC command failed!\n", __func__);
             goto err_out;
         }
+ */ 
     }
     return 0;
 
@@ -430,7 +630,9 @@ static int rpc_process_event_peer(struct rpc_server *rpc_s, struct node_id *peer
     return -1;
 }
 
-int rpc_process_event(struct rpc_server *rpc_s) {
+
+//for DS server only, using multithreading
+int rpc_process_event_mt(struct rpc_server *rpc_s) {
     int i;
     for (i = 0; i < rpc_s->num_peers; ++i) {
         struct node_id *peer = &rpc_s->peer_tab[i];
@@ -439,7 +641,7 @@ int rpc_process_event(struct rpc_server *rpc_s) {
             continue;
         }
 
-        if (rpc_process_event_peer(rpc_s, peer) < 0) {
+        if (rpc_process_event_peer_mt(rpc_s, peer) < 0) {
             printf("[%s]: process event for peer %d failed, skip!\n", __func__, peer->ptlmap.id);
             continue;
         }
