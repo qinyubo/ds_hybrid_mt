@@ -19,6 +19,22 @@ static uint64_t socket_best_read_size = 87380;
 pthread_mutex_t task_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t task_cond = PTHREAD_COND_INITIALIZER;
 
+//Yubo use for profilling
+double timer_timestamp_2(void)
+{
+        double ret;
+
+#ifdef XT3
+        ret = dclock();
+#else
+        struct timeval tv;
+
+        gettimeofday( &tv, 0 );
+        ret = (double) tv.tv_usec + tv.tv_sec * 1.e6;
+#endif
+        return ret;
+}
+
 
 static uint64_t str_to_uint64(const char *s) {
     uint64_t res = 0;
@@ -239,6 +255,7 @@ struct rpc_server* rpc_server_init(const char *interface, int app_num_peers, voi
     rpc_s->thread_alive = 0; /* Should be set to 1 before creating the thread */
     rpc_s->dart_ref = dart_ref;
     //rpc_s->tasks_q = &tasks_queue; //tasks queue
+    rpc_s->tasks_counter = 0;
 
     INIT_LIST_HEAD(&rpc_s->tasks_list);
 
@@ -263,6 +280,11 @@ struct rpc_server* rpc_server_init(const char *interface, int app_num_peers, voi
         free(rpc_s);
     }
     return NULL;
+}
+
+//Return rpc server task list size
+int task_list_size(struct rpc_server *rpc_s){
+    return rpc_s->tasks_counter;
 }
 
 void rpc_server_set_peer_ref(struct rpc_server *rpc_s, struct node_id *peer_tab, int num_peers) {
@@ -383,6 +405,7 @@ static int rpc_process_cmd(struct rpc_server *rpc_s, struct rpc_cmd *cmd) {
                 printf("[%s]: call RPC command function failed!\n", __func__);
                 goto err_out;
             }
+
             break;
         }
     }
@@ -493,10 +516,18 @@ void* thread_process_rpc_cmd(void *tasks_request){
     struct rpc_server *local_rpc_s = tmp_tr->rpc_s;
     struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));;
 
-    uloga("%s(Yubo) Debug 3, I am pthread %d\n",__func__, pthread_self());
+    //uloga("%s(Yubo) Debug 3, I am pthread %d\n",__func__, pthread_self());
 
     pthread_mutex_lock(&task_mutex);
 
+    uloga("%s(Yubo) Debug I am pthread %u, my rpc.id=%d \n",__func__, pthread_self(), local_rpc_s->ptlmap.id);
+
+    /*
+    list_for_each_entry(local_tasks_req, &local_rpc_s->tasks_list, struct tasks_request, tasks_entry)
+            {
+                uloga("%s(Yubo) client %d sent rpc_cmd=%d\n",__func__,local_tasks_req->cmd->id, local_tasks_req->cmd->cmd);
+            }   
+    */ 
 
     if(list_empty(&local_rpc_s->tasks_list)){
         uloga("%s(Yubo) Debug 4\n",__func__);
@@ -506,7 +537,7 @@ void* thread_process_rpc_cmd(void *tasks_request){
     else{
         uloga("%s(Yubo) Debug 6\n",__func__);
         local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
-        uloga("%s(Yubo) Debug 7\n",__func__);
+        uloga("%s(Yubo) Debug 7, will process cmd=%d, from rpc %d\n",__func__,local_tasks_req->cmd->cmd, local_tasks_req->rpc_s->ptlmap.id );
 
         if (rpc_process_cmd(local_tasks_req->rpc_s, local_tasks_req->cmd) < 0){
             uloga("%s process RPC command failed!\n", __func__);
@@ -524,25 +555,86 @@ void* thread_process_rpc_cmd(void *tasks_request){
 }
 
 
+void* test_thread_process_rpc_cmd(void *rpc_s){
+
+    //struct tasks_request *tmp_tr = (struct tasks_request*) tasks_request;
+    struct rpc_server *local_rpc_s = (struct rpc_server*) rpc_s;
+    struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));;
+
+    //uloga("%s(Yubo) Debug , I am pthread %d\n",__func__, pthread_self());
+     uloga("%s(Yubo) Debug I am pthread %lu, my rpc.id=%d at time=%f \n",__func__, pthread_self(), local_rpc_s->ptlmap.id, timer_timestamp_2());
+    pthread_mutex_lock(&task_mutex);
+
+    //uloga("%s(Yubo) Debug I am pthread %d, my rpc.id=%d \n",__func__, pthread_self(), local_rpc_s->ptlmap.id);
+
+        local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
+        //uloga("%s(Yubo) Debug 7\n",__func__);
+
+        if (rpc_process_cmd(local_tasks_req->rpc_s, local_tasks_req->cmd) < 0){
+            uloga("%s process RPC command failed!\n", __func__);
+            exit(-1);
+            }
+        uloga("%s(Yubo) finish executing RPC %d cmd at time=%f\n",__func__,local_tasks_req->cmd->cmd, timer_timestamp_2());
+
+        //tmp put at here, move up after this function work
+        list_del(&local_tasks_req->tasks_entry);
+        local_rpc_s->tasks_counter--;
+        //uloga("%s(Yubo) Debug 9\n",__func__);
+        pthread_mutex_unlock(&task_mutex);
+
+}
+
+void* test_thread_process_rpc_cmd_2(void *tasks_request){
+
+    struct tasks_request *tmp_tr = (struct tasks_request*) tasks_request;
+    struct rpc_server *local_rpc_s = tmp_tr->rpc_s;
+    struct rpc_cmd *local_cmd = tmp_tr->cmd;
+    //struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));;
+
+    //uloga("%s(Yubo) Debug , I am pthread %d\n",__func__, pthread_self());
+     uloga("%s(Yubo) Debug I am pthread %lu, my rpc.id=%d at time=%f \n",__func__, pthread_self(), local_rpc_s->ptlmap.id, timer_timestamp_2());
+    //pthread_mutex_lock(&task_mutex);
+
+    //uloga("%s(Yubo) Debug I am pthread %d, my rpc.id=%d \n",__func__, pthread_self(), local_rpc_s->ptlmap.id);
+
+       // local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
+        //uloga("%s(Yubo) Debug 7\n",__func__);
+
+        if (rpc_process_cmd(local_rpc_s, local_cmd) < 0){
+            uloga("%s process RPC command failed!\n", __func__);
+            exit(-1);
+            }
+        uloga("%s(Yubo) finish executing RPC %d cmd at time=%f\n",__func__,local_cmd->cmd, timer_timestamp_2());
+
+        //tmp put at here, move up after this function work
+        //list_del(&local_tasks_req->tasks_entry);
+        //local_rpc_s->tasks_counter--;
+        //uloga("%s(Yubo) Debug 9\n",__func__);
+       // pthread_mutex_unlock(&task_mutex);
+
+}
+
+
 void* thread_handle(void* attr){ //attr here is dart_server
 
     int err = 0;
     int i;
     struct rpc_server *local_rpc_s = (struct rpc_server*)attr;
     struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
-
+    struct tasks_request *tmp_tr;
 
     local_tasks_req->rpc_s = local_rpc_s;
     local_tasks_req->cmd = NULL;
 
     
     pthread_t threadid[2]; //tmp create two worker threads
-
+    uloga("%s(Yubo) Debug 1, my rpc_s->ptlmap.id=%d, thread id=%lu\n",__func__, local_rpc_s->ptlmap.id, pthread_self());
     //create worker threads
-    for (i = 0; i<1; i++){ //Need to predefine this number of threads here
-        uloga("%s(Yubo) Debug 1\n",__func__);
+    /*
+    for (i = 0; i<2; i++){ //Need to predefine this number of threads here
+        //uloga("%s(Yubo) Debug 1\n",__func__);
         err = pthread_create(&threadid[i], NULL, thread_process_rpc_cmd, (void*) local_tasks_req);
-        uloga("%s(Yubo) Debug 2\n",__func__);
+        //uloga("%s(Yubo) Debug 2\n",__func__);
         if(err == EAGAIN){
             uloga("%s(Yubo) pthread create error EAGAIN\n",__func__);
         }
@@ -554,34 +646,60 @@ void* thread_handle(void* attr){ //attr here is dart_server
         }
         
     }
+    
 
     if(err < 0){
         uloga("%s() Error in create worker threads\n", __func__);
         exit(-1);
     }
+    */
+   // uloga("%s(Yubo) Debug 2\n",__func__);
     
 
     //Need to pass rpc_s
     //while (!local_rpc_s->dart_ref->f_stop){ //using rpc_s find its dart_server, f_stop=1 when dart server stop
     while(1){
-        pthread_mutex_lock(&task_mutex);
-        if(!list_empty(&local_rpc_s->tasks_list))
+       // uloga("%s(Yubo) Debug 3\n",__func__);
+       // pthread_mutex_lock(&task_mutex);
+        //if(!list_empty(&local_rpc_s->tasks_list))
+        if(local_rpc_s->tasks_counter > 0)
         {
+            //uloga("%s(Yubo) Debug before thread create\n",__func__);
         //There is task request in the task list, wake up all workers to check it out
-            pthread_cond_broadcast(&task_cond);
-            uloga("%s(Yubo) pthread_cond_broadcast\n",__func__);
+            /*
+            list_for_each_entry(tmp_tr, &local_rpc_s->tasks_list, struct tasks_request, tasks_entry)
+            {
+                uloga("%s(Yubo) client %d sent rpc_cmd=%d\n",__func__,tmp_tr->cmd->id, tmp_tr->cmd->cmd);
+            }    
+            */
+            uloga("%s(Yubo) Debug before thread create at time=%f\n",__func__,timer_timestamp_2());
+            err = pthread_create(&threadid[0], NULL, test_thread_process_rpc_cmd, (void*) local_rpc_s); //for debuging
+            uloga("%s(Yubo) Debug after thread create\n",__func__);
+            pthread_join(threadid[0], NULL);
+            uloga("%s(Yubo) Debug after thread join at time=%f\n",__func__,timer_timestamp_2());
+            //pthread_cond_signal(&task_cond);
+            //uloga("%s(Yubo) pthread_cond_broadcast\n",__func__);
         }
+
+
+            
+        
+
         //uloga("%s(Yubo) tasks list empty\n",__func__);
-        pthread_mutex_unlock(&task_mutex);
+       // pthread_mutex_unlock(&task_mutex);
 
     }
+   // uloga("%s(Yubo) Debug 5\n",__func__);
     //Finalizae worker threads
-    for (i=0; i<1; i++){
+    /*
+    for (i=0; i<2; i++){
         pthread_cancel(threadid[i]);
         pthread_join(threadid[i], NULL);
     }
+    */
     pthread_mutex_destroy(&task_mutex);
     pthread_cond_destroy(&task_cond);
+  //  uloga("%s(Yubo) Debug 6\n",__func__);
 
 }
 
@@ -591,6 +709,7 @@ void* thread_handle(void* attr){ //attr here is dart_server
 
 /* Process the RPC requests from a specific peer */
 static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *peer) {
+    pthread_t threadid;
     while (1) {
         //struct rpc_cmd cmd;
         //Allocate space for rpc_cmd and will store it to the tasks queue
@@ -599,7 +718,7 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
         struct tasks_request *tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
         memset(tasks_req, 0, sizeof(struct tasks_request));
 
-        INIT_LIST_HEAD(&tasks_req->tasks_entry);
+        
 
         int ret = socket_recv_rpc_cmd(peer->sockfd, cmd);
         if (ret < 0) {
@@ -613,10 +732,42 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
 
         /* It is more convenient to set id here */
         cmd->id = peer->ptlmap.id;
+
+        //only put obj_put to the tasks
+        if (cmd->cmd == 16){
+
+             tasks_req->rpc_s = rpc_s;
+             tasks_req->cmd = cmd;
+
+            pthread_create(&threadid, NULL, test_thread_process_rpc_cmd_2, (void*) tasks_req);
+            pthread_join(threadid, NULL);
+
+        /*
+        INIT_LIST_HEAD(&tasks_req->tasks_entry);
         tasks_req->rpc_s = rpc_s;
         tasks_req->cmd = cmd;
+        pthread_mutex_lock(&task_mutex);
         list_add_tail(&tasks_req->tasks_entry, &rpc_s->tasks_list);
+        rpc_s->tasks_counter++;
+        uloga("%s(Yubo) Debug added tasks cmd %d into list at time=%f, my rpc_s->ptlmap,id=%d, tasks_counter=%d, current task list size=%d\n",__func__, \
+            cmd->cmd, timer_timestamp_2(), rpc_s->ptlmap.id,rpc_s->tasks_counter, task_list_size(rpc_s));
+        
+        pthread_mutex_unlock(&task_mutex);
+        */
+        }
+        else if(cmd->cmd <=0 || cmd->cmd >= 40){
+            break;
 
+        } 
+        else{
+            if (rpc_process_cmd(rpc_s, cmd) < 0) {
+            printf("[%s]: process RPC command failed!\n", __func__);
+            goto err_out;
+             }
+         }
+
+
+   
 /*
         if (rpc_process_cmd(rpc_s, cmd) < 0) {
             printf("[%s]: process RPC command failed!\n", __func__);

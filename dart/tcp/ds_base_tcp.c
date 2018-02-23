@@ -74,6 +74,7 @@ static int rpc_handler_cn_unregister(struct rpc_server *rpc_s, struct rpc_cmd *c
 }
 
 static int ds_register_cp(struct dart_server *ds) {
+     uloga("%s(Yubo) I am here ds_register_cp\n", __func__);
     struct msg_buf *msg = NULL;
 
     int i;
@@ -263,6 +264,7 @@ int ds_announce_cp(struct dart_server *ds, struct app_info *app) {
 }
 
 int rpc_handler_cn_register(struct rpc_server *rpc_s, struct rpc_cmd *cmd) {
+    
     struct dart_server *ds = ds_ref_from_rpc(rpc_s);
 
     struct ptlid_map *ptlmap = (struct ptlid_map *)cmd->pad;
@@ -522,7 +524,7 @@ int ds_boot_master(struct dart_server *ds) {
     ds->self = &ds->peer_tab[0];
     ds->self->ptlmap = ds->rpc_s->ptlmap;
     while (!ds->f_reg) {
-        rpc_process_event_mt(ds->rpc_s);
+        rpc_process_event(ds->rpc_s);
     }
     int i;
     for (i = 0; i < ds->peer_size; ++i) {
@@ -557,7 +559,7 @@ int ds_boot_slave(struct dart_server *ds) {
     msg = NULL;
 
     while (!ds->f_reg) {
-        rpc_process_event_mt(ds->rpc_s);
+        rpc_process_event(ds->rpc_s);
     }
     int i;
     for (i = 0; i < ds->peer_size; ++i) {
@@ -574,6 +576,18 @@ int ds_boot_slave(struct dart_server *ds) {
     return -1;
 }
 
+int thread_boot(struct dart_server *ds){
+        //create thread_handle
+    
+    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle, (void*)ds->rpc_s) != 0){
+        printf("[%s]: create pthread_handle failed!\n", __func__);
+        return -1;
+    }
+    uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
+    return 0;
+}
+
+
 static int ds_boot(struct dart_server *ds)
 {
 
@@ -585,19 +599,11 @@ static int ds_boot(struct dart_server *ds)
 	struct stat stat_buf;
 	int ret;
 
-
     ds->rpc_s->thread_alive = 1;
     if (pthread_create(&ds->rpc_s->comm_thread, NULL, ds_listen, (void *)ds) != 0) {
         printf("[%s]: create pthread failed!\n", __func__);
         goto err_out;
     }
-
-    //create thread_handle
-    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle, (void*)ds->rpc_s) != 0){
-        printf("[%s]: create pthread_handle failed!\n", __func__);
-        goto err_out;
-    }
-
     if(ds->comm) {
     	MPI_Comm_rank(*ds->comm, &rank);
     	if(rank == 0) {
@@ -610,7 +616,7 @@ static int ds_boot(struct dart_server *ds)
     		printf("[%s]: open file %s failed!\n", __func__, filename_lock);
     		goto err_out;
     	}
-    	/* The unique process which locked the file becomes the master */
+    	
     	file_lock(fd, 1);
 
     	ret = stat(filename_conf, &stat_buf);
@@ -664,6 +670,9 @@ err_out:
     }
     return -1;
 }
+
+
+
 
 struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm) {
     size_t size = sizeof(struct dart_server) + sizeof(struct node_id) * (size_t)(num_sp + num_cp);
@@ -719,15 +728,26 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     rpc_add_service(sp_announce_cp, rpc_handler_sp_announce_cp);
     rpc_add_service(cn_unregister, rpc_handler_cn_unregister);
 
+    uloga("%s(Yubo), #1 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
+    
+
     if (ds_boot(ds) < 0) {
         printf("[%s]: boot DART server failed!\n", __func__);
         goto err_out;
     }
     ds_register_cp(ds);
 
+    uloga("%s(Yubo), #2 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
+    
+
     int id = ds->self->ptlmap.id;
     ds->num_charge_cp = (num_cp - 1 - id + num_sp) / num_sp;
     ds->num_charge = ds->num_charge_cp;
+
+    thread_boot(ds);
+
+    uloga("%s(Yubo), #3 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
+    
 
     return ds;
 

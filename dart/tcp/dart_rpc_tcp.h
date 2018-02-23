@@ -177,6 +177,7 @@ struct rpc_server {
     void *dart_ref; /* Points to dart_server or dart_client struct */
     //struct queue *tasks_q; /* Tasks queue of received RPC requests */
     struct list_head tasks_list;
+    int tasks_counter; //count the number of tasks in the tasks list
 };
 
 struct node_id {
@@ -202,12 +203,12 @@ enum cmd_type {
     cn_init_read,
     cn_read,
     cn_large_file, 
-    cn_register, 
+    cn_register, //5 
     cn_route, 
     cn_unregister,
     cn_resume_transfer,     /* Hint for server to start async transfers. */
     cn_suspend_transfer,    /* Hint for server to stop async transfers. */
-    sp_reg_request,
+    sp_reg_request, //10
     sp_reg_reply,
     sp_announce_cp,
     cn_timing,
@@ -215,17 +216,17 @@ enum cmd_type {
     cp_barrier,
     cp_lock,
     /* Shared spaces specific. */
-    ss_obj_put,
+    ss_obj_put, //16
     ss_obj_update,
     ss_obj_get_dht_peers,
     ss_obj_get_desc,
     ss_obj_query,
     ss_obj_cq_register,
     ss_obj_cq_notify,
-    ss_obj_get,
+    ss_obj_get, //23 
     ss_obj_filter,
     ss_obj_info,
-    ss_info,
+    ss_info,  //26
     cp_remove,
 #ifdef DS_HAVE_ACTIVESPACE
     ss_code_put,

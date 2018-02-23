@@ -22,3 +22,4 @@ mpirun -n 1 $DIR/dataspaces_server -s 1 -c 2 & sleep 2
 
 mpirun -n 1 $DIR/test_writer DATASPACES 1 2 1 1 $CONF_DIMS $CONF_DIMS 1 1  &
 mpirun -n 1 $DIR/test_reader DATASPACES 1 2 1 1 $CONF_DIMS $CONF_DIMS 1 2  &
+wait
