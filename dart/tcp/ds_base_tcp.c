@@ -579,7 +579,7 @@ int ds_boot_slave(struct dart_server *ds) {
 int thread_boot(struct dart_server *ds){
         //create thread_handle
     
-    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle, (void*)ds->rpc_s) != 0){
+    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle_new, (void*)ds->rpc_s) != 0){
         printf("[%s]: create pthread_handle failed!\n", __func__);
         return -1;
     }
@@ -760,13 +760,13 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
 
 void ds_free(struct dart_server* ds) {
     //int ds_id = ds->rpc_s->ptlmap.id;
-
+    int i=0;
     ds->rpc_s->thread_alive = 0;
     pthread_cancel(ds->rpc_s->comm_thread);
     pthread_join(ds->rpc_s->comm_thread, NULL);
-    pthread_cancel(ds->rpc_s->task_thread);
-    pthread_join(ds->rpc_s->task_thread, NULL);
-
+    
+    //Finalize worker threads
+    finalize_threads(ds->rpc_s);
 
     if (rpc_server_free(ds->rpc_s) < 0) {
         printf("[%s]: free RPC server for peer %d (server) failed, skip!\n", __func__, ds->self->ptlmap.id);

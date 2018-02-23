@@ -485,7 +485,7 @@ void* rpc_process_cmd_mt(void *tasks_request)
     struct tasks_request *local_tr = (struct tasks_request*)tasks_request;
     struct rpc_server *rpc_s = local_tr->rpc_s;
     struct rpc_cmd *cmd = local_tr->cmd;
-    uloga("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
+    uloga("[%s]: MT peer %d (%s) will process RPC command %d from %d.\n", __func__,
         rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
     int i;
             
@@ -584,35 +584,7 @@ void* test_thread_process_rpc_cmd(void *rpc_s){
 
 }
 
-void* test_thread_process_rpc_cmd_2(void *tasks_request){
 
-    struct tasks_request *tmp_tr = (struct tasks_request*) tasks_request;
-    struct rpc_server *local_rpc_s = tmp_tr->rpc_s;
-    struct rpc_cmd *local_cmd = tmp_tr->cmd;
-    //struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));;
-
-    //uloga("%s(Yubo) Debug , I am pthread %d\n",__func__, pthread_self());
-     uloga("%s(Yubo) Debug I am pthread %lu, my rpc.id=%d at time=%f \n",__func__, pthread_self(), local_rpc_s->ptlmap.id, timer_timestamp_2());
-    //pthread_mutex_lock(&task_mutex);
-
-    //uloga("%s(Yubo) Debug I am pthread %d, my rpc.id=%d \n",__func__, pthread_self(), local_rpc_s->ptlmap.id);
-
-       // local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
-        //uloga("%s(Yubo) Debug 7\n",__func__);
-
-        if (rpc_process_cmd(local_rpc_s, local_cmd) < 0){
-            uloga("%s process RPC command failed!\n", __func__);
-            exit(-1);
-            }
-        uloga("%s(Yubo) finish executing RPC %d cmd at time=%f\n",__func__,local_cmd->cmd, timer_timestamp_2());
-
-        //tmp put at here, move up after this function work
-        //list_del(&local_tasks_req->tasks_entry);
-        //local_rpc_s->tasks_counter--;
-        //uloga("%s(Yubo) Debug 9\n",__func__);
-       // pthread_mutex_unlock(&task_mutex);
-
-}
 
 
 void* thread_handle(void* attr){ //attr here is dart_server
@@ -635,15 +607,6 @@ void* thread_handle(void* attr){ //attr here is dart_server
         //uloga("%s(Yubo) Debug 1\n",__func__);
         err = pthread_create(&threadid[i], NULL, thread_process_rpc_cmd, (void*) local_tasks_req);
         //uloga("%s(Yubo) Debug 2\n",__func__);
-        if(err == EAGAIN){
-            uloga("%s(Yubo) pthread create error EAGAIN\n",__func__);
-        }
-        else if(err == EINVAL){
-            uloga("%s(Yubo) pthread create error EINVAL\n",__func__);
-        }
-        else if(err == EPERM){
-            uloga("%s(Yubo) pthread create error EPERM\n",__func__);
-        }
         
     }
     
@@ -697,11 +660,56 @@ void* thread_handle(void* attr){ //attr here is dart_server
         pthread_join(threadid[i], NULL);
     }
     */
-    pthread_mutex_destroy(&task_mutex);
-    pthread_cond_destroy(&task_cond);
+   // pthread_mutex_destroy(&task_mutex);
+    //pthread_cond_destroy(&task_cond);
   //  uloga("%s(Yubo) Debug 6\n",__func__);
 
 }
+
+void* test_thread_process_rpc_cmd_2(void *tasks_request){
+
+    struct tasks_request *tmp_tr = (struct tasks_request*) tasks_request;
+    struct rpc_server *local_rpc_s = tmp_tr->rpc_s;
+    //struct rpc_cmd *local_cmd = tmp_tr->cmd;
+    struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
+    int task_flag = 0;
+
+
+    //uloga("%s(Yubo) Debug , I am pthread %d\n",__func__, pthread_self());
+    // uloga("%s(Yubo) Debug I am pthread %lu, my rpc.id=%d at time=%f \n",__func__, pthread_self(), local_rpc_s->ptlmap.id, timer_timestamp_2());
+
+
+    while(1){
+
+        pthread_mutex_lock(&task_mutex);
+        if(local_rpc_s->tasks_counter == 0){
+            pthread_cond_wait(&task_cond, &task_mutex);
+        }
+        else{
+            local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
+            local_rpc_s->tasks_counter--;
+            list_del(&local_tasks_req->tasks_entry);
+            task_flag = 1;
+        }
+        pthread_mutex_unlock(&task_mutex);
+
+
+        if(task_flag){
+            uloga("%s start process RPC command\n", __func__);
+            //if (rpc_process_cmd(local_tasks_req->rpc_s, local_tasks_req->cmd) < 0){
+              if(rpc_process_cmd_mt(local_tasks_req) < 0){
+                uloga("%s process RPC command failed!\n", __func__);
+                exit(-1);
+            }
+            task_flag = 0;
+        }
+
+    }
+
+
+}
+
+
 
 
 
@@ -733,32 +741,36 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
         /* It is more convenient to set id here */
         cmd->id = peer->ptlmap.id;
 
+
         //only put obj_put to the tasks
         if (cmd->cmd == 16){
 
-             tasks_req->rpc_s = rpc_s;
-             tasks_req->cmd = cmd;
+             //tasks_req->rpc_s = rpc_s;
+             //tasks_req->cmd = cmd;
 
-            pthread_create(&threadid, NULL, test_thread_process_rpc_cmd_2, (void*) tasks_req);
-            pthread_join(threadid, NULL);
+            //pthread_create(&threadid, NULL, test_thread_process_rpc_cmd_2, (void*) tasks_req);
+            //pthread_join(threadid, NULL);
 
-        /*
+        
         INIT_LIST_HEAD(&tasks_req->tasks_entry);
         tasks_req->rpc_s = rpc_s;
         tasks_req->cmd = cmd;
         pthread_mutex_lock(&task_mutex);
         list_add_tail(&tasks_req->tasks_entry, &rpc_s->tasks_list);
         rpc_s->tasks_counter++;
-        uloga("%s(Yubo) Debug added tasks cmd %d into list at time=%f, my rpc_s->ptlmap,id=%d, tasks_counter=%d, current task list size=%d\n",__func__, \
+        //uloga("%s(Yubo) Debug added tasks cmd %d into list at time=%f, my rpc_s->ptlmap,id=%d, tasks_counter=%d, current task list size=%d\n",__func__, \
             cmd->cmd, timer_timestamp_2(), rpc_s->ptlmap.id,rpc_s->tasks_counter, task_list_size(rpc_s));
         
+        pthread_cond_signal(&task_cond);
         pthread_mutex_unlock(&task_mutex);
-        */
+        
         }
+        /*
         else if(cmd->cmd <=0 || cmd->cmd >= 40){
             break;
 
         } 
+        */
         else{
             if (rpc_process_cmd(rpc_s, cmd) < 0) {
             printf("[%s]: process RPC command failed!\n", __func__);
@@ -773,7 +785,7 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
             printf("[%s]: process RPC command failed!\n", __func__);
             goto err_out;
         }
- */ 
+ */
     }
     return 0;
 
@@ -781,23 +793,109 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
     return -1;
 }
 
+/* Process the RPC requests from a specific peer */
+void* rpc_process_event_peer_mt_2(struct tasks_request * tasks_request) {
+    struct tasks_request *tasks_req = (struct tasks_request*) tasks_request;
+    struct rpc_server *local_rpc_s = tasks_req->rpc_s;
+    struct node_id *local_peer;
+    struct tasks_request *local_tasks_req;
+    struct rpc_cmd cmd;
+
+
+    while (1) {
+
+        pthread_mutex_lock(&task_mutex);
+        if(local_rpc_s->tasks_counter == 0){
+            pthread_cond_wait(&task_cond, &task_mutex);
+        }
+        else{
+            local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
+            local_rpc_s->tasks_counter--;
+            
+            int ret = socket_recv_rpc_cmd(local_tasks_req->peer->sockfd, &cmd);
+            if (ret < 0) {
+                printf("[%s]: receive RPC command from peer %d failed!\n", __func__, local_tasks_req->peer->ptlmap.id);
+                //goto err_out;
+            }
+            if (ret == 1) {
+            /* No event to process */
+                continue;
+            }
+
+        /* It is more convenient to set id here */
+            cmd.id = local_tasks_req->peer->ptlmap.id;
+
+            if (rpc_process_cmd(local_rpc_s, &cmd) < 0) {
+                printf("[%s]: process RPC command failed!\n", __func__);
+                //goto err_out;
+            }
+            list_del(&local_tasks_req->tasks_entry);
+
+        }
+         pthread_mutex_unlock(&task_mutex);
+        
+    }
+        
+    //err_out:
+
+}
+
 
 //for DS server only, using multithreading
 int rpc_process_event_mt(struct rpc_server *rpc_s) {
     int i;
+    struct tasks_request *tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
+    memset(tasks_req, 0, sizeof(struct tasks_request));
+
     for (i = 0; i < rpc_s->num_peers; ++i) {
         struct node_id *peer = &rpc_s->peer_tab[i];
+        
         if (!peer->f_connected) {
             /* Not connected yet, no need for processing event */
             continue;
         }
+        else{
 
+        INIT_LIST_HEAD(&tasks_req->tasks_entry);
+        tasks_req->rpc_s = rpc_s;
+        tasks_req->peer = peer;
+        pthread_mutex_lock(&task_mutex);
+        list_add_tail(&tasks_req->tasks_entry, &rpc_s->tasks_list);
+        rpc_s->tasks_counter++;
+        
+        pthread_cond_signal(&task_cond);
+        pthread_mutex_unlock(&task_mutex);
+
+        }
+
+/*
         if (rpc_process_event_peer_mt(rpc_s, peer) < 0) {
             printf("[%s]: process event for peer %d failed, skip!\n", __func__, peer->ptlmap.id);
             continue;
         }
+ */ 
     }
     return 0;
+}
+
+void* thread_handle_new(void *attr){
+    int err = 0;
+    int i;
+    struct rpc_server *local_rpc_s = (struct rpc_server*)attr;
+    struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
+    struct tasks_request *tmp_tr;
+    //pthread_t threadid[2];
+
+
+    local_tasks_req->rpc_s = local_rpc_s;
+    //local_tasks_req->cmd = NULL;
+
+    //create two worker threads
+    for(i=0; i<1; i++){
+        pthread_create(&local_rpc_s->worker_thread[i], NULL, rpc_process_event_peer_mt_2, (void*)local_tasks_req);
+    }
+
+
 }
 
 int rpc_barrier(struct rpc_server *rpc_s, void *comm) {
@@ -815,6 +913,7 @@ static int rpc_post_request(struct rpc_server *rpc_s, struct node_id *peer, stru
         printf("[%s]: send RPC request to peer %d failed!\n", __func__, peer->ptlmap.id);
         goto err_out;
     }
+
 
     if (request->iodir == io_send) {
         if (socket_send_bytes(peer->sockfd, (char *)request->msg->msg_data, (uint64_t)request->msg->size) < 0) {
@@ -1019,4 +1118,24 @@ void rpc_mem_info_reset(struct node_id *peer, struct msg_buf *msg, struct rpc_cm
 }
 
 void rpc_report_md_usage(struct rpc_server *rpc_s) {
+}
+
+void finalize_threads(struct rpc_server* rpc_s_ptr)
+{
+    struct rpc_server* rpc_s = (struct rpc_server*) rpc_s_ptr;
+    int i=0;
+    pthread_cancel(rpc_s->task_thread);
+    pthread_join(rpc_s->task_thread, NULL);
+
+
+    //tmp put worker thread to rpc_s
+    for(i=0; i<2; i++){
+        pthread_cancel(rpc_s->worker_thread[i]);
+        pthread_join(rpc_s->worker_thread[i], NULL);
+    }
+
+
+    pthread_mutex_destroy(&task_mutex);
+    pthread_cond_destroy(&task_cond);
+
 }

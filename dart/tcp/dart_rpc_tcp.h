@@ -135,6 +135,7 @@ struct tasks_request{
     struct list_head tasks_entry;
     struct rpc_server *rpc_s;
     struct rpc_cmd *cmd;
+    struct node_id *peer;
 };
 
 struct msg_buf{
@@ -172,6 +173,7 @@ struct rpc_server {
 
     pthread_t comm_thread; /* Thread for managing connections */
     pthread_t task_thread; /* Thread for listening tasks list */
+    pthread_t worker_thread[2];
     int thread_alive;
 
     void *dart_ref; /* Points to dart_server or dart_client struct */
@@ -331,6 +333,8 @@ int rpc_send_directv(struct rpc_server *, struct node_id *, struct msg_buf *); /
 
 // void rpc_report_md_usage(struct rpc_server *);
 void* thread_handle(void* attr);
+void* thread_handle_new(void* attr);
+void finalize_threads(struct rpc_server* rpc_s_ptr);
 
 #ifdef __cplusplus
 }
