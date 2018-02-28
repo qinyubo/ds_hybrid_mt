@@ -728,7 +728,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     rpc_add_service(sp_announce_cp, rpc_handler_sp_announce_cp);
     rpc_add_service(cn_unregister, rpc_handler_cn_unregister);
 
-    //uloga("%s(Yubo), #1 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
+    uloga("%s(Yubo), #1 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
     
 
     if (ds_boot(ds) < 0) {
@@ -737,7 +737,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     }
     ds_register_cp(ds);
 
-    //uloga("%s(Yubo), #2 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
+    uloga("%s(Yubo), #2 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
     
 
     int id = ds->self->ptlmap.id;
@@ -746,7 +746,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
 
     thread_boot(ds);
 
-    //uloga("%s(Yubo), #3 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
+    uloga("%s(Yubo), #3 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
     
 
     return ds;
@@ -774,7 +774,6 @@ void ds_free(struct dart_server* ds) {
 
     struct app_info *app, *t;
     list_for_each_entry_safe(app, t, &ds->app_list, struct app_info, app_entry) {
-        uloga("%s(Yubo) call list_del\n",__func__);
         list_del(&app->app_entry);
         free(app);
     }

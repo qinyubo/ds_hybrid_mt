@@ -1680,7 +1680,7 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
             //rpc_cb_decode(rpc_s, &wc);
            // uloga("%s(Yubo) after rpc_cb_decode, at time=%f\n",__func__, timer_timestamp_0());
 
-        	//Put rpc_s and wc to struct passArg, passing to pthread
+        	//Put rpc_s and wc to struct passArg, passing to pthread, Yubo
         	passArg = malloc(sizeof(struct PassArg));
 
         	(*passArg).rpc_s = rpc_s;

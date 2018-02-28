@@ -173,7 +173,7 @@ struct rpc_server {
 
     pthread_t comm_thread; /* Thread for managing connections */
     pthread_t task_thread; /* Thread for listening tasks list */
-    pthread_t worker_thread[1];
+    pthread_t worker_thread[2];
     int thread_alive;
 
     void *dart_ref; /* Points to dart_server or dart_client struct */
