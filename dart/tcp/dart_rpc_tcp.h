@@ -128,6 +128,7 @@ struct rpc_request{
     void    *data;
     size_t  size;
 
+
     request_callback cb;
 };
 
@@ -198,6 +199,7 @@ struct node_id {
 
     int sockfd; /* Socket */
     int f_connected; /* Flag: if the peer is connected through `sockfd` */
+    int f_opened; /* Flag: if the peer socket is opening for data transfer */
 };
 
 enum cmd_type { 
