@@ -320,7 +320,7 @@ int common_dspaces_put(const char *var_name,
         set_global_dimension(&dcg->gdim_list, var_name, &dcg->default_gdim,
                              &od->gdim); 
 
-        uloga("%s(Yubo) I am in normal common_dspaces_put\n",__func__);
+        //uloga("%s(Yubo) I am in normal common_dspaces_put\n",__func__);
 
         err = dcg_obj_put(od);
         if (err < 0) {
@@ -399,7 +399,7 @@ int common_dspaces_put_location_aware(const char *var_name,
 */
         dcg_find_local_server(dcg, MAX_NUM_PEER_PER_NODE);
 
-        uloga("%s(Yubo) I am in common_dspaces_put_location_aware, I have num_local_server=%d\n",\
+        //uloga("%s(Yubo) I am in common_dspaces_put_location_aware, I have num_local_server=%d\n",\
             __func__, dcg->dc->num_local_server);
 
 

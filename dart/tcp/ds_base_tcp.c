@@ -74,7 +74,7 @@ static int rpc_handler_cn_unregister(struct rpc_server *rpc_s, struct rpc_cmd *c
 }
 
 static int ds_register_cp(struct dart_server *ds) {
-     uloga("%s(Yubo) I am here ds_register_cp\n", __func__);
+     //uloga("%s(Yubo) I am here ds_register_cp\n", __func__);
     struct msg_buf *msg = NULL;
 
     int i;
@@ -583,7 +583,7 @@ int thread_boot(struct dart_server *ds){
         printf("[%s]: create pthread_handle failed!\n", __func__);
         return -1;
     }
-    uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
+    //uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
     return 0;
 }
 
@@ -774,7 +774,7 @@ void ds_free(struct dart_server* ds) {
 
     struct app_info *app, *t;
     list_for_each_entry_safe(app, t, &ds->app_list, struct app_info, app_entry) {
-        uloga("%s(Yubo) call list_del\n",__func__);
+        //uloga("%s(Yubo) call list_del\n",__func__);
         list_del(&app->app_entry);
         free(app);
     }
