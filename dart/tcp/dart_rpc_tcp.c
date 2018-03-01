@@ -22,7 +22,7 @@ pthread_cond_t task_cond = PTHREAD_COND_INITIALIZER;
 //For debugging usage
 int count_tol=0, count_ret_0=0, count_ret_1 =0;
 
-#define MAX_WORKER_THREADS 2 
+#define MAX_WORKER_THREADS 4 
 
 //Yubo use for profilling
 double timer_timestamp_2(void)

@@ -132,6 +132,7 @@ struct dcg_lock {
 static struct {
         int next;
         int opid[4095];
+        int ds_comp[4095]; //receive server notification
 } sync_op;
 
 static struct dcg_space *dcg;
@@ -667,6 +668,11 @@ static int syncop_next(void)
 static int * syncop_ref(int opid)
 {
         return &sync_op.opid[opid];
+}
+
+static int * syncds_ref(int opid)
+{
+        return &sync_op.ds_comp[opid];
 }
 
 static inline struct node_id * dcg_which_peer(void)
@@ -1447,6 +1453,17 @@ static int obj_put_completion(struct rpc_server *rpc_s, struct msg_buf *msg)
 }
 
 /*
++    Server has completed processing data, release client sync 
++*/
+static int dcgrpc_server_completion(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
+{
+
+     (*cmd->sync_comp_ptr) = 1;
+    
+    return 0;
+}
+
+/*
   Routine to receive space info.
 */
 static int dcgrpc_ss_info(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
@@ -1523,6 +1540,8 @@ struct dcg_space *dcg_alloc(int num_nodes, int appid, void* comm)
         rpc_add_service(cp_lock, dcgrpc_lock_service);
         rpc_add_service(cn_timing, dcgrpc_time_log);
         rpc_add_service(ss_info, dcgrpc_ss_info);
+        //server notify client 
+        rpc_add_service(ds_put_completion, dcgrpc_server_completion);
 #ifdef DS_HAVE_ACTIVESPACE
         rpc_add_service(ss_code_reply, dcgrpc_code_reply);
 #endif
@@ -1609,6 +1628,7 @@ int dcg_obj_put(struct obj_data *od)
 
         hdr = msg->msg_rpc->pad;
         hdr->odsc = od->obj_desc;
+        hdr->sync_comp_ptr = syncds_ref(sync_op_id); //assign syncop.ds_comp ref
         memcpy(&hdr->gdim, &od->gdim, sizeof(struct global_dimension));
 
         err = rpc_send(dcg->dc->rpc_s, peer, msg);
@@ -1765,9 +1785,11 @@ int dcg_obj_cq_update(int cq_id)
 int dcg_obj_sync(int sync_op_id)
 {
         int *sync_op_ref = syncop_ref(sync_op_id);
+        int *sync_comp_ptr_ref = syncds_ref(sync_op_id); 
         int err;
 
-        while (sync_op_ref[0] != 1) {
+        //sync release when both client and server executed call back function
+        while (sync_op_ref[0] != 1 || sync_comp_ptr_ref[0] != 1) {     
                 err = dc_process(dcg->dc);
                 if (err < 0) {
                         goto err_out;
