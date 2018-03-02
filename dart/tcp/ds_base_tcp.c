@@ -74,14 +74,14 @@ static int rpc_handler_cn_unregister(struct rpc_server *rpc_s, struct rpc_cmd *c
 }
 
 static int ds_register_cp(struct dart_server *ds) {
-     uloga("%s(Yubo) I am here ds_register_cp\n", __func__);
+     //uloga("%s(Yubo) I am here ds_register_cp\n", __func__);
     struct msg_buf *msg = NULL;
 
     int i;
     for (i = ds->self->ptlmap.id; i < ds->num_cp; i += ds->size_sp) {
         struct node_id *peer = &ds->cn_peers[i];
-        ulog("[%s]: server %d will send ptlid_map data of all peers to client %d.\n", __func__,
-            ds->self->ptlmap.id, peer->ptlmap.id);
+        //ulog("[%s]: server %d will send ptlid_map data of all peers to client %d.\n", __func__,
+        //   ds->self->ptlmap.id, peer->ptlmap.id);
         msg = msg_buf_alloc(ds->rpc_s, peer, 1);
         if (msg == NULL) {
             printf("[%s]: allocate message failed!\n", __func__);
@@ -583,7 +583,7 @@ int thread_boot(struct dart_server *ds){
         printf("[%s]: create pthread_handle failed!\n", __func__);
         return -1;
     }
-    uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
+    //uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
     return 0;
 }
 
@@ -731,6 +731,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     //uloga("%s(Yubo), #1 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
     
 
+
     if (ds_boot(ds) < 0) {
         printf("[%s]: boot DART server failed!\n", __func__);
         goto err_out;
@@ -738,13 +739,13 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     ds_register_cp(ds);
 
     //uloga("%s(Yubo), #2 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
-    
+    thread_boot(ds);
 
     int id = ds->self->ptlmap.id;
     ds->num_charge_cp = (num_cp - 1 - id + num_sp) / num_sp;
     ds->num_charge = ds->num_charge_cp;
 
-    thread_boot(ds);
+    
 
     //uloga("%s(Yubo), #3 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
     
@@ -774,7 +775,7 @@ void ds_free(struct dart_server* ds) {
 
     struct app_info *app, *t;
     list_for_each_entry_safe(app, t, &ds->app_list, struct app_info, app_entry) {
-        uloga("%s(Yubo) call list_del\n",__func__);
+        //uloga("%s(Yubo) call list_del\n",__func__);
         list_del(&app->app_entry);
         free(app);
     }

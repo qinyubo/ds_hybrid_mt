@@ -1281,6 +1281,7 @@ static int dsgrpc_obj_put(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         struct node_id *peer;
         struct msg_buf *msg;
         int err;
+        double time_tol, time_start, time_end;
 
         odsc->owner = DSG_ID;
 
@@ -1308,12 +1309,15 @@ static int dsgrpc_obj_put(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
 #endif
 
        // uloga("%s(Yubo), before ds server obj put, at time=%f\n",__func__, timer_timestamp_1());
+        time_start = timer_timestamp_1();
 
         rpc_mem_info_cache(peer, msg, cmd); 
         err = rpc_receive_direct(rpc_s, peer, msg);
         rpc_mem_info_reset(peer, msg, cmd);
 
-       // uloga("%s(Yubo), after ds server obj put, at time=%f\n",__func__, timer_timestamp_1());
+        time_end = timer_timestamp_1();
+        time_tol = (time_end - time_start)/1000000;
+        //uloga("%s(Yubo), ds_put() start at %f, end at %f, total time=%f\n",__func__,time_start, time_end, time_tol);
 
         if (err < 0)
                 goto err_free_msg;
@@ -1321,7 +1325,12 @@ static int dsgrpc_obj_put(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
 	/* NOTE: This  early update, has  to be protected  by external
 	   locks in the client code. */
 
+        //time_start = timer_timestamp_1();
         err = obj_put_update_dht(dsg, od);
+        //time_end = timer_timestamp_1();
+        //time_tol = (time_end - time_start)/1000000;
+        //uloga("%s(Yubo), server obj put update dht start at %f, end at %f, total time=%f\n",__func__,time_start, time_end, time_tol);
+
         if (err == 0)
 	        return 0;
  err_free_msg:
@@ -1865,6 +1874,7 @@ static int dsgrpc_obj_get(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         struct obj_data *od, *from_obj;
         int fast_v;
         int err = -ENOENT; 
+        double time_start, time_end, time_tol;
 
         peer = ds_get_peer(dsg->ds, cmd->id);
 
@@ -1925,10 +1935,17 @@ static int dsgrpc_obj_get(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         msg->cb = obj_get_completion;
         msg->private = od;
 
+        time_start = timer_timestamp_1();
 
         rpc_mem_info_cache(peer, msg, cmd); 
         err = (fast_v)? rpc_send_directv(rpc_s, peer, msg) : rpc_send_direct(rpc_s, peer, msg);
         rpc_mem_info_reset(peer, msg, cmd);
+
+        time_end = timer_timestamp_1();
+        time_tol = (time_end - time_start)/1000000;
+       // uloga("%s(Yubo), ds_get() start at %f, end at %f, total time=%f\n",__func__,time_start, time_end, time_tol);
+
+
         if (err == 0)
                 return 0;
 

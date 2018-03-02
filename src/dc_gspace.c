@@ -240,7 +240,7 @@ static void qt_add(struct query_tran *qt, struct query_tran_entry *qte)
 
 static void qt_remove(struct query_tran *qt, struct query_tran_entry *qte)
 {
-        uloga("%s(Yubo) call list_del\n",__func__);
+        //uloga("%s(Yubo) call list_del\n",__func__);
         list_del(&qte->q_entry);
         qt->num_ent--;
 }
@@ -260,7 +260,7 @@ qt_find_obj(struct query_tran_entry *qte, struct obj_descriptor *odsc)
 
 static void qt_remove_obj(struct query_tran_entry *qte, struct obj_data *od)
 {
-        uloga("%s(Yubo) call list_del\n",__func__);
+        //uloga("%s(Yubo) call list_del\n",__func__);
         list_del(&od->obj_entry);
         qte->num_od--;
         qte->size_od--;
@@ -468,7 +468,7 @@ static void qc_add_entry(struct query_cache *qc, struct query_cache_entry *qce)
 
 static void qc_del_entry(struct query_cache *qc, struct query_cache_entry *qce)
 {
-        uloga("%s(Yubo) call list_del\n",__func__);
+        //uloga("%s(Yubo) call list_del\n",__func__);
         list_del(&qce->q_entry);
         qc->num_ent--;
 }

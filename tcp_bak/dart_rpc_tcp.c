@@ -490,8 +490,8 @@ void* rpc_process_cmd_mt(void *tasks_request)
     struct tasks_request *local_tr = (struct tasks_request*)tasks_request;
     struct rpc_server *rpc_s = local_tr->rpc_s;
     struct rpc_cmd *cmd = local_tr->cmd;
-    uloga("[%s]: MT peer %d (%s) will process RPC command %d from %d.\n", __func__,
-        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
+    //uloga("[%s]: MT peer %d (%s) will process RPC command %d from %d.\n", __func__,
+    //    rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
     int i;
             
     for (i = 0; i < num_service; ++i) {
