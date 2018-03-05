@@ -72,12 +72,6 @@ typedef int (*completion_callback) (struct rpc_server *, struct msg_buf *);
 Structures
 */
 
-//Used for passing thread arguments
-struct PassArg{
-    	struct rpc_server *rpc_s;
-    	struct ibv_wc *wc;
-}; 
-
 
 /* Define a type for flags. */
 
@@ -141,6 +135,14 @@ struct hdr_fn_kernel {
 	int fn_kernel_size;
 	int fn_reduce_size;
 } __attribute__ ((__packed__));
+
+//Used for passing thread arguments
+struct tasks_request{
+	struct list_head tasks_entry;
+    struct rpc_server *rpc_s;
+    struct ibv_wc wc;
+    struct node_id *peer;
+}; 
 
 
 /* Rpc command structure. */
@@ -315,6 +317,11 @@ struct rpc_server {
 	int alloc_pd_flag;
 	struct ibv_pd *global_pd;
 	struct ibv_context *global_ctx;
+
+	pthread_t task_thread; /* Thread for listening tasks list */
+	pthread_t worker_thread[64];
+	struct list_head tasks_list;
+	int tasks_counter;
 };
 
 struct rdma_mr {
@@ -491,6 +498,7 @@ int rpc_read_config(int appid, struct sockaddr_in *address);	//
 int rpc_write_config(int appid, struct rpc_server *rpc_s);	//
 
 int rpc_process_event(struct rpc_server *rpc_s);
+int rpc_process_event_mt(struct rpc_server *rpc_s);
 int rpc_process_event_with_timeout(struct rpc_server *rpc_s, int timeout);
 
 void rpc_add_service(enum cmd_type rpc_cmd, rpc_service rpc_func);
@@ -515,5 +523,9 @@ struct node_id *rpc_server_find(struct rpc_server *rpc_s, int nodeid);
 void rpc_server_find_local_peers(struct rpc_server *rpc_s,
             struct node_id **peer_tab, int *num_local_peer, int peer_tab_size);
 uint32_t rpc_server_get_nid(struct rpc_server *rpc_s);
+
+//Yubo 
+void* thread_handle_new(void* attr);
+void finalize_threads(struct rpc_server* rpc_s_ptr);
 
 #endif

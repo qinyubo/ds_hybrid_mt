@@ -19,10 +19,8 @@ static uint64_t socket_best_read_size = 87380;
 pthread_mutex_t task_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t task_cond = PTHREAD_COND_INITIALIZER;
 
-//For debugging usage
-int count_tol=0, count_ret_0=0, count_ret_1 =0;
 
-#define MAX_WORKER_THREADS 4
+#define MAX_WORKER_THREADS 1
 
 
 //Yubo use for profilling
@@ -487,6 +485,7 @@ void* rpc_process_cmd_mt(void *tasks_request)
     //struct node_id *peer_to_connect;
     struct rpc_cmd cmd;
     int i;
+    double tm_start, tm_end, tm_tot;
     
 
     while(1){
@@ -501,13 +500,16 @@ void* rpc_process_cmd_mt(void *tasks_request)
        
                 
             //uloga("%s(Yubo) has tasks in list\n", __func__);
+            //tm_start = timer_timestamp_2();
             local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
-            
-            //sleep(1);
-            
+        
             list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
             local_rpc_s->tasks_counter--;
             //uloga("%s(Yubo) call list_del, left tasks=%d\n", __func__,local_rpc_s->tasks_counter);
+            //tm_end = timer_timestamp_2();
+            //tm_tot = (tm_end - tm_start)/1000000;
+            //uloga("%s(Yubo) time spend in fetch tasks from list =%f\n", __func__,tm_tot);
+
             pthread_mutex_unlock(&task_mutex);
 
             cmd = local_tasks_req->cmd;
@@ -551,11 +553,10 @@ void* rpc_process_cmd_mt(void *tasks_request)
 static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *peer) {
     struct tasks_request *tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
     memset(tasks_req, 0, sizeof(struct tasks_request));
-    int i=0;
+
 
 
     while (1) {
-   // for(i=0; i<20; i++){
         struct rpc_cmd cmd;
 
     if(!peer->f_opened){
@@ -588,8 +589,7 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
         }
     }
     else
-        break;
-    //}//end of for loop     
+        break;   
     }//end of while loop
     return 0;
 
@@ -798,16 +798,22 @@ int rpc_receive(struct rpc_server *rpc_s, struct node_id *peer, struct msg_buf *
 }
 
 int rpc_receive_direct(struct rpc_server *rpc_s, struct node_id *peer, struct msg_buf *msg) {
+    //Debug
+    double time_start, time_end, time_tol;
     if (!peer->f_connected) {
         printf("[%s]: cannot receive from an unconnected peer directly!\n", __func__);
         goto err_out;
     }
-
+    //Yubo
+    time_start = timer_timestamp_2();
     /* TODO: should deserialize data */
     if (socket_recv_bytes(peer->sockfd, (char *)msg->msg_data, (uint64_t)msg->size, 1) < 0) {
         printf("[%s]: receive from peer %d directly failed!\n", __func__, peer->ptlmap.id);
         goto err_out;
     }
+    time_end = timer_timestamp_2();
+    time_tol = (time_end - time_start)/1000000;
+    uloga("%s(Yubo), ds_put() data receive total time=%f\n",__func__, time_tol);
 
     if (msg->cb != NULL) {
         if ((*msg->cb)(rpc_s, msg) < 0) {
@@ -872,15 +878,11 @@ void finalize_threads(struct rpc_server* rpc_s_ptr)
 
 
     //tmp put worker thread to rpc_s
-    /*
-    for(i=0; i<2; i++){
+
+    for(i=0; i<MAX_WORKER_THREADS; i++){
         pthread_cancel(rpc_s->worker_thread[i]);
         pthread_join(rpc_s->worker_thread[i], NULL);
     }
-    */
-    pthread_cancel(rpc_s->worker_thread[0]);
-    pthread_join(rpc_s->worker_thread[0], NULL);
-
 
     pthread_mutex_destroy(&task_mutex);
     pthread_cond_destroy(&task_cond);

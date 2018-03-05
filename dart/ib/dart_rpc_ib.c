@@ -57,6 +57,13 @@ static struct {
 	rpc_service rpc_func;
 } rpc_commands[64];
 
+//Yubo mt
+pthread_mutex_t task_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t task_cond = PTHREAD_COND_INITIALIZER;
+
+
+#define MAX_WORKER_THREADS 2
+
 
 //Yubo use for profilling
 double timer_timestamp_0(void)
@@ -470,35 +477,7 @@ static int rpc_cb_decode(struct rpc_server *rpc_s, struct ibv_wc *wc)	//Done
 
 
 
-//Yubo, calling from thread
-void* rpc_cb_decode_thrd(void *passArg)	//Done
-{
-	struct PassArg *local_passArg = (struct PassArg*)passArg;
-	struct rpc_server *rpc_s = local_passArg->rpc_s;
-	struct ibv_wc *wc = local_passArg->wc;
 
-
-	struct rpc_cmd *cmd = (struct rpc_cmd *) (uintptr_t) wc->wr_id;
-	int err, i;
-
-	for(i = 0; i < num_service; i++) {
-		if(cmd->cmd == rpc_commands[i].rpc_cmd) {
-			err = rpc_commands[i].rpc_func(rpc_s, cmd);
-			break;
-		}
-	}
-
-	if(i == num_service) {
-		printf("Network command unknown %d!\n", cmd->cmd);
-		err = -EINVAL;
-	}
-
-	if(err < 0)
-		printf("(%s) err: Peer# %d Network command %d from %d.\n", __func__, rpc_s->ptlmap.id, cmd->cmd, cmd->id);
-
-
-	//return err;
-}
 
 
 /*
@@ -1623,15 +1602,8 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
     void *ev_ctx;
     struct ibv_wc wc;
     struct rpc_request *rr;
-    //Add for pthread
-    pthread_t callThrd[1];
-    struct PassArg *passArg;
 
 
-
-
-//data transfer between ibv_get_cq_event and ibv_ack_cq_events
-    //uloga("%s(Yubo) before ibv_get_cq_event, at time=%f\n",__func__, timer_timestamp_0());
     err = ibv_get_cq_event(peer->rpc_conn.comp_channel, &ev_cq, &ev_ctx);
     if(err == -1 && errno == EAGAIN) {
         return 0;
@@ -1642,10 +1614,7 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
         goto err_out;
     }
     ibv_ack_cq_events(ev_cq, 1);
-    
-
     err = ibv_req_notify_cq(ev_cq, 0);
-   //uloga("%s(Yubo) after ibv_req_notify_cq, at time=%f\n",__func__, timer_timestamp_0());
     if(err != 0) {
         printf("Failed to ibv_req_notify_cq.\n");
         fprintf(stderr, "Failed to ibv_req_notify_cq.\n");
@@ -1659,9 +1628,6 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
             fprintf(stderr, "Failed to ibv_poll_cq.\n");
             goto err_out;
         }
-
-        //uloga("%s(Yubo) ret = %d\n", __func__, ret);
-
         if(ret == 0) {
             continue;
         }
@@ -1676,22 +1642,7 @@ static int rpc_process(struct rpc_server *rpc_s, struct node_id *peer)
             goto err_out;
         }
         if(wc.opcode & IBV_WC_RECV) {
-        	//uloga("%s(Yubo) before rpc_cb_decode, at time=%f\n",__func__, timer_timestamp_0());
-            //rpc_cb_decode(rpc_s, &wc);
-           // uloga("%s(Yubo) after rpc_cb_decode, at time=%f\n",__func__, timer_timestamp_0());
-
-        	//Put rpc_s and wc to struct passArg, passing to pthread, Yubo
-        	passArg = malloc(sizeof(struct PassArg));
-
-        	(*passArg).rpc_s = rpc_s;
-        	(*passArg).wc = &wc;
-
-        	pthread_create(&callThrd[0], NULL, rpc_cb_decode_thrd, (void*) passArg);
-
-        	pthread_join(callThrd[0], NULL);
-
-        	free(passArg);
-
+            rpc_cb_decode(rpc_s, &wc);
 
             peer->num_recv_buf--;
 
@@ -1831,6 +1782,287 @@ int rpc_process_event_with_timeout(struct rpc_server *rpc_s, int timeout)	//Done
       err_out:
 	printf("(%s): err (%d).\n", __func__, err);
 	return err;
+}
+
+/*----------------------
+	Threads operation
+----------------------*/
+
+//Yubo, calling from thread
+void* rpc_cb_decode_thrd(void *tasks_request)	//Done
+{
+
+	struct tasks_request *tasks_req = (struct tasks_request*)tasks_request;
+	struct rpc_server *local_rpc_s = tasks_req->rpc_s;
+	struct tasks_request *local_tasks_req;
+	struct ibv_wc wc;
+
+	while(1){
+		pthread_mutex_lock(&task_mutex);
+        //if(local_rpc_s->tasks_counter == 0){
+        while(list_empty(&local_rpc_s->tasks_list)){
+            //uloga("%s(Yubo) pthread_cond_wait\n", __func__);
+            pthread_cond_wait(&task_cond, &task_mutex);
+        }
+
+        local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
+        
+        list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
+        local_rpc_s->tasks_counter--;
+
+        pthread_mutex_unlock(&task_mutex);
+
+        wc = local_tasks_req->wc;
+
+        struct rpc_cmd *cmd = (struct rpc_cmd *) (uintptr_t) &wc.wr_id;
+		int err, i;
+
+		for(i = 0; i < num_service; i++) {
+			if(cmd->cmd == rpc_commands[i].rpc_cmd) {
+				err = rpc_commands[i].rpc_func(local_rpc_s, cmd);
+				break;
+			}
+		}
+
+		if(i == num_service) {
+			printf("Network command unknown %d!\n", cmd->cmd);
+			err = -EINVAL;
+		}
+
+		if(err < 0)
+			printf("(%s) err: Peer# %d Network command %d from %d.\n", __func__, rpc_s->ptlmap.id, cmd->cmd, cmd->id);
+
+	}
+
+
+
+	
+	//return err;
+}
+
+
+static int rpc_process_mt(struct rpc_server *rpc_s, struct node_id *peer)
+{
+    int ret, err;
+    struct ibv_cq *ev_cq;
+    void *ev_ctx;
+    struct ibv_wc wc;
+    struct rpc_request *rr;
+    struct tasks_request *tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
+    memset(tasks_req, 0, sizeof(struct tasks_request));
+
+//data transfer between ibv_get_cq_event and ibv_ack_cq_events
+    //uloga("%s(Yubo) before ibv_get_cq_event, at time=%f\n",__func__, timer_timestamp_0());
+    err = ibv_get_cq_event(peer->rpc_conn.comp_channel, &ev_cq, &ev_ctx);
+    if(err == -1 && errno == EAGAIN) {
+        return 0;
+    }
+    if(err == -1 && errno != EAGAIN) {
+        printf("Failed to get cq_event: %s\n", strerror(errno));
+        err = errno;
+        goto err_out;
+    }
+    ibv_ack_cq_events(ev_cq, 1);
+    
+
+    err = ibv_req_notify_cq(ev_cq, 0);
+   //uloga("%s(Yubo) after ibv_req_notify_cq, at time=%f\n",__func__, timer_timestamp_0());
+    if(err != 0) {
+        printf("Failed to ibv_req_notify_cq.\n");
+        fprintf(stderr, "Failed to ibv_req_notify_cq.\n");
+        goto err_out;
+    }
+
+    do {
+        ret = ibv_poll_cq(ev_cq, 1, &wc);
+        if(ret < 0) {
+            printf("Failed to ibv_poll_cq.\n");
+            fprintf(stderr, "Failed to ibv_poll_cq.\n");
+            goto err_out;
+        }
+
+        //uloga("%s(Yubo) ret = %d\n", __func__, ret);
+
+        if(ret == 0) {
+            continue;
+        }
+        if(wc.status != IBV_WC_SUCCESS) {
+            const char *descr;
+             
+            descr = ibv_wc_status_str(IBV_WC_SUCCESS);
+             
+            printf("The description of the enumerated value %d is %s\n", IBV_WC_SUCCESS, descr);
+            err = -wc.status;
+            return 0;
+            goto err_out;
+        }
+        if(wc.opcode & IBV_WC_RECV) {
+        	//uloga("%s(Yubo) before rpc_cb_decode, at time=%f\n",__func__, timer_timestamp_0());
+            //rpc_cb_decode(rpc_s, &wc);
+           // uloga("%s(Yubo) after rpc_cb_decode, at time=%f\n",__func__, timer_timestamp_0());
+
+        	//Yubo add request to structure tasks requsts and add it to the tasks list
+
+        	tasks_req->rpc_s = rpc_s;
+        	tasks_req->wc = wc;
+
+        	pthread_mutex_lock(&task_mutex);
+            list_add_tail(&tasks_req->tasks_entry, &rpc_s->tasks_list);
+            
+            rpc_s->tasks_counter++;
+            //uloga("%s(Yubo) put tasks_request from peer %d to list, which has #%d tasks \n", __func__,peer->ptlmap.id, rpc_s->tasks_counter);
+            pthread_cond_signal(&task_cond);
+            pthread_mutex_unlock(&task_mutex);
+
+
+            peer->num_recv_buf--;
+
+            struct ibv_recv_wr wr, *bad_wr = NULL;
+            struct ibv_sge sge;
+            int err = 0;
+
+
+            wr.wr_id = (uintptr_t) wc.wr_id;
+            wr.next = NULL;
+            wr.sg_list = &sge;
+            wr.num_sge = 1;
+
+            sge.addr = (uintptr_t) wc.wr_id;
+            sge.length = sizeof(struct rpc_cmd);
+            sge.lkey = peer->rr->rpc_mr->lkey;
+
+            err = ibv_post_recv(peer->rpc_conn.qp, &wr, &bad_wr);
+
+            peer->num_recv_buf++;
+
+
+        } else if(wc.opcode == IBV_WC_SEND || wc.opcode == IBV_WC_RDMA_WRITE || wc.opcode == IBV_WC_RDMA_READ) {
+            peer->req_posted--;//debug
+            rr = (struct rpc_request *) (uintptr_t) wc.wr_id;
+
+            err = (*rr->cb) (rpc_s, &wc);
+            if(err != 0) {
+                goto err_out;
+            }
+        } else {
+            printf("Weird wc.opcode %d.\n", wc.opcode);//debug
+            err = wc.opcode;
+            goto err_out;
+        }
+
+    } while(ret);
+
+    return 0;
+
+err_out:
+    printf("(%s): err (%d).\n", __func__, err);
+    return err;
+
+}
+
+//Use poll 2
+static int __process_event_mt(struct rpc_server *rpc_s, int timeout)   //Done
+{
+    struct node_id *peer;
+    struct pollfd my_pollfd[2 * rpc_s->num_peers - 2];
+    int which_peer[2 * rpc_s->num_peers - 2];
+    int sys_peer[2 * rpc_s->num_peers - 2];
+    // initialize file descriptor set
+    int i, j, err = 0;
+    
+    j = 0;
+    list_for_each_entry(peer, &rpc_s->peer_list, struct node_id, peer_entry) {
+    
+        if(peer->sys_conn.f_connected == 1) {    
+            my_pollfd[j].fd = peer->sys_conn.comp_channel->fd;
+			my_pollfd[j].events = POLLIN;
+			my_pollfd[j].revents = 0;
+			which_peer[j] = peer->ptlmap.id;
+			sys_peer[j] = 1;
+			j++;
+		}
+
+		if(peer->rpc_conn.f_connected == 1) {
+			my_pollfd[j].fd = peer->rpc_conn.comp_channel->fd;
+			my_pollfd[j].events = POLLIN;
+			my_pollfd[j].revents = 0;
+			which_peer[j] = peer->ptlmap.id;
+			sys_peer[j] = 0;
+			j++;
+		}
+	}
+
+	if(j == 0)
+		return 0;
+
+	err = poll(my_pollfd, j, timeout);
+
+	if(err < 0) {
+		return 0;
+	} else if(err == 0) {
+		return -ETIME;
+	} else if(err > 0) {
+		for(i = 0; i < j; i++) {
+            if(sys_peer[i] == 1 && my_pollfd[i].revents != 0) {
+                peer = rpc_get_peer(rpc_s, which_peer[i]);
+                err = sys_process(rpc_s, peer);
+                if(err < 0)
+                    goto err_out;
+            }
+            if(sys_peer[i] == 0 && my_pollfd[i].revents != 0) {
+                peer = rpc_get_peer(rpc_s, which_peer[i]);
+                err = rpc_process(rpc_s, peer);
+                if(err < 0)
+                    goto err_out;
+            }
+		}
+	}
+
+	return 0;
+
+err_out:
+	printf("%d (%s): err (%d). %d\n",rpc_s->ptlmap.id, __func__, err, peer->ptlmap.id);
+    return err;
+}
+
+int rpc_process_event_mt(struct rpc_server *rpc_s)	//Done
+{
+	int err;
+
+	err = __process_event_mt(rpc_s, 100);
+	if(err != 0 && err != -ETIME)
+		goto err_out;
+
+	return 0;
+
+      err_out:
+	printf("(%s): err (%d).\n", __func__, err);
+	return err;
+}
+
+
+
+
+
+
+void* thread_handle_new(void *attr){
+    int err = 0;
+    int i;
+    struct rpc_server *local_rpc_s = (struct rpc_server*)attr;
+    struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
+    struct tasks_request *tmp_tr;
+    //pthread_t threadid[2];
+    uloga("%s(Yubo) current # thread=%d\n", __func__, MAX_WORKER_THREADS);
+
+    local_tasks_req->rpc_s = local_rpc_s;
+    //local_tasks_req->cmd = NULL;
+
+    //create two worker threads
+    for(i=0; i<MAX_WORKER_THREADS; i++){
+        pthread_create(&local_rpc_s->worker_thread[i], NULL, rpc_cb_decode_thrd, (void*)local_tasks_req);
+    }
+
+
 }
 
 /* -------------------------------------------------------------------
@@ -2173,4 +2405,24 @@ void rpc_cache_msg(struct msg_buf *msg, struct rpc_cmd *cmd)
 	msg->mr = cmd->mr;
 
 	return;
+}
+
+void finalize_threads(struct rpc_server* rpc_s_ptr)
+{
+    struct rpc_server* rpc_s = (struct rpc_server*) rpc_s_ptr;
+    int i=0;
+    pthread_cancel(rpc_s->task_thread);
+    pthread_join(rpc_s->task_thread, NULL);
+
+
+    //tmp put worker thread to rpc_s
+
+    for(i=0; i<MAX_WORKER_THREADS; i++){
+        pthread_cancel(rpc_s->worker_thread[i]);
+        pthread_join(rpc_s->worker_thread[i], NULL);
+    }
+
+    pthread_mutex_destroy(&task_mutex);
+    pthread_cond_destroy(&task_cond);
+
 }

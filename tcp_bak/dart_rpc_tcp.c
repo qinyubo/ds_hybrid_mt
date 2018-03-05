@@ -394,8 +394,8 @@ int rpc_connect(struct rpc_server *rpc_s, struct node_id *peer) {
 }
 
 static int rpc_process_cmd(struct rpc_server *rpc_s, struct rpc_cmd *cmd) {
-    uloga("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
-        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
+//    uloga("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
+//        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
     int i;
             
     for (i = 0; i < num_service; ++i) {
@@ -516,8 +516,8 @@ void* rpc_process_cmd_mt(void *tasks_request)
 }
 
 static int rpc_process_cmd_mt_2(struct rpc_server *rpc_s, struct rpc_cmd *cmd) {
-    uloga("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
-        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
+//    uloga("[%s]: peer %d (%s) will process RPC command %d from %d.\n", __func__,
+//        rpc_s->ptlmap.id, rpc_s->cmp_type == DART_SERVER ? "server" : "client", (int)cmd->cmd, cmd->id);
     int i;
             
     for (i = 0; i < num_service; ++i) {

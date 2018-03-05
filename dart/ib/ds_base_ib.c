@@ -1788,6 +1788,17 @@ int ds_boot_slave(struct dart_server *ds)   //Done
     return err;
 }
 
+int thread_boot(struct dart_server *ds){
+
+    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle_new, (void*)ds->rpc_s) != 0){
+        printf("[%s]: create pthread_handle failed!\n", __func__);
+        return -1;
+    }
+    //uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
+    return 0;
+
+}
+
 
 /* Function to automatically decide if this instance should
    run as 'master' or 'slave'. */
@@ -1961,6 +1972,10 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
 		ds->f_reg = 1;
 	}
 	err = ds_boot(ds);
+
+    //Yubo start thread listener
+    thread_boot(ds);
+
 	if(err != 0)
 		goto err_free_dsrv;
 	ds->num_charge = (ds->num_cp / ds->num_sp) + (ds->rpc_s->ptlmap.id < ds->num_cp % ds->num_sp);
@@ -1979,8 +1994,11 @@ void ds_free(struct dart_server *ds)
 	if(ds->rpc_s->thread_alive) {
 		ds->rpc_s->thread_alive = 0;
 		pthread_cancel(ds->rpc_s->comm_thread);
-		//pthread_join(ds->rpc_s->comm_thread, NULL);
+		pthread_join(ds->rpc_s->comm_thread, NULL);
 	}
+    
+    //Finalize worker threads
+    finalize_threads(ds->rpc_s);
 
 
 	err = rpc_server_free(ds->rpc_s);
