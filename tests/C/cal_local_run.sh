@@ -1,10 +1,10 @@
 #!/bin/bash
 DIR=.
-#CONF_DIMS_1=2048
-#CONF_DIMS_2=2048
-
 CONF_DIMS_1=8192
 CONF_DIMS_2=8192
+
+#CONF_DIMS_1=1024
+#CONF_DIMS_2=1024
 
 NUM_SERVER=1
 NUM_WRITER=1
@@ -22,8 +22,8 @@ lock_type = 2
 " > dataspaces.conf
 
 mpirun -machinefile cal_server -n $NUM_SERVER $DIR/dataspaces_server -s $NUM_SERVER -c $(($NUM_WRITER+$NUM_READER))  & sleep 2
-mpirun -machinefile cal_server -n $NUM_WRITER $DIR/test_writer DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 3 1 &
-mpirun -machinefile cal_server -n $NUM_READER $DIR/test_reader DATASPACES $NUM_READER 2 $NUM_READER 1 $(($CONF_DIMS_1/$NUM_READER)) $CONF_DIMS_2 3 2 &
+mpirun -machinefile cal_server -n $NUM_WRITER $DIR/test_writer DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 5 1 &
+mpirun -machinefile cal_server -n $NUM_READER $DIR/test_reader DATASPACES $NUM_READER 2 $NUM_READER 1 $(($CONF_DIMS_1/$NUM_READER)) $CONF_DIMS_2 5 2 &
 
 
 #mpirun -machinefile cal_server -n $NUM_SERVER $DIR/dataspaces_server -s $NUM_SERVER -c $(($NUM_WRITER+$NUM_READER)) >& $DIR/server_$CONF_DIMS_1.log & sleep 2

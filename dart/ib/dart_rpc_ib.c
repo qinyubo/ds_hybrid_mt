@@ -29,6 +29,8 @@
 #include "debug.h"
 #include <pthread.h>  //Yubo
 
+#define MAX_WORKER_THREADS 8
+
 #define SYS_WAIT_COMPLETION(x)					\
 	while (!(x)) {						\
 		err = sys_process_event(rpc_s);			\
@@ -62,7 +64,7 @@ pthread_mutex_t task_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t task_cond = PTHREAD_COND_INITIALIZER;
 
 
-#define MAX_WORKER_THREADS 2
+
 
 
 //Yubo use for profilling

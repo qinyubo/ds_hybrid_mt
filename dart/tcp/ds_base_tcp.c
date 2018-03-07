@@ -578,11 +578,21 @@ int ds_boot_slave(struct dart_server *ds) {
 
 int thread_boot(struct dart_server *ds){
         //create thread_handle
-    
+    /*
     if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle_new, (void*)ds->rpc_s) != 0){
         printf("[%s]: create pthread_handle failed!\n", __func__);
         return -1;
     }
+    */
+    thread_handle_new(ds->rpc_s);
+
+/*
+    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle_new, (void*)ds->rpc_s) != 0){
+        printf("[%s]: create pthread_handle failed!\n", __func__);
+        return -1;
+    }
+    */
+
     //uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
     return 0;
 }
@@ -739,7 +749,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     ds_register_cp(ds);
 
     //uloga("%s(Yubo), #2 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
-    thread_boot(ds);
+   // thread_boot(ds);
 
     int id = ds->self->ptlmap.id;
     ds->num_charge_cp = (num_cp - 1 - id + num_sp) / num_sp;
@@ -767,7 +777,10 @@ void ds_free(struct dart_server* ds) {
     pthread_join(ds->rpc_s->comm_thread, NULL);
     
     //Finalize worker threads
-    finalize_threads(ds->rpc_s);
+    //uloga("%s(Yubo) Debug #1\n", __func__);
+   // finalize_threads(ds->rpc_s);
+    //uloga("%s(Yubo) Debug #2\n", __func__);
+
 
     if (rpc_server_free(ds->rpc_s) < 0) {
         printf("[%s]: free RPC server for peer %d (server) failed, skip!\n", __func__, ds->self->ptlmap.id);
@@ -798,5 +811,5 @@ void ds_free(struct dart_server* ds) {
 }
 
 int ds_process(struct dart_server* ds) {
-    return rpc_process_event_mt(ds->rpc_s);
+    return rpc_process_event(ds->rpc_s);
 }

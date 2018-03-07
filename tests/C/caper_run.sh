@@ -1,8 +1,8 @@
 #!/bin/bash
 DIR=.
-CONF_DIMS=16384
+CONF_DIMS=1024
 NUM_SERVER=1
-NUM_WRITER=8
+NUM_WRITER=1
 NUM_READER=1
 
 bash $DIR/cleanall.sh

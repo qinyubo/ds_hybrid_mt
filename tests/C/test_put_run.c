@@ -107,7 +107,7 @@ static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type ty
 		data_tab[i] = NULL;
 
 	common_lock_on_write("mnd_lock", &gcomm_);
-	//common_lock_on_write("mnd_lock", NULL);	//Test dspaces_barrier()
+
 	if (type == USE_DIMES) {
 		common_put_sync(type);
 	}
@@ -157,9 +157,9 @@ static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type ty
 	}
 	tm_end = timer_read(&timer_);
 
-	//sleep(3);
+
 	common_unlock_on_write("mnd_lock", &gcomm_);
-	//common_unlock_on_write("mnd_lock", NULL);	//Test dspaces_barrier
+	
 
 	tm_diff = tm_end-tm_st;
 	MPI_Reduce(&tm_diff, &tm_max, 1, MPI_DOUBLE, MPI_MAX, root, gcomm_);

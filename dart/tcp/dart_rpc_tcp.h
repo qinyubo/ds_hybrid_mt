@@ -335,7 +335,8 @@ int rpc_send_directv(struct rpc_server *, struct node_id *, struct msg_buf *); /
 
 // void rpc_report_md_usage(struct rpc_server *);
 void* thread_handle(void* attr);
-void* thread_handle_new(void* attr);
+//void* thread_handle_new(void* attr);
+void thread_handle_new(struct rpc_server *rpc_s);
 void finalize_threads(struct rpc_server* rpc_s_ptr);
 
 #ifdef __cplusplus
