@@ -2018,5 +2018,5 @@ void ds_free(struct dart_server *ds)
 
 int ds_process(struct dart_server *ds)
 {
-	return rpc_process_event(ds->rpc_s);
+	return rpc_process_event_mt(ds->rpc_s);
 }

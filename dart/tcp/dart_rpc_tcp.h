@@ -39,6 +39,9 @@ struct rpc_cmd;
 struct node_id;
 struct rpc_request;
 
+int debug_flag;
+int debug_counter;
+
 
 
 /*

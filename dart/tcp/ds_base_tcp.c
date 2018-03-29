@@ -505,6 +505,7 @@ static void *ds_listen(void *server) {
         peer->f_connected = 1;
         //Yubo
         peer->f_opened = 0;
+        debug_counter = 0;
     }
 }
 
@@ -580,20 +581,9 @@ int ds_boot_slave(struct dart_server *ds) {
 
 int thread_boot(struct dart_server *ds){
         //create thread_handle
-    /*
-    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle_new, (void*)ds->rpc_s) != 0){
-        printf("[%s]: create pthread_handle failed!\n", __func__);
-        return -1;
-    }
-    */
+
     thread_handle_new(ds->rpc_s);
 
-/*
-    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle_new, (void*)ds->rpc_s) != 0){
-        printf("[%s]: create pthread_handle failed!\n", __func__);
-        return -1;
-    }
-    */
 
     //uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
     return 0;
@@ -818,6 +808,30 @@ void ds_free(struct dart_server* ds) {
     free(ds);
 }
 
+
+
 int ds_process(struct dart_server* ds) {
     return rpc_process_event_mt(ds->rpc_s);
 }
+
+
+/*
+//Debug 
+int ds_process(struct dart_server* ds) {
+    int ret;
+
+
+                        if(debug_flag){
+                        uloga("%s(Yubo) sleep (1)\n", __func__);
+                        sleep(1);
+                        debug_flag = 0;
+                        }
+                        
+
+    ret = rpc_process_event_direct(ds->rpc_s);
+
+
+    return ret;
+}
+*/
+

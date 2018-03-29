@@ -1,0 +1,79 @@
+MT version
+1 thread
+1:1:1    8912*8192
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.529761
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 1.075606
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.532937
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 1.082777
+
+Clean one 
+8192*8192
+1:1:1 writer:server:reader
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.469295
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.794551
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.470562
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.784126
+test_get_run(): done
+ds_free(Yubo): debug_counter_1=0, debug_counter_2=0
+All ok.
+
+Clean version
+8192*8192
+4 writer 2 server 1 reader
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.290863
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.802587
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.282681
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.805808
+test_get_run(): done
+ds_free(Yubo): debug_counter_1=0, debug_counter_2=0
+All ok.
+ds_free(Yubo): debug_counter_1=0, debug_counter_2=0
+All ok.
+
+MT
+4 thread
+4:2:4
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.340462
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.599117
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.372332
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.576167
+test_get_run(): done
+
+thread_handle_new(Yubo) current # thread=1
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 1.189773
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.431165
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 1.361036
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 1.243033
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.437922
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.917678
+test_get_run(): done
+ds_free(Yubo): debug_counter_1=0, debug_counter_2=0
+All ok.
+
+
+
+Now benchmark
+Clean version
+1:1:1
+
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 1.028847
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.452662
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 1.221494
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 1.024663
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.426446
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.759290
+test_get_run(): done
+ds_free(Yubo): debug_counter_1=0, debug_counter_2=0
+All ok.
+
+
+
+
+
+
+

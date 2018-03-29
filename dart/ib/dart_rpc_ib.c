@@ -29,7 +29,7 @@
 #include "debug.h"
 #include <pthread.h>  //Yubo
 
-#define MAX_WORKER_THREADS 8
+#define MAX_WORKER_THREADS 1
 
 #define SYS_WAIT_COMPLETION(x)					\
 	while (!(x)) {						\
@@ -1800,45 +1800,43 @@ void* rpc_cb_decode_thrd(void *tasks_request)	//Done
 	struct ibv_wc wc;
 
 	while(1){
-		pthread_mutex_lock(&task_mutex);
-        //if(local_rpc_s->tasks_counter == 0){
-        while(list_empty(&local_rpc_s->tasks_list)){
-            //uloga("%s(Yubo) pthread_cond_wait\n", __func__);
-            pthread_cond_wait(&task_cond, &task_mutex);
+
+        if(list_empty(&local_rpc_s->tasks_list)){
+        	continue;
         }
-
-        local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
+        else{
+        	pthread_mutex_lock(&task_mutex);
+        	local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
         
-        list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
-        local_rpc_s->tasks_counter--;
+        	list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
+        	local_rpc_s->tasks_counter--;
 
-        pthread_mutex_unlock(&task_mutex);
+        	pthread_mutex_unlock(&task_mutex);
 
-        wc = local_tasks_req->wc;
+        	wc = local_tasks_req->wc;
 
-        struct rpc_cmd *cmd = (struct rpc_cmd *) (uintptr_t) &wc.wr_id;
-		int err, i;
+        	struct rpc_cmd *cmd = (struct rpc_cmd *) (uintptr_t) &wc.wr_id;
+			int err, i;
 
-		for(i = 0; i < num_service; i++) {
-			if(cmd->cmd == rpc_commands[i].rpc_cmd) {
-				err = rpc_commands[i].rpc_func(local_rpc_s, cmd);
-				break;
+			for(i = 0; i < num_service; i++) {
+				if(cmd->cmd == rpc_commands[i].rpc_cmd) {
+					err = rpc_commands[i].rpc_func(local_rpc_s, cmd);
+					break;
+				}
 			}
+
+			if(i == num_service) {
+				printf("Network command unknown %d!\n", cmd->cmd);
+					err = -EINVAL;
+			}
+
+			if(err < 0)
+				printf("(%s) err: Peer# %d Network command %d from %d.\n", __func__, local_rpc_s->ptlmap.id, cmd->cmd, cmd->id);
+
 		}
-
-		if(i == num_service) {
-			printf("Network command unknown %d!\n", cmd->cmd);
-			err = -EINVAL;
-		}
-
-		if(err < 0)
-			printf("(%s) err: Peer# %d Network command %d from %d.\n", __func__, rpc_s->ptlmap.id, cmd->cmd, cmd->id);
-
-	}
+    }
 
 
-
-	
 	//return err;
 }
 
@@ -1913,7 +1911,7 @@ static int rpc_process_mt(struct rpc_server *rpc_s, struct node_id *peer)
             
             rpc_s->tasks_counter++;
             //uloga("%s(Yubo) put tasks_request from peer %d to list, which has #%d tasks \n", __func__,peer->ptlmap.id, rpc_s->tasks_counter);
-            pthread_cond_signal(&task_cond);
+            //pthread_cond_signal(&task_cond);
             pthread_mutex_unlock(&task_mutex);
 
 
@@ -2013,7 +2011,7 @@ static int __process_event_mt(struct rpc_server *rpc_s, int timeout)   //Done
             }
             if(sys_peer[i] == 0 && my_pollfd[i].revents != 0) {
                 peer = rpc_get_peer(rpc_s, which_peer[i]);
-                err = rpc_process(rpc_s, peer);
+                err = rpc_process_mt(rpc_s, peer);
                 if(err < 0)
                     goto err_out;
             }
@@ -2060,8 +2058,14 @@ void* thread_handle_new(void *attr){
     //local_tasks_req->cmd = NULL;
 
     //create two worker threads
+    uloga("%s(Yubo) Debug #1\n",__func__);
     for(i=0; i<MAX_WORKER_THREADS; i++){
         pthread_create(&local_rpc_s->worker_thread[i], NULL, rpc_cb_decode_thrd, (void*)local_tasks_req);
+    }
+    uloga("%s(Yubo) Debug #2\n",__func__);
+
+    for(i=0; i<MAX_WORKER_THREADS; i++){
+        pthread_join(local_rpc_s->worker_thread[i], NULL);
     }
 
 

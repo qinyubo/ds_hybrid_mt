@@ -67,6 +67,21 @@ static double demo_sum_timing;
 
 typedef unsigned char		_u8;
 
+double timer_timestamp_3(void)
+{
+        double ret;
+
+#ifdef XT3
+        ret = dclock();
+#else
+        struct timeval tv;
+
+        gettimeofday( &tv, 0 );
+        ret = (double) tv.tv_usec + tv.tv_sec * 1.e6;
+#endif
+        return ret;
+}
+
 struct query_cache_entry {
         struct list_head        q_entry;
 
@@ -1610,6 +1625,8 @@ int dcg_obj_put(struct obj_data *od)
         hdr = msg->msg_rpc->pad;
         hdr->odsc = od->obj_desc;
         memcpy(&hdr->gdim, &od->gdim, sizeof(struct global_dimension));
+
+        //uloga("%s(Yubo) client obj_put() at %f\n",__func__, timer_timestamp_3());
 
         err = rpc_send(dcg->dc->rpc_s, peer, msg);
         if (err < 0) {

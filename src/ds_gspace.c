@@ -1310,7 +1310,7 @@ static int dsgrpc_obj_put(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
 
        
         time_start = timer_timestamp_1();
-        //uloga("%s(Yubo), before ds_put(), at time= %f\n",__func__, time_start);
+        //uloga("%s(Yubo), server obj_put() at %f\n",__func__, time_start);
 
         rpc_mem_info_cache(peer, msg, cmd); 
         err = rpc_receive_direct(rpc_s, peer, msg);
@@ -2174,8 +2174,9 @@ void dsg_free(struct ds_gspace *dsg)
 int dsg_process(struct ds_gspace *dsg)
 {
 	int err;
-    
+
     err = ds_process(dsg->ds);
+
 	if (err < 0)
 		rpc_report_md_usage(dsg->ds->rpc_s);
 

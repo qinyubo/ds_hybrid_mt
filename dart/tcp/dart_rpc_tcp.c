@@ -29,6 +29,8 @@ int socket_opened=0;
 
 
 
+
+
 #define MAX_WORKER_THREADS 1
 
 int thrd_num=MAX_WORKER_THREADS; //number of threads is currently running
@@ -432,7 +434,7 @@ static int rpc_process_cmd(struct rpc_server *rpc_s, struct rpc_cmd *cmd) {
             
     for (i = 0; i < num_service; ++i) {
         if (cmd->cmd == rpc_commands[i].rpc_cmd) {
-            //uloga("%s(Yubo) exec_start rpc %d at timestamp %f\n", __func__, cmd->cmd, MPI_Wtime());
+            //uloga("%s(Yubo) client rpc %d at timestamp %f\n", __func__, cmd->cmd, timer_timestamp_2());
             if (rpc_commands[i].rpc_func(rpc_s, cmd) < 0) {
                 printf("[%s]: call RPC command function failed!\n", __func__);
                 goto err_out;
@@ -529,9 +531,10 @@ void* rpc_process_cmd_thrd(void *tasks_request){
     //uloga("[%s]thread %lu will process RPC command %d from %d.\n", __func__, pthread_self(),(int)cmd.cmd, cmd.id);
     
 
-    //uloga("%s(Yubo) direct_exec_start rpc %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());        
+            
     for (i = 0; i < num_service; ++i) {
         if (cmd.cmd == rpc_commands[i].rpc_cmd) {
+            uloga("%s(Yubo) worker_thrd rpc %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
             time_start = timer_timestamp_2();
             if (rpc_commands[i].rpc_func(rpc_s, &cmd) < 0) {
                 printf("[%s]: call RPC command function failed!\n", __func__);
@@ -539,11 +542,23 @@ void* rpc_process_cmd_thrd(void *tasks_request){
             }
             time_end = timer_timestamp_2();
             time_total = time_end - time_start;
+            
             if(cmd.cmd == 16){
                 uloga("%s(Yubo) obj_put took %f second\n",__func__, time_total);
             }
+            
             //uloga("%s(Yubo) direct_exec_end rpc %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
             peer->f_opened = 0;
+
+            pthread_rwlock_wrlock(&rw_lock);
+            thrd_num++;
+            pthread_rwlock_unlock(&rw_lock);
+
+
+
+            pthread_detach(pthread_self());
+
+            pthread_exit(NULL);
             break;
         }
     }
@@ -566,12 +581,14 @@ void* rpc_process_cmd_thrd(void *tasks_request){
 static int rpc_process_event_peer_direct(struct rpc_server *rpc_s, struct node_id *peer) {
         struct rpc_cmd cmd;
         pthread_t local_thrd;
+        pthread_t socket_thrd;
         pthread_attr_t tattr;
         
-
+   // uloga("%s(Yubo) Debug #1\n", __func__);
     while (1 && !peer->f_opened) {
-        
+      //  uloga("%s(Yubo) Debug #1.1\n", __func__);
         peer->f_opened = 1;
+
         int ret = socket_recv_rpc_cmd(peer->sockfd, &cmd);
         if (ret < 0) {
             printf("[%s]: receive RPC command from peer %d failed!\n", __func__, peer->ptlmap.id);
@@ -586,7 +603,7 @@ static int rpc_process_event_peer_direct(struct rpc_server *rpc_s, struct node_i
         
         //Check out if there is available resource
 
-        //start_again:
+        start_again:
         if(thrd_num > 0){
             //uloga("%s(Yubo) Debug #1\n", __func__);
 
@@ -599,54 +616,62 @@ static int rpc_process_event_peer_direct(struct rpc_server *rpc_s, struct node_i
         tasks_req->rpc_s = rpc_s;
         tasks_req->peer = peer;
 
-/*
-    if( pthread_attr_init(&tattr) != 0 ){
-        uloga("%s(Yubo) Error: pthread attr init failed\n",__func__);
-        return -1;
-    }
+        uloga("%s(Yubo) server connect to peer %d sockfd %d cmd %d\n", __func__, peer->ptlmap.id, peer->sockfd, cmd.cmd);
 
-    if( pthread_attr_setdetachstate(&tattr, PTHREAD_CREATE_JOINABLE) != 0 ){
-        uloga("%s(Yubo) Error: pthread attr init failed\n",__func__);
-        return -1;
-    }
-*/
-        
-        //using pthread
         //uloga("%s(Yubo) before pthread create rpc %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
-        pthread_create(&local_thrd, NULL, rpc_process_cmd_thrd, (void*)tasks_req);
-        //uloga("%s(Yubo) after pthread create rpc %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
-        //pthread_rwlock_wrlock(&rw_lock);
-        //thrd_num--;
-        //pthread_rwlock_unlock(&rw_lock);
-       // }
-        //else{
-            //uloga("%s(Yubo) Debug #2\n", __func__);
-        //pthread_tryjoin_np(local_thrd, NULL);
-       //     goto start_again;
-       // }
-    //    pthread_attr_destroy(&tattr);
-
-
-        //pthread_join(local_thrd, NULL);
-
+        if(cmd.cmd == 16){
+            pthread_create(&socket_thrd, NULL, rpc_process_cmd_thrd, (void*)tasks_req);
+         //   uloga("%s(Yubo) Debug #2\n", __func__);
+            //pthread_detach(socket_thrd);
+            //sleep(1);
+            //pthread_join(socket_thrd, NULL);
+           // debug_flag = 1;
+        }
+        else if(cmd.cmd == 19){
+            //sleep(1);
+            pthread_create(&local_thrd, NULL, rpc_process_cmd_thrd, (void*)tasks_req);
+           
+        }
+        else{
+            pthread_create(&local_thrd, NULL, rpc_process_cmd_thrd, (void*)tasks_req);
+        }
         
 
+        pthread_rwlock_wrlock(&rw_lock);
+        //uloga("%s(Yubo) Debug #1\n", __func__);
+        thrd_num--;
+
+        pthread_rwlock_unlock(&rw_lock);
+    
 
     }
+    else{
+       // uloga("%s(Yubo) Debug #2\n", __func__);
+        goto start_again;
+    }
+   // uloga("%s(Yubo) Debug #2.1\n", __func__);
+
+   
+}
+
+//uloga("%s(Yubo) Debug #4\n", __func__);
     return 0;
 
     err_out:
     return -1;
-}
+
 }
 
 int rpc_process_event_direct(struct rpc_server *rpc_s) {
     int i;
 
+
+
         pthread_rwlock_init(&rw_lock, NULL);
     for (i = 0; i < rpc_s->num_peers; ++i) {
+
         struct node_id *peer = &rpc_s->peer_tab[i];
-        if (!peer->f_connected) {
+        if (!peer->f_connected || thrd_num==0) {
             /* Not connected yet, no need for processing event */
             continue;
         }
@@ -655,6 +680,7 @@ int rpc_process_event_direct(struct rpc_server *rpc_s) {
             printf("[%s]: process event for peer %d failed, skip!\n", __func__, peer->ptlmap.id);
             continue;
         }
+        //sleep(1);
 
     }
     return 0;
@@ -676,40 +702,28 @@ void* rpc_process_cmd_mt(void *tasks_request)
     struct rpc_cmd cmd;
     int i;
     double tm_start, tm_end, tm_tot;
-    int cond_err;
     
 
-    //while(1){
-        //uloga("%s(Yubo) Debug #1\n",__func__);
-        //local_rpc_s->debug_counter_1++;
-            /*
-            pthread_mutex_lock(&cond_mutex);
-            while(!cond_signal){
-                //local_rpc_s->debug_counter_2++;
-                pthread_cond_wait(&task_cond, &cond_mutex);
-            }
-            //else{
+    while(1){
+            pthread_mutex_lock(&task_mutex);
+            if(!list_empty(&local_rpc_s->tasks_list)){
                 
-            pthread_mutex_unlock(&cond_mutex);
-            cond_signal--;
-            */
-
-
-               // time_end = timer_timestamp_2();
-               // time_total = time_end - time_start;
-               // uloga("%s(Yubo) take %f to wake up thread\n", __func__, time_total);
-        if(!list_empty(&local_rpc_s->tasks_list)){
-            pthread_rwlock_wrlock(&rw_lock);
                 local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
-                list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
-                local_rpc_s->tasks_counter--;
-                pthread_rwlock_unlock(&rw_lock);
 
-                cmd = local_tasks_req->cmd;
+        
+            list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
+            local_rpc_s->tasks_counter--;
+            thrd_num--;
 
-            //uloga("[%s]:peer %d (%s) in thread %lu will process RPC command %d from %d.\n", __func__, \
-            local_rpc_s->ptlmap.id, local_rpc_s->cmp_type == DART_SERVER ? "server" : "client", pthread_self(),(int)cmd.cmd, cmd.id);
-            //uloga("%s(Yubo) thrd_exec_start rpc %d at timestamp %f\n", __func__, cmd.cmd, MPI_Wtime());      
+            pthread_mutex_unlock(&task_mutex);
+
+            cmd = local_tasks_req->cmd;
+/*
+            if(cmd.cmd == 16){
+                debug_flag = 1;
+            }
+*/
+            //uloga("%s(Yubo) worker_thrd rpc %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
             for (i = 0; i < num_service; ++i) {
                 if (cmd.cmd == rpc_commands[i].rpc_cmd) {
 
@@ -717,37 +731,64 @@ void* rpc_process_cmd_mt(void *tasks_request)
                         printf("[%s]: call RPC command function failed!\n", __func__);
                     goto err_out;
                     }
-                    //uloga("%s(Yubo) thrd_exec_end rpc %d at timestamp %f\n", __func__, cmd.cmd, MPI_Wtime());  
                 break;
                 }
             }
 
-           local_tasks_req->peer->f_opened = 0; //after received all peer data, socket closed
            free(local_tasks_req);
+
+           pthread_mutex_lock(&task_mutex);
+        if(thrd_num == 0){
+            
+            //uloga("%s(Yubo) Debug worker thread about to signal\n",__func__);
+            thrd_num++;
+            //uloga("%s(Yubo) Debug #2.1, thrd_num=%d\n",__func__, thrd_num);
+            pthread_mutex_unlock(&task_mutex);
+            //uloga("%s(Yubo) Debug #2.2, thrd_num=%d\n",__func__, thrd_num);
+
+            pthread_mutex_lock(&cond_mutex);
+            //uloga("%s(Yubo) Debug #2.3, thrd_num=%d\n",__func__, thrd_num);
+            pthread_cond_signal(&task_cond);
+            //uloga("%s(Yubo) Debug #2.4 signaled, thrd_num=%d\n",__func__, thrd_num);
+            pthread_mutex_unlock(&cond_mutex);
+        }
+        else{
+            
+            //uloga("%s(Yubo) Debug #2.5, thrd_num=%d\n",__func__, thrd_num);
+            thrd_num++;
+            pthread_mutex_unlock(&task_mutex);
+        }
+
+
+           local_tasks_req->peer->f_opened = 0; //after received all peer data, socket closed
+
 
             if (i == num_service) {
                 printf("[%s]: unknown RPC command %d!\n", __func__, (int)cmd.cmd);
                 goto err_out;
             }
 
-        }
+        }//end of if list empty
         else{
-            pthread_exit(NULL);
-        }
-                
-           
-   // }// end of while
+            pthread_mutex_unlock(&task_mutex);
+        }    
+            
+
+    
+        
+    }// end of while
 
     err_out:
     exit(-1);
 
-    //}
 }
 
 
 /* Process the RPC requests from a specific peer */
 static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *peer) {
     
+
+
 
     while (1) {
         struct rpc_cmd cmd;
@@ -771,23 +812,14 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
             tasks_req->cmd = cmd;
             tasks_req->peer = peer;
 
-            //uloga("%s(Yubo) main_receive rpc %d at timestamp %f\n", __func__, cmd.cmd, MPI_Wtime());
-            //pthread_mutex_lock(&task_mutex);
-            pthread_rwlock_wrlock(&rw_lock);
+            //uloga("%s(Yubo) thread receive cmd %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
+            pthread_mutex_lock(&task_mutex);
             list_add_tail(&tasks_req->tasks_entry, &rpc_s->tasks_list);
             
             rpc_s->tasks_counter++;
             peer->f_opened = 1;
-            pthread_rwlock_unlock(&rw_lock);
-            //pthread_mutex_unlock(&task_mutex);
             //uloga("%s(Yubo) put tasks_request from peer %d to list, which has #%d tasks \n", __func__,peer->ptlmap.id, rpc_s->tasks_counter);
-           
-           /*
-            pthread_mutex_lock(&cond_mutex);
-            cond_signal++;
-            pthread_cond_signal(&task_cond);
-            pthread_mutex_unlock(&cond_mutex);
-            */
+            pthread_mutex_unlock(&task_mutex);
 
             //uloga("%s(Yubo) signaled and unlock mutex \n", __func__);
         }
@@ -808,14 +840,38 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
 int rpc_process_event_mt(struct rpc_server *rpc_s) {
     int i;
 
+        
 
     for (i = 0; i < rpc_s->num_peers; ++i) {
         struct node_id *peer = &rpc_s->peer_tab[i];
+
+        pthread_rwlock_rdlock(&rw_lock);
+        if(thrd_num==0){
+            pthread_rwlock_unlock(&rw_lock);
+            //uloga("%s(Yubo) Debug main thread about to sleep\n",__func__);
+            pthread_mutex_lock(&cond_mutex);
+            if(pthread_cond_wait(&task_cond, &cond_mutex) != 0){
+                uloga("%s(Yubo) Error: pthread_cond_wait\n",__func__);
+            }
+            pthread_mutex_unlock(&cond_mutex);
+        }
+        else{
+            pthread_rwlock_unlock(&rw_lock);
+        }
+        
+            
         
         if (!peer->f_connected || peer->f_opened) {
+            debug_counter++;
             continue;
         }
-        //uloga("%s(Yubo) keep checking peers \n", __func__);
+        /*
+        if(debug_counter > 10000){
+            uloga("%s(Yubo) debug_counter=%d \n", __func__, debug_counter);
+        }
+        */
+        
+        debug_counter=0;
 
         if (rpc_process_event_peer_mt(rpc_s, peer) < 0) {
             printf("[%s]: process event for peer %d failed, skip!\n", __func__, peer->ptlmap.id);
@@ -826,44 +882,6 @@ int rpc_process_event_mt(struct rpc_server *rpc_s) {
     return 0;
 }
 
-void* create_worker_threads(void *tasks_request){
-    int i;
-    pthread_attr_t worker_attr;
-    struct tasks_request *tasks_req = (struct tasks_request*)tasks_request;
-    struct rpc_server *local_rpc_s = tasks_req->rpc_s;
-
-    if( pthread_attr_init(&worker_attr) != 0 ){
-        uloga("%s(Yubo) Error: pthread worker_attr init failed\n",__func__);
-        exit(-1);
-    }
-
-    if( pthread_attr_setdetachstate(&worker_attr, PTHREAD_CREATE_JOINABLE) != 0 ){
-        uloga("%s(Yubo) Error: pthread worker_attr init failed\n",__func__);
-        exit(-1);
-    }
-
-//This thread is actively runing in background
-    while(1){
-        uloga("%s(Yubo) Debug #1\n",__func__);
-        
-        for(i=0; i<MAX_WORKER_THREADS; i++){
-            if (pthread_create(&local_rpc_s->worker_thread[i], &worker_attr, rpc_process_cmd_mt, (void*)tasks_request) != 0){
-                uloga("%s(Yubo) Error: pthread worker_attr init failed\n",__func__);
-                exit(-1);
-            }
-        }
-
-        for(i=0; i<MAX_WORKER_THREADS; i++){
-            pthread_join(local_rpc_s->worker_thread[i], NULL);
-        }
-        //create two worker threads
-    }
-    
-    pthread_exit(NULL);
-
-
-}
-
 
 void thread_handle_new(struct rpc_server *rpc_s){
     int err = 0;
@@ -871,9 +889,9 @@ void thread_handle_new(struct rpc_server *rpc_s){
     struct rpc_server *local_rpc_s = rpc_s;
     struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
     struct tasks_request *tmp_tr;
-
     pthread_attr_t tattr;
 
+    pthread_rwlock_init(&rw_lock, NULL);
 
     if( pthread_attr_init(&tattr) != 0 ){
         uloga("%s(Yubo) Error: pthread attr init failed\n",__func__);
@@ -888,15 +906,16 @@ void thread_handle_new(struct rpc_server *rpc_s){
     //pthread_t threadid[2];
     uloga("%s(Yubo) current # thread=%d\n", __func__, MAX_WORKER_THREADS);
 
-    //Init read-write lock
-    pthread_rwlock_init(&rw_lock, NULL);
-
     local_tasks_req->rpc_s = local_rpc_s;
     //local_tasks_req->cmd = NULL;
+    pthread_rwlock_wrlock(&rw_lock);
+    thrd_num = MAX_WORKER_THREADS;
+    pthread_rwlock_unlock(&rw_lock);
 
-
-    pthread_create(&local_rpc_s->task_thread, &tattr, create_worker_threads, (void*)local_tasks_req);
-
+    //create two worker threads
+    for(i=0; i<MAX_WORKER_THREADS; i++){
+        pthread_create(&local_rpc_s->worker_thread[i], &tattr, rpc_process_cmd_mt, (void*)local_tasks_req);
+    }
 
     pthread_attr_destroy(&tattr);
 
@@ -1355,20 +1374,17 @@ void finalize_threads(struct rpc_server* rpc_s_ptr)
 
 
     //tmp put worker thread to rpc_s
-    /*
-    uloga("%s(Yubo) Debug #3\n", __func__);
+    
+/*
     for(i=0; i<MAX_WORKER_THREADS; i++){
-        uloga("%s(Yubo) Debug #3.1\n", __func__);
         pthread_cancel(rpc_s->worker_thread[i]);
-        uloga("%s(Yubo) Debug #3.2\n", __func__);
         pthread_join(rpc_s->worker_thread[i], NULL);
-        uloga("%s(Yubo) Debug #3.3\n", __func__);
     }
-    uloga("%s(Yubo) Debug #4\n", __func__);
-    */
+  */  
     pthread_mutex_destroy(&task_mutex);
     pthread_mutex_destroy(&cond_mutex);
     pthread_cond_destroy(&task_cond);
+    pthread_rwlock_destroy(&rw_lock);
     //uloga("%s(Yubo) Debug #5\n", __func__);
 
 }
