@@ -503,6 +503,8 @@ static void *ds_listen(void *server) {
         }
         peer->sockfd = sockfd_c;
         peer->f_connected = 1;
+        //Yubo
+        peer->f_opened = 0;
     }
 }
 
@@ -746,6 +748,10 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
         printf("[%s]: boot DART server failed!\n", __func__);
         goto err_out;
     }
+        //Debug counter Yubo
+    ds->rpc_s->debug_counter_1=0;    
+    ds->rpc_s->debug_counter_2=0;  
+
     ds_register_cp(ds);
 
     //uloga("%s(Yubo), #2 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
@@ -755,7 +761,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     ds->num_charge_cp = (num_cp - 1 - id + num_sp) / num_sp;
     ds->num_charge = ds->num_charge_cp;
 
-    
+
 
     //uloga("%s(Yubo), #3 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
     
@@ -780,6 +786,8 @@ void ds_free(struct dart_server* ds) {
     //uloga("%s(Yubo) Debug #1\n", __func__);
     finalize_threads(ds->rpc_s);
     //uloga("%s(Yubo) Debug #2\n", __func__);
+    //Output debug counter
+    uloga("%s(Yubo): debug_counter_1=%d, debug_counter_2=%d\n",__func__,ds->rpc_s->debug_counter_1,ds->rpc_s->debug_counter_2);
 
 
     if (rpc_server_free(ds->rpc_s) < 0) {

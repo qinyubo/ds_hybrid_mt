@@ -1,0 +1,110 @@
+rpc_process_event_peer(Yubo) receive rpc 5 at timestamp 1520607265343243.000000
+rpc_process_cmd(Yubo) exec_start rpc 5 at timestamp 1520607265343259.000000
+rpc_process_cmd(Yubo) exec_end rpc 5 at timestamp 1520607265343262.000000
+rpc_process_event_peer(Yubo) receive rpc 5 at timestamp 1520607265347188.000000
+rpc_process_cmd(Yubo) exec_start rpc 5 at timestamp 1520607265347195.000000
+rpc_process_cmd(Yubo) exec_end rpc 5 at timestamp 1520607265347197.000000
+thread_handle_new(Yubo) current # thread=1
+rpc_process_event_peer(Yubo) receive rpc 5 at timestamp 1520607265351189.000000
+rpc_process_cmd(Yubo) exec_start rpc 5 at timestamp 1520607265351201.000000
+rpc_process_cmd(Yubo) exec_end rpc 5 at timestamp 1520607265351205.000000
+rpc_process_event_peer(Yubo) receive rpc 5 at timestamp 1520607265355188.000000
+rpc_process_cmd(Yubo) exec_start rpc 5 at timestamp 1520607265355199.000000
+rpc_process_cmd(Yubo) exec_end rpc 5 at timestamp 1520607265355203.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 26 at timestamp 1520607265359202.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 26 at timestamp 1520607265359212.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 26 at timestamp 1520607265363186.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 26 at timestamp 1520607265363198.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 26 at timestamp 1520607265363201.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 26 at timestamp 1520607265363204.000000
+rpc_process_event_peer(Yubo) receive rpc 26 at timestamp 1520607265363220.000000
+rpc_process_cmd(Yubo) exec_start rpc 26 at timestamp 1520607265363225.000000
+rpc_process_cmd(Yubo) exec_end rpc 26 at timestamp 1520607265363228.000000
+rpc_process_event_peer(Yubo) receive rpc 26 at timestamp 1520607265370187.000000
+rpc_process_cmd(Yubo) exec_start rpc 26 at timestamp 1520607265370192.000000
+rpc_process_cmd(Yubo) exec_end rpc 26 at timestamp 1520607265370194.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 15 at timestamp 1520607265377197.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 15 at timestamp 1520607265377205.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 15 at timestamp 1520607265377229.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 15 at timestamp 1520607265377234.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 15 at timestamp 1520607265377239.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 15 at timestamp 1520607265377241.000000
+rpc_process_event_peer(Yubo) receive rpc 15 at timestamp 1520607265392186.000000
+rpc_process_cmd(Yubo) exec_start rpc 15 at timestamp 1520607265392191.000000
+rpc_process_cmd(Yubo) exec_end rpc 15 at timestamp 1520607265392194.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 16 at timestamp 1520607266401200.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 16 at timestamp 1520607266401874.000000
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 1.176924
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 16 at timestamp 1520607266986883.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 15 at timestamp 1520607267003190.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 15 at timestamp 1520607267007187.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 15 at timestamp 1520607267007200.000000
+rpc_process_event_peer(Yubo) receive rpc 15 at timestamp 1520607267016187.000000
+rpc_process_cmd(Yubo) exec_start rpc 15 at timestamp 1520607267016196.000000
+rpc_process_cmd(Yubo) exec_end rpc 15 at timestamp 1520607267016202.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 15 at timestamp 1520607267025192.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 15 at timestamp 1520607267025206.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 15 at timestamp 1520607267025208.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 18 at timestamp 1520607267445189.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 18 at timestamp 1520607267445212.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 18 at timestamp 1520607267445224.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 19 at timestamp 1520607267454187.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 19 at timestamp 1520607267454193.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 19 at timestamp 1520607267454205.000000
+rpc_process_event_peer(Yubo) receive rpc 19 at timestamp 1520607267463186.000000
+rpc_process_cmd(Yubo) exec_start rpc 19 at timestamp 1520607267463194.000000
+rpc_process_cmd(Yubo) exec_end rpc 19 at timestamp 1520607267494192.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 23 at timestamp 1520607267494215.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 23 at timestamp 1520607267494222.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 23 at timestamp 1520607268614033.000000
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 1.515584
+rpc_process_event_peer_mt(Yubo) main_receive rpc 15 at timestamp 1520607268957196.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 15 at timestamp 1520607268957218.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 15 at timestamp 1520607268957235.000000
+rpc_process_event_peer(Yubo) receive rpc 15 at timestamp 1520607268966196.000000
+rpc_process_cmd(Yubo) exec_start rpc 15 at timestamp 1520607268966213.000000
+rpc_process_cmd(Yubo) exec_end rpc 15 at timestamp 1520607268966215.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 15 at timestamp 1520607269146193.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 15 at timestamp 1520607269146222.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 15 at timestamp 1520607269146226.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 16 at timestamp 1520607269950314.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 16 at timestamp 1520607269950343.000000
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 1.167727
+test_put_run(): done
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 16 at timestamp 1520607270546915.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 15 at timestamp 1520607270551225.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 15 at timestamp 1520607270558187.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 15 at timestamp 1520607270558200.000000
+rpc_process_event_peer(Yubo) receive rpc 15 at timestamp 1520607270558225.000000
+rpc_process_cmd(Yubo) exec_start rpc 15 at timestamp 1520607270558242.000000
+rpc_process_cmd(Yubo) exec_end rpc 15 at timestamp 1520607270558245.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 7 at timestamp 1520607270575214.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 7 at timestamp 1520607270575251.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 7 at timestamp 1520607270575254.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 18 at timestamp 1520607270843034.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 18 at timestamp 1520607270843060.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 18 at timestamp 1520607270843070.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 19 at timestamp 1520607270855187.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 19 at timestamp 1520607270855193.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 19 at timestamp 1520607270855202.000000
+rpc_process_event_peer(Yubo) receive rpc 19 at timestamp 1520607270868186.000000
+rpc_process_cmd(Yubo) exec_start rpc 19 at timestamp 1520607270868194.000000
+rpc_process_cmd(Yubo) exec_end rpc 19 at timestamp 1520607270895192.000000
+rpc_process_event_peer_mt(Yubo) main_receive rpc 23 at timestamp 1520607270895215.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 23 at timestamp 1520607270895222.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 23 at timestamp 1520607271686335.000000
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 1.056811
+rpc_process_event_peer_mt(Yubo) main_receive rpc 15 at timestamp 1520607271906199.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 15 at timestamp 1520607271906231.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 15 at timestamp 1520607271906236.000000
+test_get_run(): done
+rpc_process_event_peer_mt(Yubo) main_receive rpc 7 at timestamp 1520607272026393.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_start rpc 7 at timestamp 1520607272026426.000000
+rpc_process_cmd_mt(Yubo) thrd_exec_end rpc 7 at timestamp 1520607272026430.000000
+finalize_threads(Yubo) Debug #3
+finalize_threads(Yubo) Debug #3.1
+finalize_threads(Yubo) Debug #3.2
+finalize_threads(Yubo) Debug #3.3
+finalize_threads(Yubo) Debug #4
+finalize_threads(Yubo) Debug #5
+All ok.

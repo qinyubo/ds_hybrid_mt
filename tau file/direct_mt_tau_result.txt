@@ -1,0 +1,782 @@
+[yq47@e3c-254 C]$ pprof
+Reading Profile files in profile.*
+
+NODE 0;CONTEXT 0;THREAD 0:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.095        8,106           1           1    8106596 .TAU application
+100.0         0.77        8,106           1           9    8106501 int main(int, char **) C
+ 96.7        2,956        7,836           1      200037    7836030 int common_run_server(int, int, enum transport_type, void *) C
+ 29.2        2,370        2,370          21           0     112873 pthread_join
+ 25.2        0.364        2,043           1          15    2043883 struct ds_gspace *dsg_alloc(int, int, char *, void *) C
+ 25.2        0.418        2,041           1          10    2041652 struct dart_server *ds_alloc(int, int, void *, void *) C
+ 25.2        0.282        2,040           1           5    2040241 int ds_boot(struct dart_server *) C
+ 25.2        2,012        2,039           1      100003    2039108 int ds_boot_master(struct dart_server *) C
+  6.3           38          510      100001      100001          5 int dsg_process(struct ds_gspace *) C [THROTTLED]
+  5.8           32          472      100001      100001          5 int ds_process(struct dart_server *) C [THROTTLED]
+  5.4          129          439      100001      100001          4 int rpc_process_event_direct(struct rpc_server *) C [THROTTLED]
+  3.8           39          309      100001      100005          3 int rpc_process_event_peer_direct(struct rpc_server *, struct node_id *) C [THROTTLED]
+  3.1          249          249           1           1     249296 MPI_Init()
+  2.6           85          212      100001      100001          2 int socket_recv_rpc_cmd(int, struct rpc_cmd *) C [THROTTLED]
+  1.6          126          126      100001           0          1 int socket_recv_bytes(int, char *, uint64_t, int) C [THROTTLED]
+  0.3           22           22      100001           0          0 int rpc_process_event(struct rpc_server *) C [THROTTLED]
+  0.3           20           20           1           0      20341 MPI_Finalize()
+  0.1           11           11      100001           0          0 int dsg_complete(struct ds_gspace *) C [THROTTLED]
+  0.0        0.116            3           2           6       1990 int rpc_process_event_peer(struct rpc_server *, struct node_id *) C
+  0.0            3            3           2           2       1926 int rpc_process_cmd(struct rpc_server *, struct rpc_cmd *) C
+  0.0        0.129            1           1           3       1801 void dsg_free(struct ds_gspace *) C
+  0.0        0.004            1           1           2       1261 void ls_free(struct ss_storage *) C
+  0.0            1            1           1           0       1257 void obj_data_free(struct obj_data *) C
+  0.0            1            1           1           7       1150 int parse_conf(char *) C
+  0.0        0.813        0.813           1           0        813 int rpc_write_config(struct rpc_server *, const char *) C
+  0.0        0.092        0.713           1           2        713 int init_sspace(struct bbox *, struct ds_gspace *) C
+  0.0        0.175        0.635           1           2        635 struct rpc_server *rpc_server_init(const char *, int, void *, enum rpc_component) C
+  0.0        0.045        0.621           1           1        621 struct sspace *ssd_alloc(const struct bbox *, int, int, enum sspace_hash_version) C
+  0.0        0.126        0.576           1           3        576 struct sspace *ssd_alloc_v1(const struct bbox *, int, int) C
+  0.0        0.131        0.406           1           4        406 int dht_construct_hash(struct dht *, struct sspace *) C
+  0.0        0.129        0.331           1           5        331 int ds_register_cp(struct dart_server *) C
+  0.0         0.31         0.31          21           0         15 pthread_create
+  0.0        0.281        0.281           1           0        281 struct sockaddr_in search_ip_address(const char *) C
+  0.0        0.179        0.231           1           4        231 void bbox_to_intv(const struct bbox *, uint64_t, int, struct intv **, int *) C
+  0.0        0.136        0.229           1           3        229 void ds_free(struct dart_server *) C
+  0.0        0.043        0.195           2           2         98 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  0.0        0.041        0.182           1           1        182 int free_sspace(struct ds_gspace *) C
+  0.0        0.179        0.179           1           0        179 int rpc_server_init_socket(struct rpc_server *) C
+  0.0        0.045        0.152           2           2         76 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+  0.0        0.044        0.141           1           1        141 void ssd_free(struct sspace *) C
+  0.0        0.087        0.107           2           6         54 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+  0.0        0.096        0.097           1           2         97 void ssd_free_v1(struct sspace *) C
+  0.0        0.089        0.095           7           9         14 int parse_line(int, char *) C
+  0.0        0.051        0.051           1           2         51 int bbox_include(const struct bbox *, const struct bbox *) C
+  0.0        0.046        0.048           2           4         24 int rpc_handler_cn_register(struct rpc_server *, struct rpc_cmd *) C
+  0.0        0.045        0.045           1           0         45 MPI_Comm_split()
+  0.0        0.044        0.044           1           1         44 struct dht *dht_alloc(struct sspace *, const struct bbox *, int, int) C
+  0.0        0.042        0.043           1           2         43 uint64_t bbox_volume(struct bbox *) C
+  0.0        0.027        0.027           1           0         27 MPI_Comm_dup()
+  0.0         0.02         0.02           4           0          5 int socket_send_bytes(int, char *, uint64_t) C
+  0.0        0.015        0.015           5           0          3 MPI_Barrier()
+  0.0        0.012        0.012           1           0         12 int parse_args(int, char **) C
+  0.0        0.002        0.007           1           1          7 int rpc_barrier(struct rpc_server *, void *) C
+  0.0        0.006        0.006           9           0          1 void eat_spaces(char *) C
+  0.0        0.004        0.004           1           0          4 void finalize_threads(struct rpc_server *) C
+  0.0        0.004        0.004          16           0          0 void rpc_add_service(enum cmd_type, rpc_service) C
+  0.0        0.002        0.002           2           0          1 MPI_Comm_rank()
+  0.0        0.002        0.002           2           0          1 struct app_info *app_find(struct dart_server *, int) C
+  0.0        0.001        0.001           1           0          1 MPI_Comm_size()
+  0.0        0.001        0.001           2           0          0 uint64_t coord_dist(struct coord *, struct coord *, int) C
+  0.0        0.001        0.001           2           0          0 uint64_t intv_size(struct intv *) C
+  0.0        0.001        0.001           1           0          1 void bbox_flat(struct bbox *, struct intv *, int) C
+  0.0        0.001        0.001           1           0          1 void sem_init(struct dsg_lock *, int) C
+  0.0        0.001        0.001           1           0          1 void sh_free(void) C
+  0.0            0            0           2           0          0 int bbox_include_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0            0            0           2           0          0 int compute_bits(uint64_t) C
+  0.0            0            0           2           0          0 int ds_announce_cp(struct dart_server *, struct app_info *) C
+  0.0            0            0           2           0          0 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  0.0            0            0           1           0          0 int rpc_server_free(struct rpc_server *) C
+  0.0            0            0           1           0          0 int ssd_init(struct sspace *, int) C
+  0.0            0            0           1           0          0 struct dht_entry *dht_entry_alloc(struct sspace *, int) C
+  0.0            0            0           2           0          0 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0            0            0           1           0          0 struct ss_storage *ls_alloc(int) C
+  0.0            0            0           1           0          0 uint64_t intv_compact(struct intv *, uint64_t) C
+  0.0            0            0           1           0          0 void dht_free(struct dht *) C
+  0.0            0            0           1           0          0 void ls_remove(struct ss_storage *, struct obj_data *) C
+  0.0            0            0           1           0          0 void rpc_server_set_peer_ref(struct rpc_server *, struct node_id *, int) C
+
+NODE 0;CONTEXT 0;THREAD 1:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.094        7,855           1           1    7855097 .TAU application
+100.0        7,854        7,855           1           6    7855003 void *ds_listen(void *) C
+  0.0        0.083         0.32           2           2        160 int rpc_recv_connection_info(int, struct connection_info *) C
+  0.0        0.237        0.237           2           0        118 int socket_recv_bytes(int, char *, uint64_t, int) C [THROTTLED]
+  0.0        0.001        0.001           2           0          0 struct app_info *app_alloc() C
+  0.0            0            0           2           0          0 struct app_info *app_find(struct dart_server *, int) C
+
+NODE 0;CONTEXT 0;THREAD 2:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.045        0.099           1           1         99 .TAU application
+ 54.5        0.043        0.054           1           1         54 void *rpc_process_cmd_thrd(void *) C
+ 11.1        0.001        0.011           1           2         11 int dsgrpc_ss_info(struct rpc_server *, struct rpc_cmd *) C
+ 10.1        0.001         0.01           1           1         10 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+ 10.1            0         0.01           1           1         10 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  9.1        0.001        0.009           1           3          9 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+  8.1        0.008        0.008           2           0          4 int socket_send_bytes(int, char *, uint64_t) C
+  0.0            0            0           1           0          0 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  0.0            0            0           1           0          0 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+
+NODE 0;CONTEXT 0;THREAD 3:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001        0.288           1           1        288 .TAU application
+ 99.7        0.048        0.287           1           1        287 void *rpc_process_cmd_thrd(void *) C
+ 83.0        0.135        0.239           1           3        239 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+ 34.4        0.087        0.099           1           2         99 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+  4.2        0.001        0.012           1           2         12 int dsg_lock_grant(struct node_id *, struct lockhdr *) C
+  3.8            0        0.011           1           1         11 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+  3.8        0.001        0.011           1           3         11 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+  3.8            0        0.011           1           1         11 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  3.5         0.01         0.01           2           0          5 int socket_send_bytes(int, char *, uint64_t) C
+  1.7        0.005        0.005           1           1          5 struct dsg_lock *dsg_lock_alloc(const char *, enum lock_service, int) C
+  0.0            0            0           1           0          0 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+  0.0            0            0           1           0          0 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  0.0            0            0           1           0          0 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+  0.0            0            0           1           0          0 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0            0            0           1           0          0 void sem_init(struct dsg_lock *, int) C
+
+NODE 0;CONTEXT 0;THREAD 4:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001        0.012           1           1         12 .TAU application
+ 91.7        0.001        0.011           1           1         11 void *rpc_process_cmd_thrd(void *) C
+ 83.3        0.002         0.01           1           2         10 int dsgrpc_ss_info(struct rpc_server *, struct rpc_cmd *) C
+ 66.7            0        0.008           1           1          8 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+ 66.7        0.001        0.008           1           3          8 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+ 66.7            0        0.008           1           1          8 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 58.3        0.007        0.007           2           0          4 int socket_send_bytes(int, char *, uint64_t) C
+  0.0            0            0           1           0          0 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  0.0            0            0           1           0          0 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+
+NODE 0;CONTEXT 0;THREAD 5:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.002        0.053           1           1         53 .TAU application
+ 96.2            0        0.051           1           2         51 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+ 96.2            0        0.051           1           1         51 void *rpc_process_cmd_thrd(void *) C
+ 94.3        0.049         0.05           1           2         50 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+  1.9        0.001        0.001           1           0          1 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+  1.9        0.001        0.001           1           0          1 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+  0.0            0            0           1           0          0 int dsg_lock_put_on_wait(struct dsg_lock *, struct rpc_cmd *) C
+
+NODE 0;CONTEXT 0;THREAD 6:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.002          443           1           1     443823 .TAU application
+100.0        0.052          443           1           1     443821 void *rpc_process_cmd_thrd(void *) C
+100.0        0.218          443           1           7     443769 int dsgrpc_obj_put(struct rpc_server *, struct rpc_cmd *) C
+ 99.8          442          442           1           3     442953 int rpc_receive_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  0.1         0.16        0.543           1           4        543 int obj_put_update_dht(struct ds_gspace *, struct obj_data *) C
+  0.1        0.035        0.285           1           1        285 int ssd_hash(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.1        0.163         0.25           1           4        250 int ssd_hash_v1(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.0        0.047        0.092           1           1         92 int obj_put_completion(struct rpc_server *, struct msg_buf *) C
+  0.0        0.055        0.055           1           1         55 struct sspace *lookup_sspace(struct ds_gspace *, const char *, const struct global_dimension *) C
+  0.0        0.052        0.054           1           1         54 struct obj_data *obj_data_alloc(struct obj_descriptor *) C
+  0.0        0.044        0.045           1           1         45 void ls_add_obj(struct ss_storage *, struct obj_data *) C
+  0.0        0.041        0.044           1           4         44 void bbox_to_intv2(const struct bbox *, uint64_t, int, struct intv **, int *) C
+  0.0        0.043        0.043           1           1         43 int dht_add_entry(struct dht_entry *, const struct obj_descriptor *) C
+  0.0        0.042        0.043           1           1         43 int dht_intersect(struct dht_entry *, struct intv *) C
+  0.0        0.001        0.003           2           2          2 uint64_t obj_data_size(struct obj_descriptor *) C
+  0.0        0.001        0.002           2           4          1 uint64_t bbox_volume(struct bbox *) C
+  0.0        0.002        0.002           1           0          2 void bbox_flat(struct bbox *, struct intv *, int) C
+  0.0        0.001        0.001           2           0          0 double timer_timestamp_2(void) C
+  0.0        0.001        0.001           1           2          1 int bbox_include(const struct bbox *, const struct bbox *) C
+  0.0        0.001        0.001           1           0          1 int intv_do_intersect(struct intv *, struct intv *) C
+  0.0        0.001        0.001           1           0          1 struct obj_data *ls_find_no_version(struct ss_storage *, struct obj_descriptor *) C
+  0.0        0.001        0.001           4           0          0 uint64_t coord_dist(struct coord *, struct coord *, int) C
+  0.0            0            0           2           0          0 int bbox_include_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0            0            0           1           0          0 int compute_bits(uint64_t) C
+  0.0            0            0           1           0          0 int cq_check_match(struct obj_descriptor *) C
+  0.0            0            0           1           0          0 int global_dimension_equal(const struct global_dimension *, const struct global_dimension *) C
+  0.0            0            0           1           0          0 int sh_add(const struct bbox *, struct dht_entry **, int) C
+  0.0            0            0           1           0          0 int sh_find(const struct bbox *, struct dht_entry **) C
+  0.0            0            0           1           0          0 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0            0            0           1           0          0 struct obj_desc_list *dht_find_match(const struct dht_entry *, const struct obj_descriptor *) C
+  0.0            0            0           1           0          0 uint64_t intv_compact(struct intv *, uint64_t) C
+  0.0            0            0           1           0          0 void rpc_mem_info_cache(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0            0            0           1           0          0 void rpc_mem_info_reset(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+
+NODE 0;CONTEXT 0;THREAD 7:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001        0.067           1           1         67 .TAU application
+ 98.5        0.003        0.066           1           2         66 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+ 98.5            0        0.066           1           1         66 void *rpc_process_cmd_thrd(void *) C
+ 94.0        0.048        0.063           1           2         63 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+ 22.4            0        0.015           1           2         15 int dsg_lock_grant(struct node_id *, struct lockhdr *) C
+ 22.4            0        0.015           1           2         15 int sem_process_wait_list(struct dsg_lock *) C
+ 20.9        0.002        0.014           1           1         14 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 17.9            0        0.012           1           1         12 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+ 17.9            0        0.012           1           3         12 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+ 16.4        0.011        0.011           2           0          6 int socket_send_bytes(int, char *, uint64_t) C
+  1.5        0.001        0.001           1           0          1 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  1.5        0.001        0.001           1           0          1 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0            0            0           2           0          0 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+  0.0            0            0           1           0          0 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+
+NODE 0;CONTEXT 0;THREAD 8:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001        0.004           1           1          4 .TAU application
+ 75.0        0.001        0.003           1           1          3 void *rpc_process_cmd_thrd(void *) C
+ 50.0        0.001        0.002           1           2          2 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+ 25.0        0.001        0.001           1           0          1 int dsg_lock_put_on_wait(struct dsg_lock *, struct rpc_cmd *) C
+ 25.0            0        0.001           1           2          1 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+  0.0            0            0           1           0          0 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+  0.0            0            0           1           0          0 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+
+NODE 0;CONTEXT 0;THREAD 9:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001            9           1           1       9021 .TAU application
+100.0        0.051            9           1           1       9020 void *rpc_process_cmd_thrd(void *) C
+ 99.4        0.048            8           1           6       8969 int dsgrpc_obj_send_dht_peers(struct rpc_server *, struct rpc_cmd *) C
+ 98.4        0.048            8           1           2       8873 int rpc_send_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 97.8            8            8           1           0       8825 int socket_send_bytes(int, char *, uint64_t) C
+  0.5        0.001        0.046           1           1         46 int ssd_hash(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.5        0.044        0.045           1           1         45 int sh_find(const struct bbox *, struct dht_entry **) C
+  0.5            0        0.045           1           1         45 int ssd_hash_v1(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.0        0.002        0.002           1           1          2 struct sspace *lookup_sspace(struct ds_gspace *, const char *, const struct global_dimension *) C
+  0.0        0.001        0.001           1           0          1 int bbox_equals(const struct bbox *, const struct bbox *) C
+  0.0            0            0           1           0          0 int global_dimension_equal(const struct global_dimension *, const struct global_dimension *) C
+  0.0            0            0           1           0          0 int obj_send_dht_peers_completion(struct rpc_server *, struct msg_buf *) C
+  0.0            0            0           1           0          0 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0            0            0           1           0          0 void rpc_mem_info_cache(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0            0            0           1           0          0 void rpc_mem_info_reset(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+
+NODE 0;CONTEXT 0;THREAD 10:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.002        0.321           1           1        321 .TAU application
+ 99.4        0.044        0.319           1           1        319 void *rpc_process_cmd_thrd(void *) C
+ 85.7        0.086        0.275           1           5        275 int dsgrpc_obj_get_desc(struct rpc_server *, struct rpc_cmd *) C
+ 41.1        0.044        0.132           1           1        132 int dht_find_entry_all(struct dht_entry *, struct obj_descriptor *, const struct obj_descriptor **) C
+ 27.4        0.045        0.088           1           1         88 int obj_desc_equals_intersect(const struct obj_descriptor *, const struct obj_descriptor *) C
+ 17.4        0.001        0.056           1           1         56 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 17.1            0        0.055           1           1         55 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+ 17.1        0.001        0.055           1           3         55 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+ 13.4        0.043        0.043           1           2         43 int bbox_does_intersect(const struct bbox *, const struct bbox *) C
+ 13.4        0.043        0.043           1           1         43 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  3.4        0.011        0.011           2           0          6 int socket_send_bytes(int, char *, uint64_t) C
+  0.3        0.001        0.001           1           0          1 void bbox_intersect(struct bbox *, const struct bbox *, struct bbox *) C
+  0.0            0            0           2           0          0 int bbox_intersect_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0            0            0           1           0          0 int global_dimension_equal(const struct global_dimension *, const struct global_dimension *) C
+  0.0            0            0           1           0          0 int obj_get_desc_completion(struct rpc_server *, struct msg_buf *) C
+  0.0            0            0           1           0          0 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0            0            0           1           1          0 struct sspace *lookup_sspace(struct ds_gspace *, const char *, const struct global_dimension *) C
+
+NODE 0;CONTEXT 0;THREAD 11:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.005          784           1           1     784345 .TAU application
+100.0        0.046          784           1           1     784340 void *rpc_process_cmd_thrd(void *) C
+100.0        0.145          784           1          10     784294 int dsgrpc_obj_get(struct rpc_server *, struct rpc_cmd *) C
+ 53.9         0.07          422           1           2     422623 int rpc_send_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 53.7          421          421           1           0     421257 int socket_send_bytes(int, char *, uint64_t) C
+ 46.1        0.088          361           1           4     361511 int ssd_copy(struct obj_data *, struct obj_data *) C
+ 46.1          361          361           1           0     361377 void matrix_copy(struct matrix *, struct matrix *) C
+  0.2        0.045            1           1           1       1296 int obj_get_completion(struct rpc_server *, struct msg_buf *) C
+  0.2            1            1           1           0       1251 void obj_data_free(struct obj_data *) C
+  0.0        0.043        0.045           2           4         22 void matrix_init(struct matrix *, enum storage_type, struct bbox *, struct bbox *, void *, size_t) C
+  0.0        0.006        0.007           1           1          7 struct obj_data *obj_data_alloc(struct obj_descriptor *) C
+  0.0        0.003        0.003           1           0          3 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0        0.001        0.003           2           2          2 uint64_t obj_data_size(struct obj_descriptor *) C
+  0.0        0.002        0.002           1           1          2 int obj_desc_equals_intersect(const struct obj_descriptor *, const struct obj_descriptor *) C
+  0.0            0        0.002           1           1          2 struct obj_data *ls_find(struct ss_storage *, const struct obj_descriptor *) C
+  0.0        0.002        0.002           4           4          0 uint64_t bbox_dist(struct bbox *, int) C
+  0.0            0        0.002           2           4          1 uint64_t bbox_volume(struct bbox *) C
+  0.0        0.002        0.002           8           0          0 uint64_t coord_dist(struct coord *, struct coord *, int) C
+  0.0        0.001        0.001           1           0          1 void bbox_intersect(struct bbox *, const struct bbox *, struct bbox *) C
+  0.0        0.001        0.001           1           0          1 void rpc_mem_info_reset(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0            0            0           2           0          0 double timer_timestamp_1(void) C
+  0.0            0            0           1           2          0 int bbox_does_intersect(const struct bbox *, const struct bbox *) C
+  0.0            0            0           2           0          0 int bbox_intersect_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0            0            0           1           0          0 void rpc_mem_info_cache(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+
+NODE 0;CONTEXT 0;THREAD 12:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001        0.033           1           1         33 .TAU application
+ 97.0        0.002        0.032           1           1         32 void *rpc_process_cmd_thrd(void *) C
+ 90.9        0.001         0.03           1           2         30 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+ 84.8        0.001        0.028           1           2         28 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+ 81.8        0.001        0.027           1           2         27 int sem_process_wait_list(struct dsg_lock *) C
+ 78.8        0.002        0.026           1           2         26 int dsg_lock_grant(struct node_id *, struct lockhdr *) C
+ 72.7        0.001        0.024           1           1         24 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 69.7            0        0.023           1           1         23 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+ 69.7        0.001        0.023           1           3         23 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+ 63.6        0.021        0.021           2           0         10 int socket_send_bytes(int, char *, uint64_t) C
+  3.0        0.001        0.001           1           0          1 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  3.0        0.001        0.001           1           0          1 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+  0.0            0            0           2           0          0 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+  0.0            0            0           1           0          0 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+
+NODE 0;CONTEXT 0;THREAD 13:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001        0.006           1           1          6 .TAU application
+ 83.3        0.002        0.005           1           1          5 void *rpc_process_cmd_thrd(void *) C
+ 50.0            0        0.003           1           2          3 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+ 33.3        0.002        0.002           1           2          2 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+ 16.7        0.001        0.001           1           0          1 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+  0.0            0            0           1           0          0 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+  0.0            0            0           1           0          0 int dsg_lock_put_on_wait(struct dsg_lock *, struct rpc_cmd *) C
+
+NODE 0;CONTEXT 0;THREAD 14:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001          435           1           1     435281 .TAU application
+100.0        0.002          435           1           1     435280 void *rpc_process_cmd_thrd(void *) C
+100.0        0.001          435           1           7     435278 int dsgrpc_obj_put(struct rpc_server *, struct rpc_cmd *) C
+100.0          433          435           1           3     435252 int rpc_receive_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  0.3        0.001            1           1           1       1352 int obj_put_completion(struct rpc_server *, struct msg_buf *) C
+  0.3         0.04            1           1           3       1351 void ls_add_obj(struct ss_storage *, struct obj_data *) C
+  0.3            1            1           1           0       1253 void obj_data_free(struct obj_data *) C
+  0.0        0.056        0.058           1           1         58 struct obj_data *ls_find_no_version(struct ss_storage *, struct obj_descriptor *) C
+  0.0        0.012        0.014           1           1         14 struct obj_data *obj_data_alloc(struct obj_descriptor *) C
+  0.0         0.01         0.01           2           0          5 double timer_timestamp_2(void) C
+  0.0        0.001        0.008           1           4          8 int obj_put_update_dht(struct ds_gspace *, struct obj_data *) C
+  0.0        0.002        0.003           2           2          2 int obj_desc_by_name_intersect(const struct obj_descriptor *, const struct obj_descriptor *) C
+  0.0        0.001        0.003           1           1          3 int ssd_hash(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.0        0.001        0.003           2           2          2 uint64_t obj_data_size(struct obj_descriptor *) C
+  0.0            0        0.002           1           1          2 int dht_add_entry(struct dht_entry *, const struct obj_descriptor *) C
+  0.0        0.001        0.002           1           1          2 int ssd_hash_v1(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.0        0.001        0.002           1           1          2 struct obj_desc_list *dht_find_match(const struct dht_entry *, const struct obj_descriptor *) C
+  0.0        0.002        0.002           1           1          2 struct sspace *lookup_sspace(struct ds_gspace *, const char *, const struct global_dimension *) C
+  0.0        0.002        0.002           2           4          1 uint64_t bbox_volume(struct bbox *) C
+  0.0        0.001        0.001           2           4          0 int bbox_does_intersect(const struct bbox *, const struct bbox *) C
+  0.0        0.001        0.001           1           0          1 int bbox_equals(const struct bbox *, const struct bbox *) C
+  0.0            0        0.001           1           1          1 int sh_find(const struct bbox *, struct dht_entry **) C
+  0.0        0.001        0.001           1           0          1 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0        0.001        0.001           1           0          1 void rpc_mem_info_cache(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0            0            0           4           0          0 int bbox_intersect_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0            0            0           1           0          0 int cq_check_match(struct obj_descriptor *) C
+  0.0            0            0           1           0          0 int global_dimension_equal(const struct global_dimension *, const struct global_dimension *) C
+  0.0            0            0           4           0          0 uint64_t coord_dist(struct coord *, struct coord *, int) C
+  0.0            0            0           1           0          0 void ls_remove(struct ss_storage *, struct obj_data *) C
+  0.0            0            0           1           0          0 void rpc_mem_info_reset(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+
+NODE 0;CONTEXT 0;THREAD 15:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.002        0.019           1           1         19 .TAU application
+ 89.5        0.001        0.017           1           1         17 void *rpc_process_cmd_thrd(void *) C
+ 84.2            0        0.016           1           2         16 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+ 78.9            0        0.015           1           2         15 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+ 73.7        0.001        0.014           1           2         14 int sem_process_wait_list(struct dsg_lock *) C
+ 63.2        0.001        0.012           1           2         12 int dsg_lock_grant(struct node_id *, struct lockhdr *) C
+ 57.9        0.001        0.011           1           1         11 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 52.6            0         0.01           1           1         10 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+ 52.6        0.002         0.01           1           3         10 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+ 42.1        0.008        0.008           2           0          4 int socket_send_bytes(int, char *, uint64_t) C
+ 10.5        0.002        0.002           2           0          1 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+  5.3        0.001        0.001           1           0          1 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+  0.0            0            0           1           0          0 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  0.0            0            0           1           0          0 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+
+NODE 0;CONTEXT 0;THREAD 16:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001        0.052           1           1         52 .TAU application
+ 98.1        0.051        0.051           1           1         51 void *rpc_process_cmd_thrd(void *) C
+  0.0            0            0           1           0          0 int rpc_handler_cn_unregister(struct rpc_server *, struct rpc_cmd *) C
+
+NODE 0;CONTEXT 0;THREAD 17:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.002           12           1           1      12655 .TAU application
+100.0        0.005           12           1           1      12653 void *rpc_process_cmd_thrd(void *) C
+ 99.9        0.013           12           1           6      12648 int dsgrpc_obj_send_dht_peers(struct rpc_server *, struct rpc_cmd *) C
+ 99.7        0.005           12           1           2      12613 int rpc_send_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 99.6           12           12           1           0      12607 int socket_send_bytes(int, char *, uint64_t) C
+  0.1        0.004        0.011           1           1         11 int ssd_hash(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.1        0.002        0.007           1           1          7 int ssd_hash_v1(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.0        0.005        0.006           1           1          6 struct sspace *lookup_sspace(struct ds_gspace *, const char *, const struct global_dimension *) C
+  0.0        0.004        0.005           1           1          5 int sh_find(const struct bbox *, struct dht_entry **) C
+  0.0        0.002        0.002           1           0          2 void rpc_mem_info_cache(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0        0.002        0.002           1           0          2 void rpc_mem_info_reset(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0        0.001        0.001           1           0          1 int bbox_equals(const struct bbox *, const struct bbox *) C
+  0.0        0.001        0.001           1           0          1 int global_dimension_equal(const struct global_dimension *, const struct global_dimension *) C
+  0.0        0.001        0.001           1           0          1 int obj_send_dht_peers_completion(struct rpc_server *, struct msg_buf *) C
+  0.0        0.001        0.001           1           0          1 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+
+NODE 0;CONTEXT 0;THREAD 18:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001        0.023           1           1         23 .TAU application
+ 95.7        0.001        0.022           1           1         22 void *rpc_process_cmd_thrd(void *) C
+ 91.3        0.002        0.021           1           5         21 int dsgrpc_obj_get_desc(struct rpc_server *, struct rpc_cmd *) C
+ 60.9        0.001        0.014           1           1         14 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+ 60.9            0        0.014           1           1         14 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 56.5        0.001        0.013           1           3         13 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+ 43.5         0.01         0.01           2           0          5 int socket_send_bytes(int, char *, uint64_t) C
+ 13.0            0        0.003           1           1          3 int dht_find_entry_all(struct dht_entry *, struct obj_descriptor *, const struct obj_descriptor **) C
+ 13.0        0.003        0.003           1           1          3 int obj_desc_equals_intersect(const struct obj_descriptor *, const struct obj_descriptor *) C
+  8.7        0.002        0.002           1           1          2 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  4.3        0.001        0.001           1           0          1 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  4.3        0.001        0.001           1           1          1 struct sspace *lookup_sspace(struct ds_gspace *, const char *, const struct global_dimension *) C
+  0.0            0            0           1           2          0 int bbox_does_intersect(const struct bbox *, const struct bbox *) C
+  0.0            0            0           2           0          0 int bbox_intersect_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0            0            0           1           0          0 int global_dimension_equal(const struct global_dimension *, const struct global_dimension *) C
+  0.0            0            0           1           0          0 int obj_get_desc_completion(struct rpc_server *, struct msg_buf *) C
+  0.0            0            0           1           0          0 void bbox_intersect(struct bbox *, const struct bbox *, struct bbox *) C
+
+NODE 0;CONTEXT 0;THREAD 19:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.003          448           1           1     448412 .TAU application
+100.0        0.002          448           1           1     448409 void *rpc_process_cmd_thrd(void *) C
+100.0        0.006          448           1          10     448407 int dsgrpc_obj_get(struct rpc_server *, struct rpc_cmd *) C
+ 58.2        0.003          261           1           2     261094 int rpc_send_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+ 57.9          259          259           1           0     259775 int socket_send_bytes(int, char *, uint64_t) C
+ 41.8        0.002          187           1           4     187292 int ssd_copy(struct obj_data *, struct obj_data *) C
+ 41.8          187          187           1           0     187286 void matrix_copy(struct matrix *, struct matrix *) C
+  0.3        0.007            1           1           1       1316 int obj_get_completion(struct rpc_server *, struct msg_buf *) C
+  0.3            1            1           1           0       1309 void obj_data_free(struct obj_data *) C
+  0.0        0.005        0.007           1           1          7 struct obj_data *obj_data_alloc(struct obj_descriptor *) C
+  0.0        0.004        0.004           2           4          2 uint64_t bbox_volume(struct bbox *) C
+  0.0            0        0.004           2           2          2 uint64_t obj_data_size(struct obj_descriptor *) C
+  0.0        0.003        0.004           2           4          2 void matrix_init(struct matrix *, enum storage_type, struct bbox *, struct bbox *, void *, size_t) C
+  0.0        0.002        0.002           2           0          1 double timer_timestamp_1(void) C
+  0.0        0.002        0.002           1           0          2 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0        0.001        0.002           1           1          2 struct obj_data *ls_find(struct ss_storage *, const struct obj_descriptor *) C
+  0.0            0        0.001           1           2          1 int bbox_does_intersect(const struct bbox *, const struct bbox *) C
+  0.0        0.001        0.001           2           0          0 int bbox_intersect_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0            0        0.001           1           1          1 int obj_desc_equals_intersect(const struct obj_descriptor *, const struct obj_descriptor *) C
+  0.0            0        0.001           4           4          0 uint64_t bbox_dist(struct bbox *, int) C
+  0.0        0.001        0.001           8           0          0 uint64_t coord_dist(struct coord *, struct coord *, int) C
+  0.0            0            0           1           0          0 void bbox_intersect(struct bbox *, const struct bbox *, struct bbox *) C
+  0.0            0            0           1           0          0 void rpc_mem_info_cache(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0            0            0           1           0          0 void rpc_mem_info_reset(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+
+NODE 0;CONTEXT 0;THREAD 20:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.002        0.007           1           1          7 .TAU application
+ 71.4        0.001        0.005           1           1          5 void *rpc_process_cmd_thrd(void *) C
+ 57.1        0.001        0.004           1           2          4 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+ 42.9        0.001        0.003           1           2          3 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+ 14.3        0.001        0.001           1           0          1 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+ 14.3        0.001        0.001           1           0          1 int sem_process_wait_list(struct dsg_lock *) C
+  0.0            0            0           1           0          0 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+
+NODE 0;CONTEXT 0;THREAD 21:
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.001        0.003           1           1          3 .TAU application
+ 66.7        0.001        0.002           1           1          2 void *rpc_process_cmd_thrd(void *) C
+ 33.3        0.001        0.001           1           0          1 int rpc_handler_cn_unregister(struct rpc_server *, struct rpc_cmd *) C
+
+FUNCTION SUMMARY (total):
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.265       18,096          22          22     822555 .TAU application
+ 44.8         0.77        8,106           1           9    8106501 int main(int, char **) C
+ 43.4        7,854        7,855           1           6    7855003 void *ds_listen(void *) C
+ 43.3        2,956        7,836           1      200037    7836030 int common_run_server(int, int, enum transport_type, void *) C
+ 13.1        2,370        2,370          21           0     112873 pthread_join
+ 11.8        0.354        2,134          20          20     106722 void *rpc_process_cmd_thrd(void *) C
+ 11.3        0.364        2,043           1          15    2043883 struct ds_gspace *dsg_alloc(int, int, char *, void *) C
+ 11.3        0.418        2,041           1          10    2041652 struct dart_server *ds_alloc(int, int, void *, void *) C
+ 11.3        0.282        2,040           1           5    2040241 int ds_boot(struct dart_server *) C
+ 11.3        2,012        2,039           1      100003    2039108 int ds_boot_master(struct dart_server *) C
+  6.8        0.151        1,232           2          20     616350 int dsgrpc_obj_get(struct rpc_server *, struct rpc_cmd *) C
+  4.9        0.219          879           2          14     439524 int dsgrpc_obj_put(struct rpc_server *, struct rpc_cmd *) C
+  4.9          876          878           2           6     439102 int rpc_receive_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  3.9        0.126          705           4           8     176301 int rpc_send_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  3.9          702          702          24           0      29274 int socket_send_bytes(int, char *, uint64_t) C
+  3.0         0.09          548           2           8     274402 int ssd_copy(struct obj_data *, struct obj_data *) C
+  3.0          548          548           2           0     274332 void matrix_copy(struct matrix *, struct matrix *) C
+  2.8           38          510      100001      100001          5 int dsg_process(struct ds_gspace *) C [THROTTLED]
+  2.6           32          472      100001      100001          5 int ds_process(struct dart_server *) C [THROTTLED]
+  2.4          129          439      100001      100001          4 int rpc_process_event_direct(struct rpc_server *) C [THROTTLED]
+  1.7           39          309      100001      100005          3 int rpc_process_event_peer_direct(struct rpc_server *, struct node_id *) C [THROTTLED]
+  1.4          249          249           1           1     249296 MPI_Init()
+  1.2           85          212      100001      100001          2 int socket_recv_rpc_cmd(int, struct rpc_cmd *) C [THROTTLED]
+  0.7          126          126      100003           0          1 int socket_recv_bytes(int, char *, uint64_t, int) C [THROTTLED]
+  0.1           22           22      100001           0          0 int rpc_process_event(struct rpc_server *) C [THROTTLED]
+  0.1        0.061           21           2          12      10808 int dsgrpc_obj_send_dht_peers(struct rpc_server *, struct rpc_cmd *) C
+  0.1           20           20           1           0      20341 MPI_Finalize()
+  0.1           11           11      100001           0          0 int dsg_complete(struct ds_gspace *) C [THROTTLED]
+  0.0            5            5           4           0       1268 void obj_data_free(struct obj_data *) C
+  0.0        0.116            3           2           6       1990 int rpc_process_event_peer(struct rpc_server *, struct node_id *) C
+  0.0            3            3           2           2       1926 int rpc_process_cmd(struct rpc_server *, struct rpc_cmd *) C
+  0.0        0.052            2           2           2       1306 int obj_get_completion(struct rpc_server *, struct msg_buf *) C
+  0.0        0.129            1           1           3       1801 void dsg_free(struct ds_gspace *) C
+  0.0        0.048            1           2           2        722 int obj_put_completion(struct rpc_server *, struct msg_buf *) C
+  0.0        0.084            1           2           4        698 void ls_add_obj(struct ss_storage *, struct obj_data *) C
+  0.0        0.004            1           1           2       1261 void ls_free(struct ss_storage *) C
+  0.0            1            1           1           7       1150 int parse_conf(char *) C
+  0.0        0.813        0.813           1           0        813 int rpc_write_config(struct rpc_server *, const char *) C
+  0.0        0.092        0.713           1           2        713 int init_sspace(struct bbox *, struct ds_gspace *) C
+  0.0        0.175        0.635           1           2        635 struct rpc_server *rpc_server_init(const char *, int, void *, enum rpc_component) C
+  0.0        0.045        0.621           1           1        621 struct sspace *ssd_alloc(const struct bbox *, int, int, enum sspace_hash_version) C
+  0.0        0.126        0.576           1           3        576 struct sspace *ssd_alloc_v1(const struct bbox *, int, int) C
+  0.0        0.161        0.551           2           8        276 int obj_put_update_dht(struct ds_gspace *, struct obj_data *) C
+  0.0        0.141        0.411           8          17         51 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+  0.0        0.131        0.406           1           4        406 int dht_construct_hash(struct dht *, struct sspace *) C
+  0.0        0.041        0.345           4           4         86 int ssd_hash(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.0        0.048        0.343          10          10         34 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  0.0        0.129        0.331           1           5        331 int ds_register_cp(struct dart_server *) C
+  0.0        0.083         0.32           2           2        160 int rpc_recv_connection_info(int, struct connection_info *) C
+  0.0         0.31         0.31          21           0         15 pthread_create
+  0.0        0.166        0.304           4           7         76 int ssd_hash_v1(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.0        0.088        0.296           2          10        148 int dsgrpc_obj_get_desc(struct rpc_server *, struct rpc_cmd *) C
+  0.0        0.047        0.295          10          10         30 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+  0.0        0.281        0.281           1           0        281 struct sockaddr_in search_ip_address(const char *) C
+  0.0        0.188        0.261           8          16         33 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+  0.0        0.095        0.248          10          30         25 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+  0.0        0.179        0.231           1           4        231 void bbox_to_intv(const struct bbox *, uint64_t, int, struct intv **, int *) C
+  0.0        0.136        0.229           1           3        229 void ds_free(struct dart_server *) C
+  0.0        0.041        0.182           1           1        182 int free_sspace(struct ds_gspace *) C
+  0.0        0.179        0.179           1           0        179 int rpc_server_init_socket(struct rpc_server *) C
+  0.0        0.044        0.141           1           1        141 void ssd_free(struct sspace *) C
+  0.0        0.044        0.135           2           2         68 int dht_find_entry_all(struct dht_entry *, struct obj_descriptor *, const struct obj_descriptor **) C
+  0.0        0.096        0.097           1           2         97 void ssd_free_v1(struct sspace *) C
+  0.0        0.089        0.095           7           9         14 int parse_line(int, char *) C
+  0.0         0.05        0.094           4           4         24 int obj_desc_equals_intersect(const struct obj_descriptor *, const struct obj_descriptor *) C
+  0.0        0.075        0.082           4           4         20 struct obj_data *obj_data_alloc(struct obj_descriptor *) C
+  0.0        0.065        0.066           6           6         11 struct sspace *lookup_sspace(struct ds_gspace *, const char *, const struct global_dimension *) C
+  0.0        0.004        0.065           4           8         16 int dsg_lock_grant(struct node_id *, struct lockhdr *) C
+  0.0        0.057        0.059           2           1         30 struct obj_data *ls_find_no_version(struct ss_storage *, struct obj_descriptor *) C
+  0.0        0.003        0.057           4           6         14 int sem_process_wait_list(struct dsg_lock *) C
+  0.0        0.049        0.053           9          18          6 uint64_t bbox_volume(struct bbox *) C
+  0.0        0.052        0.052           2           4         26 int bbox_include(const struct bbox *, const struct bbox *) C
+  0.0        0.048        0.051           4           3         13 int sh_find(const struct bbox *, struct dht_entry **) C
+  0.0        0.046        0.049           4           8         12 void matrix_init(struct matrix *, enum storage_type, struct bbox *, struct bbox *, void *, size_t) C
+  0.0        0.046        0.048           2           4         24 int rpc_handler_cn_register(struct rpc_server *, struct rpc_cmd *) C
+  0.0        0.047        0.047          10           2          5 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  0.0        0.045        0.045           1           0         45 MPI_Comm_split()
+  0.0        0.044        0.045           6          12          8 int bbox_does_intersect(const struct bbox *, const struct bbox *) C
+  0.0        0.043        0.045           2           2         22 int dht_add_entry(struct dht_entry *, const struct obj_descriptor *) C
+  0.0        0.044        0.044           1           1         44 struct dht *dht_alloc(struct sspace *, const struct bbox *, int, int) C
+  0.0        0.041        0.044           1           4         44 void bbox_to_intv2(const struct bbox *, uint64_t, int, struct intv **, int *) C
+  0.0        0.042        0.043           1           1         43 int dht_intersect(struct dht_entry *, struct intv *) C
+  0.0        0.027        0.027           1           0         27 MPI_Comm_dup()
+  0.0        0.003        0.021           2           4         10 int dsgrpc_ss_info(struct rpc_server *, struct rpc_cmd *) C
+  0.0        0.015        0.015           5           0          3 MPI_Barrier()
+  0.0        0.003        0.013           8           8          2 uint64_t obj_data_size(struct obj_descriptor *) C
+  0.0        0.012        0.012           1           0         12 int parse_args(int, char **) C
+  0.0        0.011        0.011           4           0          3 double timer_timestamp_2(void) C
+  0.0        0.009        0.009          16           0          1 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0        0.002        0.007           1           1          7 int rpc_barrier(struct rpc_server *, void *) C
+  0.0        0.006        0.006           9           0          1 void eat_spaces(char *) C
+  0.0        0.005        0.005           1           1          5 struct dsg_lock *dsg_lock_alloc(const char *, enum lock_service, int) C
+  0.0        0.005        0.005          26           0          0 uint64_t coord_dist(struct coord *, struct coord *, int) C
+  0.0        0.004        0.004          11           0          0 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+  0.0        0.004        0.004           8           0          0 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+  0.0        0.001        0.004           2           2          2 struct obj_data *ls_find(struct ss_storage *, const struct obj_descriptor *) C
+  0.0        0.004        0.004           1           0          4 void finalize_threads(struct rpc_server *) C
+  0.0        0.004        0.004          16           0          0 void rpc_add_service(enum cmd_type, rpc_service) C
+  0.0        0.003        0.003           3           0          1 int bbox_equals(const struct bbox *, const struct bbox *) C
+  0.0        0.002        0.003           2           2          2 int obj_desc_by_name_intersect(const struct obj_descriptor *, const struct obj_descriptor *) C
+  0.0        0.002        0.003           8           8          0 uint64_t bbox_dist(struct bbox *, int) C
+  0.0        0.003        0.003           2           0          2 void bbox_flat(struct bbox *, struct intv *, int) C
+  0.0        0.003        0.003           6           0          0 void rpc_mem_info_cache(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0        0.003        0.003           6           0          0 void rpc_mem_info_reset(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0        0.002        0.002           2           0          1 MPI_Comm_rank()
+  0.0        0.002        0.002           4           0          0 double timer_timestamp_1(void) C
+  0.0        0.002        0.002           4           0          0 struct app_info *app_find(struct dart_server *, int) C
+  0.0        0.001        0.002           2           1          1 struct obj_desc_list *dht_find_match(const struct dht_entry *, const struct obj_descriptor *) C
+  0.0        0.002        0.002           4           0          0 void bbox_intersect(struct bbox *, const struct bbox *, struct bbox *) C
+  0.0        0.001        0.001           1           0          1 MPI_Comm_size()
+  0.0        0.001        0.001          12           0          0 int bbox_intersect_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0        0.001        0.001           3           0          0 int dsg_lock_put_on_wait(struct dsg_lock *, struct rpc_cmd *) C
+  0.0        0.001        0.001           6           0          0 int global_dimension_equal(const struct global_dimension *, const struct global_dimension *) C
+  0.0        0.001        0.001           1           0          1 int intv_do_intersect(struct intv *, struct intv *) C
+  0.0        0.001        0.001           2           0          0 int obj_send_dht_peers_completion(struct rpc_server *, struct msg_buf *) C
+  0.0        0.001        0.001           2           0          0 int rpc_handler_cn_unregister(struct rpc_server *, struct rpc_cmd *) C
+  0.0        0.001        0.001           2           0          0 struct app_info *app_alloc() C
+  0.0        0.001        0.001           2           0          0 uint64_t intv_size(struct intv *) C
+  0.0        0.001        0.001           2           0          0 void sem_init(struct dsg_lock *, int) C
+  0.0        0.001        0.001           1           0          1 void sh_free(void) C
+  0.0            0            0           4           0          0 int bbox_include_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0            0            0           3           0          0 int compute_bits(uint64_t) C
+  0.0            0            0           2           0          0 int cq_check_match(struct obj_descriptor *) C
+  0.0            0            0           2           0          0 int ds_announce_cp(struct dart_server *, struct app_info *) C
+  0.0            0            0           2           0          0 int obj_get_desc_completion(struct rpc_server *, struct msg_buf *) C
+  0.0            0            0           1           0          0 int rpc_server_free(struct rpc_server *) C
+  0.0            0            0           1           0          0 int sh_add(const struct bbox *, struct dht_entry **, int) C
+  0.0            0            0           1           0          0 int ssd_init(struct sspace *, int) C
+  0.0            0            0           1           0          0 struct dht_entry *dht_entry_alloc(struct sspace *, int) C
+  0.0            0            0           1           0          0 struct ss_storage *ls_alloc(int) C
+  0.0            0            0           2           0          0 uint64_t intv_compact(struct intv *, uint64_t) C
+  0.0            0            0           1           0          0 void dht_free(struct dht *) C
+  0.0            0            0           2           0          0 void ls_remove(struct ss_storage *, struct obj_data *) C
+  0.0            0            0           1           0          0 void rpc_server_set_peer_ref(struct rpc_server *, struct node_id *, int) C
+
+FUNCTION SUMMARY (mean):
+---------------------------------------------------------------------------------------
+%Time    Exclusive    Inclusive       #Call      #Subrs  Inclusive Name
+              msec   total msec                          usec/call
+---------------------------------------------------------------------------------------
+100.0        0.012          822           1           1     822555 .TAU application
+ 44.8        0.035          368   0.0454545    0.409091    8106501 int main(int, char **) C
+ 43.4          357          357   0.0454545    0.272727    7855003 void *ds_listen(void *) C
+ 43.3          134          356   0.0454545     9092.59    7836030 int common_run_server(int, int, enum transport_type, void *) C
+ 13.1          107          107    0.954545           0     112873 pthread_join
+ 11.8       0.0161           97    0.909091    0.909091     106722 void *rpc_process_cmd_thrd(void *) C
+ 11.3       0.0165           92   0.0454545    0.681818    2043883 struct ds_gspace *dsg_alloc(int, int, char *, void *) C
+ 11.3        0.019           92   0.0454545    0.454545    2041652 struct dart_server *ds_alloc(int, int, void *, void *) C
+ 11.3       0.0128           92   0.0454545    0.227273    2040241 int ds_boot(struct dart_server *) C
+ 11.3           91           92   0.0454545     4545.59    2039108 int ds_boot_master(struct dart_server *) C
+  6.8      0.00686           56   0.0909091    0.909091     616350 int dsgrpc_obj_get(struct rpc_server *, struct rpc_cmd *) C
+  4.9      0.00995           39   0.0909091    0.636364     439523 int dsgrpc_obj_put(struct rpc_server *, struct rpc_cmd *) C
+  4.9           39           39   0.0909091    0.272727     439102 int rpc_receive_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  3.9      0.00573           32    0.181818    0.363636     176301 int rpc_send_direct(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  3.9           31           31     1.09091           0      29274 int socket_send_bytes(int, char *, uint64_t) C
+  3.0      0.00409           24   0.0909091    0.363636     274402 int ssd_copy(struct obj_data *, struct obj_data *) C
+  3.0           24           24   0.0909091           0     274332 void matrix_copy(struct matrix *, struct matrix *) C
+  2.8            1           23      4545.5      4545.5          5 int dsg_process(struct ds_gspace *) C [THROTTLED]
+  2.6            1           21      4545.5      4545.5          5 int ds_process(struct dart_server *) C [THROTTLED]
+  2.4            5           19      4545.5      4545.5          4 int rpc_process_event_direct(struct rpc_server *) C [THROTTLED]
+  1.7            1           14      4545.5     4545.68          3 int rpc_process_event_peer_direct(struct rpc_server *, struct node_id *) C [THROTTLED]
+  1.4           11           11   0.0454545   0.0454545     249296 MPI_Init()
+  1.2            3            9      4545.5      4545.5          2 int socket_recv_rpc_cmd(int, struct rpc_cmd *) C [THROTTLED]
+  0.7            5            5     4545.59           0          1 int socket_recv_bytes(int, char *, uint64_t, int) C [THROTTLED]
+  0.1            1            1      4545.5           0          0 int rpc_process_event(struct rpc_server *) C [THROTTLED]
+  0.1      0.00277        0.983   0.0909091    0.545455      10808 int dsgrpc_obj_send_dht_peers(struct rpc_server *, struct rpc_cmd *) C
+  0.1        0.925        0.925   0.0454545           0      20341 MPI_Finalize()
+  0.1        0.512        0.512      4545.5           0          0 int dsg_complete(struct ds_gspace *) C [THROTTLED]
+  0.0         0.23         0.23    0.181818           0       1268 void obj_data_free(struct obj_data *) C
+  0.0      0.00527        0.181   0.0909091    0.272727       1990 int rpc_process_event_peer(struct rpc_server *, struct node_id *) C
+  0.0        0.173        0.175   0.0909091   0.0909091       1925 int rpc_process_cmd(struct rpc_server *, struct rpc_cmd *) C
+  0.0      0.00236        0.119   0.0909091   0.0909091       1306 int obj_get_completion(struct rpc_server *, struct msg_buf *) C
+  0.0      0.00586       0.0819   0.0454545    0.136364       1801 void dsg_free(struct ds_gspace *) C
+  0.0      0.00218       0.0656   0.0909091   0.0909091        722 int obj_put_completion(struct rpc_server *, struct msg_buf *) C
+  0.0      0.00382       0.0635   0.0909091    0.181818        698 void ls_add_obj(struct ss_storage *, struct obj_data *) C
+  0.0     0.000182       0.0573   0.0454545   0.0909091       1261 void ls_free(struct ss_storage *) C
+  0.0        0.048       0.0523   0.0454545    0.318182       1150 int parse_conf(char *) C
+  0.0        0.037        0.037   0.0454545           0        813 int rpc_write_config(struct rpc_server *, const char *) C
+  0.0      0.00418       0.0324   0.0454545   0.0909091        713 int init_sspace(struct bbox *, struct ds_gspace *) C
+  0.0      0.00795       0.0289   0.0454545   0.0909091        635 struct rpc_server *rpc_server_init(const char *, int, void *, enum rpc_component) C
+  0.0      0.00205       0.0282   0.0454545   0.0454545        621 struct sspace *ssd_alloc(const struct bbox *, int, int, enum sspace_hash_version) C
+  0.0      0.00573       0.0262   0.0454545    0.136364        576 struct sspace *ssd_alloc_v1(const struct bbox *, int, int) C
+  0.0      0.00732        0.025   0.0909091    0.363636        276 int obj_put_update_dht(struct ds_gspace *, struct obj_data *) C
+  0.0      0.00641       0.0187    0.363636    0.772727         51 int dsgrpc_lock_service(struct rpc_server *, struct rpc_cmd *) C
+  0.0      0.00595       0.0185   0.0454545    0.181818        406 int dht_construct_hash(struct dht *, struct sspace *) C
+  0.0      0.00186       0.0157    0.181818    0.181818         86 int ssd_hash(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.0      0.00218       0.0156    0.454545    0.454545         34 int rpc_send(struct rpc_server *, struct node_id *, struct msg_buf *) C
+  0.0      0.00586        0.015   0.0454545    0.227273        331 int ds_register_cp(struct dart_server *) C
+  0.0      0.00377       0.0145   0.0909091   0.0909091        160 int rpc_recv_connection_info(int, struct connection_info *) C
+  0.0       0.0141       0.0141    0.954545           0         15 pthread_create
+  0.0      0.00755       0.0138    0.181818    0.318182         76 int ssd_hash_v1(struct sspace *, const struct bbox *, struct dht_entry **) C
+  0.0        0.004       0.0135   0.0909091    0.454545        148 int dsgrpc_obj_get_desc(struct rpc_server *, struct rpc_cmd *) C
+  0.0      0.00214       0.0134    0.454545    0.454545         30 int peer_process_send_list(struct rpc_server *, struct node_id *) C
+  0.0       0.0128       0.0128   0.0454545           0        281 struct sockaddr_in search_ip_address(const char *) C
+  0.0      0.00855       0.0119    0.363636    0.727273         33 int sem_service(struct dsg_lock *, struct rpc_server *, struct rpc_cmd *) C
+  0.0      0.00432       0.0113    0.454545     1.36364         25 int rpc_post_request(struct rpc_server *, struct node_id *, struct rpc_request *) C
+  0.0      0.00814       0.0105   0.0454545    0.181818        231 void bbox_to_intv(const struct bbox *, uint64_t, int, struct intv **, int *) C
+  0.0      0.00618       0.0104   0.0454545    0.136364        229 void ds_free(struct dart_server *) C
+  0.0      0.00186      0.00827   0.0454545   0.0454545        182 int free_sspace(struct ds_gspace *) C
+  0.0      0.00814      0.00814   0.0454545           0        179 int rpc_server_init_socket(struct rpc_server *) C
+  0.0        0.002      0.00641   0.0454545   0.0454545        141 void ssd_free(struct sspace *) C
+  0.0        0.002      0.00614   0.0909091   0.0909091         68 int dht_find_entry_all(struct dht_entry *, struct obj_descriptor *, const struct obj_descriptor **) C
+  0.0      0.00436      0.00441   0.0454545   0.0909091         97 void ssd_free_v1(struct sspace *) C
+  0.0      0.00405      0.00432    0.318182    0.409091         14 int parse_line(int, char *) C
+  0.0      0.00227      0.00427    0.181818    0.181818         23 int obj_desc_equals_intersect(const struct obj_descriptor *, const struct obj_descriptor *) C
+  0.0      0.00341      0.00373    0.181818    0.181818         20 struct obj_data *obj_data_alloc(struct obj_descriptor *) C
+  0.0      0.00295        0.003    0.272727    0.272727         11 struct sspace *lookup_sspace(struct ds_gspace *, const char *, const struct global_dimension *) C
+  0.0     0.000182      0.00295    0.181818    0.363636         16 int dsg_lock_grant(struct node_id *, struct lockhdr *) C
+  0.0      0.00259      0.00268   0.0909091   0.0454545         29 struct obj_data *ls_find_no_version(struct ss_storage *, struct obj_descriptor *) C
+  0.0     0.000136      0.00259    0.181818    0.272727         14 int sem_process_wait_list(struct dsg_lock *) C
+  0.0      0.00223      0.00241    0.409091    0.818182          6 uint64_t bbox_volume(struct bbox *) C
+  0.0      0.00236      0.00236   0.0909091    0.181818         26 int bbox_include(const struct bbox *, const struct bbox *) C
+  0.0      0.00218      0.00232    0.181818    0.136364         13 int sh_find(const struct bbox *, struct dht_entry **) C
+  0.0      0.00209      0.00223    0.181818    0.363636         12 void matrix_init(struct matrix *, enum storage_type, struct bbox *, struct bbox *, void *, size_t) C
+  0.0      0.00209      0.00218   0.0909091    0.181818         24 int rpc_handler_cn_register(struct rpc_server *, struct rpc_cmd *) C
+  0.0      0.00214      0.00214    0.454545   0.0909091          5 int rpc_cb_request_posted(struct rpc_server *, struct rpc_request *) C
+  0.0      0.00205      0.00205   0.0454545           0         45 MPI_Comm_split()
+  0.0        0.002      0.00205    0.272727    0.545455          8 int bbox_does_intersect(const struct bbox *, const struct bbox *) C
+  0.0      0.00195      0.00205   0.0909091   0.0909091         22 int dht_add_entry(struct dht_entry *, const struct obj_descriptor *) C
+  0.0        0.002        0.002   0.0454545   0.0454545         44 struct dht *dht_alloc(struct sspace *, const struct bbox *, int, int) C
+  0.0      0.00186        0.002   0.0454545    0.181818         44 void bbox_to_intv2(const struct bbox *, uint64_t, int, struct intv **, int *) C
+  0.0      0.00191      0.00195   0.0454545   0.0454545         43 int dht_intersect(struct dht_entry *, struct intv *) C
+  0.0      0.00123      0.00123   0.0454545           0         27 MPI_Comm_dup()
+  0.0     0.000136     0.000955   0.0909091    0.181818         10 int dsgrpc_ss_info(struct rpc_server *, struct rpc_cmd *) C
+  0.0     0.000682     0.000682    0.227273           0          3 MPI_Barrier()
+  0.0     0.000136     0.000591    0.363636    0.363636          2 uint64_t obj_data_size(struct obj_descriptor *) C
+  0.0     0.000545     0.000545   0.0454545           0         12 int parse_args(int, char **) C
+  0.0       0.0005       0.0005    0.181818           0          3 double timer_timestamp_2(void) C
+  0.0     0.000409     0.000409    0.727273           0          1 struct msg_buf *msg_buf_alloc(struct rpc_server *, const struct node_id *, int) C
+  0.0     9.09E-05     0.000318   0.0454545   0.0454545          7 int rpc_barrier(struct rpc_server *, void *) C
+  0.0     0.000273     0.000273    0.409091           0          1 void eat_spaces(char *) C
+  0.0     0.000227     0.000227   0.0454545   0.0454545          5 struct dsg_lock *dsg_lock_alloc(const char *, enum lock_service, int) C
+  0.0     0.000227     0.000227     1.18182           0          0 uint64_t coord_dist(struct coord *, struct coord *, int) C
+  0.0     0.000182     0.000182         0.5           0          0 enum lock_action sem_process_request(struct dsg_lock *, struct lockhdr *, int) C
+  0.0     0.000182     0.000182    0.363636           0          0 struct dsg_lock *dsg_lock_find_by_name(const char *) C
+  0.0     4.55E-05     0.000182   0.0909091   0.0909091          2 struct obj_data *ls_find(struct ss_storage *, const struct obj_descriptor *) C
+  0.0     0.000182     0.000182   0.0454545           0          4 void finalize_threads(struct rpc_server *) C
+  0.0     0.000182     0.000182    0.727273           0          0 void rpc_add_service(enum cmd_type, rpc_service) C
+  0.0     0.000136     0.000136    0.136364           0          1 int bbox_equals(const struct bbox *, const struct bbox *) C
+  0.0     9.09E-05     0.000136   0.0909091   0.0909091          1 int obj_desc_by_name_intersect(const struct obj_descriptor *, const struct obj_descriptor *) C
+  0.0     9.09E-05     0.000136    0.363636    0.363636          0 uint64_t bbox_dist(struct bbox *, int) C
+  0.0     0.000136     0.000136   0.0909091           0          1 void bbox_flat(struct bbox *, struct intv *, int) C
+  0.0     0.000136     0.000136    0.272727           0          0 void rpc_mem_info_cache(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0     0.000136     0.000136    0.272727           0          0 void rpc_mem_info_reset(struct node_id *, struct msg_buf *, struct rpc_cmd *) C
+  0.0     9.09E-05     9.09E-05   0.0909091           0          1 MPI_Comm_rank()
+  0.0     9.09E-05     9.09E-05    0.181818           0          0 double timer_timestamp_1(void) C
+  0.0     9.09E-05     9.09E-05    0.181818           0          0 struct app_info *app_find(struct dart_server *, int) C
+  0.0     4.55E-05     9.09E-05   0.0909091   0.0454545          1 struct obj_desc_list *dht_find_match(const struct dht_entry *, const struct obj_descriptor *) C
+  0.0     9.09E-05     9.09E-05    0.181818           0          0 void bbox_intersect(struct bbox *, const struct bbox *, struct bbox *) C
+  0.0     4.55E-05     4.55E-05   0.0454545           0          1 MPI_Comm_size()
+  0.0     4.55E-05     4.55E-05    0.545455           0          0 int bbox_intersect_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0     4.55E-05     4.55E-05    0.136364           0          0 int dsg_lock_put_on_wait(struct dsg_lock *, struct rpc_cmd *) C
+  0.0     4.55E-05     4.55E-05    0.272727           0          0 int global_dimension_equal(const struct global_dimension *, const struct global_dimension *) C
+  0.0     4.55E-05     4.55E-05   0.0454545           0          1 int intv_do_intersect(struct intv *, struct intv *) C
+  0.0     4.55E-05     4.55E-05   0.0909091           0          0 int obj_send_dht_peers_completion(struct rpc_server *, struct msg_buf *) C
+  0.0     4.55E-05     4.55E-05   0.0909091           0          0 int rpc_handler_cn_unregister(struct rpc_server *, struct rpc_cmd *) C
+  0.0     4.55E-05     4.55E-05   0.0909091           0          0 struct app_info *app_alloc() C
+  0.0     4.55E-05     4.55E-05   0.0909091           0          0 uint64_t intv_size(struct intv *) C
+  0.0     4.55E-05     4.55E-05   0.0909091           0          0 void sem_init(struct dsg_lock *, int) C
+  0.0     4.55E-05     4.55E-05   0.0454545           0          1 void sh_free(void) C
+  0.0            0            0    0.181818           0          0 int bbox_include_ondim(const struct bbox *, const struct bbox *, int) C
+  0.0            0            0    0.136364           0          0 int compute_bits(uint64_t) C
+  0.0            0            0   0.0909091           0          0 int cq_check_match(struct obj_descriptor *) C
+  0.0            0            0   0.0909091           0          0 int ds_announce_cp(struct dart_server *, struct app_info *) C
+  0.0            0            0   0.0909091           0          0 int obj_get_desc_completion(struct rpc_server *, struct msg_buf *) C
+  0.0            0            0   0.0454545           0          0 int rpc_server_free(struct rpc_server *) C
+  0.0            0            0   0.0454545           0          0 int sh_add(const struct bbox *, struct dht_entry **, int) C
+  0.0            0            0   0.0454545           0          0 int ssd_init(struct sspace *, int) C
+  0.0            0            0   0.0454545           0          0 struct dht_entry *dht_entry_alloc(struct sspace *, int) C
+  0.0            0            0   0.0454545           0          0 struct ss_storage *ls_alloc(int) C
+  0.0            0            0   0.0909091           0          0 uint64_t intv_compact(struct intv *, uint64_t) C
+  0.0            0            0   0.0454545           0          0 void dht_free(struct dht *) C
+  0.0            0            0   0.0909091           0          0 void ls_remove(struct ss_storage *, struct obj_data *) C
+  0.0            0            0   0.0454545           0          0 void rpc_server_set_peer_ref(struct rpc_server *, struct node_id *, int) C
+[yq47@e3c-254 C]$

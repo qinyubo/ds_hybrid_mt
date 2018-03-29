@@ -154,9 +154,6 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
-/* Define to 1 if you have the <"rdmacred.h"> header file. */
-/* #undef HAVE__RDMACRED_H_ */
-
 /* IB Interface option */
 #define IB_INTERFACE "ib0"
 
@@ -183,6 +180,9 @@
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "dataspaces"
+
+/* Define to the home page for this package. */
+#define PACKAGE_URL ""
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "1.6.5"
