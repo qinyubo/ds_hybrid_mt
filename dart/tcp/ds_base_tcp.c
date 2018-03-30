@@ -795,15 +795,6 @@ void ds_free(struct dart_server* ds) {
         free(ds->comm);
     }
 
-    /*
-    //Print content in tasks_list for debuging purpose
-    struct tasks_request *tmp_tr;
-    list_for_each_entry(tmp_tr, &ds->rpc_s->tasks_list, struct tasks_request, tasks_entry)
-    {
-        uloga("%s(Yubo) server %d has rpc_cmd=%d\n",__func__,ds_id, tmp_tr->cmd->cmd);
-    }
-    */
-
     
     free(ds);
 }
@@ -815,23 +806,4 @@ int ds_process(struct dart_server* ds) {
 }
 
 
-/*
-//Debug 
-int ds_process(struct dart_server* ds) {
-    int ret;
-
-
-                        if(debug_flag){
-                        uloga("%s(Yubo) sleep (1)\n", __func__);
-                        sleep(1);
-                        debug_flag = 0;
-                        }
-                        
-
-    ret = rpc_process_event_direct(ds->rpc_s);
-
-
-    return ret;
-}
-*/
 
