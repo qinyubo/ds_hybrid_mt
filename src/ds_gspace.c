@@ -1319,8 +1319,8 @@ static int dsgrpc_obj_put(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         //time_end = timer_timestamp_1();
         //uloga("%s(Yubo), after ds_put(), at time= %f\n",__func__, time_end);
 
-        //time_tol = (time_end - time_start)/1000000;
-        //uloga("%s(Yubo), ds_put() data receive total time= %f\n",__func__, time_tol);
+       // time_tol = (time_end - time_start)/1000000;
+       // uloga("%s(Yubo), ds_put() data receive total time= %f\n",__func__, time_tol);
         //uloga("%f\n", time_tol);
 
         if (err < 0)

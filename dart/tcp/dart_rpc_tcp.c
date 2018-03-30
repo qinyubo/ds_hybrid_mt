@@ -36,7 +36,7 @@ int main_thrd_counter=0;
 
 
 
-#define MAX_WORKER_THREADS 2
+#define MAX_WORKER_THREADS 4
 
 int thrd_num=MAX_WORKER_THREADS; //number of threads is currently running
 
@@ -537,6 +537,7 @@ void* rpc_process_cmd_mt(void *tasks_request)
     struct timeval now;
     struct timespec outtime;
     struct timespec slptm;
+    int cpuid;
     
 
     while(1){
@@ -563,7 +564,7 @@ void* rpc_process_cmd_mt(void *tasks_request)
             //uloga("%s(Yubo) worker_thrd rpc %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
             for (i = 0; i < num_service; ++i) {
                 if (cmd.cmd == rpc_commands[i].rpc_cmd) {
-
+               // uloga("%s(Yubo) worker thread is on CPU %d\n", __func__, sched_getcpu());
                  if (rpc_commands[i].rpc_func(local_rpc_s, &cmd) < 0) {
                         printf("[%s]: call RPC command function failed!\n", __func__);
                     goto err_out;
@@ -627,7 +628,7 @@ void* rpc_process_cmd_mt(void *tasks_request)
 
             if(debug_counter > 1000){
                 slptm.tv_sec = 0;
-                slptm.tv_nsec = 1000000; //1ms
+                slptm.tv_nsec = 1000; //1ms
 
                 //uloga("%s(Yubo) worker thread about to sleep\n",__func__);
                 
@@ -736,7 +737,7 @@ int rpc_process_event_mt(struct rpc_server *rpc_s) {
             //pthread_rwlock_unlock(&rw_lock);
             //uloga("%s(Yubo) Debug main thread about to sleep\n",__func__);
 
-            
+            //uloga("%s(Yubo) main thread is on CPU %d\n", __func__, sched_getcpu());
             pthread_mutex_lock(&cond_mutex);
             if(pthread_cond_wait(&task_cond, &cond_mutex) != 0){
                 uloga("%s(Yubo) Error: pthread_cond_wait\n",__func__);

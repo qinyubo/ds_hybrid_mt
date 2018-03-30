@@ -72,6 +72,329 @@ ds_free(Yubo): debug_counter_1=0, debug_counter_2=0
 All ok.
 
 
+MT version now
+thread_handle_new(Yubo) current # thread=1
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 1.236786
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.446030
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 1.381778
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 1.207348
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.433483
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.924897
+test_get_run(): done
+ds_free(Yubo): debug_counter_1=0, debug_counter_2=0
+All ok.
+
+
+
+MT
+4:1:1
+1 thread
+thread_handle_new(Yubo) current # thread=1
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.502434
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.806041
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.503190
+test_put_run(): done
+
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.787237
+test_get_run(): done
+ds_free(Yubo): debug_counter_1=0, debug_counter_2=0
+All ok.
+
+thread_handle_new(Yubo) current # thread=2
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.418303
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.814052
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.373201
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.799213
+test_get_run(): done
+All ok.
+
+4:1:1 2 thread
+thread_handle_new(Yubo) current # thread=2
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.418303
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.814052
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.373201
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.799213
+test_get_run(): done
+All ok.
+
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.408263
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.857879
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.348631
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.822605
+test_get_run(): done
+All ok.
+
+4:1:4
+thread_handle_new(Yubo) current # thread=4
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.303856
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.459548
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.306563
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.461121
+test_get_run(): done
+All ok.
+
+thread_handle_new(Yubo) current # thread=1
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.311014
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.548024
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.308316
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.546005
+test_get_run(): done
+All ok.
+
+
+Clean version
+4:1:1
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.085241
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.122707
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.086547
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.459227
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.110930
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.801743
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.102365
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.111282
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.099991
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.471468
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.124588
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.768089
+test_get_run(): done
+All ok.
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.084423
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.123238
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.086405
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.457787
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.110621
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.794380
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.123037
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.098954
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.111208
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.477303
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.098786
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.779442
+test_get_run(): done
+All ok.
+
+
+4:2:1
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.048353
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.049202
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.113384
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.292882
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.124722
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.801971
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.049880
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.049348
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.125852
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.297277
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.125379
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.786506
+test_get_run(): done
+All ok.
+All ok.
+
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.048146
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.048849
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.126485
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.284354
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.107881
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.787846
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.049708
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.048395
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.126821
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.284068
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.112341
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.766470
+test_get_run(): done
+All ok.
+All ok.
+
+
+Clean version
+16:1:4
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.011622
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.014803
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.011913
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015138
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012284
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015390
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012505
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.014736
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012429
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015162
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012620
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.014936
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012595
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015167
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012586
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.235760
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015497
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.482006
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015620
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.011832
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015216
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012449
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015194
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012898
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015388
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012521
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015441
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012582
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015413
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012987
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015367
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012932
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015454
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.238820
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013619
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.475088
+test_get_run(): done
+All ok.
+
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.016012
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012452
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015662
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012339
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015318
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012912
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015225
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012806
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015489
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012610
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015444
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012543
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015238
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012670
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015241
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.240482
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012887
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.477534
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012172
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015367
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012683
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015513
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012402
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015785
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012734
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015502
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012861
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015450
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013001
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015423
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012925
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015573
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012773
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.240136
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015816
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.473295
+test_get_run(): done
+All ok.
+
+Clean version
+16:2:4
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012760
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.016495
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013023
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.016343
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013185
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015975
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012724
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012989
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015830
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012925
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015812
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012938
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015442
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012828
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015280
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.139469
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015724
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.249412
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012289
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.016149
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013394
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.016100
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013308
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.016339
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013463
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.016094
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013062
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013112
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015922
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012988
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015806
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013179
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015567
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.141197
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.016201
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.294007
+test_get_run(): done
+All ok.
+All ok.
+
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012174
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.016189
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013070
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015848
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012695
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015739
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012927
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015357
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012729
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012609
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015609
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012762
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015720
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012617
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015340
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.137711
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015802
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.275550
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012134
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015969
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013078
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015796
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013317
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015910
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013371
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015398
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013219
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.012864
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015691
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013029
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015704
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.013253
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015543
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.142537
+test_put_run(): done
+dsgrpc_obj_put(Yubo), ds_put() data receive total time= 0.015819
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.318154
+test_get_run(): done
+All ok.
+All ok.
+
+
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.334263
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.670868
+
+
+
+
+
+
+
+
 
 
 
