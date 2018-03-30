@@ -36,7 +36,7 @@ int main_thrd_counter=0;
 
 
 
-#define MAX_WORKER_THREADS 1
+#define MAX_WORKER_THREADS 2
 
 int thrd_num=MAX_WORKER_THREADS; //number of threads is currently running
 
@@ -572,14 +572,27 @@ void* rpc_process_cmd_mt(void *tasks_request)
                 }
             }
 
+            //When cmd=16 or cmd=23 finished
+            if(cmd.cmd == 16 || cmd.cmd ==23){
+                pthread_mutex_lock(&task_mutex);
+                main_thrd_ready_wait = 0;
+                pthread_mutex_unlock(&task_mutex);
+
+            pthread_mutex_lock(&cond_mutex);
+            //uloga("%s(Yubo) Debug #2.3, thrd_num=%d\n",__func__, thrd_num);
+            pthread_cond_signal(&task_cond);
+            //uloga("%s(Yubo) Debug #2.4 signaled, thrd_num=%d\n",__func__, thrd_num);
+            pthread_mutex_unlock(&cond_mutex);
+            }
+
            free(local_tasks_req);
            //uloga("%s(Yubo) debug_counter=%d \n", __func__, debug_counter);
            debug_counter=0;
 
            pthread_mutex_lock(&task_mutex);
-        if(main_thrd_wait == 1 && main_thrd_ready_wait == 1){
+        if(main_thrd_wait == 1){
             
-            uloga("%s(Yubo) Debug worker thread about to signal\n",__func__);
+            //uloga("%s(Yubo) Debug worker thread about to signal\n",__func__);
             thrd_num++;
             //uloga("%s(Yubo) Debug #2.1, thrd_num=%d\n",__func__, thrd_num);
             pthread_mutex_unlock(&task_mutex);
@@ -708,6 +721,7 @@ int rpc_process_event_mt(struct rpc_server *rpc_s) {
     int i;
     struct timeval now;
     struct timespec outtime;
+    int ret;
 
         
 
@@ -720,27 +734,36 @@ int rpc_process_event_mt(struct rpc_server *rpc_s) {
             main_thrd_wait=1;
             pthread_mutex_unlock(&task_mutex);
             //pthread_rwlock_unlock(&rw_lock);
-            uloga("%s(Yubo) Debug main thread about to sleep\n",__func__);
+            //uloga("%s(Yubo) Debug main thread about to sleep\n",__func__);
 
-            /*
+            
             pthread_mutex_lock(&cond_mutex);
             if(pthread_cond_wait(&task_cond, &cond_mutex) != 0){
                 uloga("%s(Yubo) Error: pthread_cond_wait\n",__func__);
             }
 
             pthread_mutex_unlock(&cond_mutex);
-            */
-
+            
+            /*
             pthread_mutex_lock(&task_cond);
             outtime.tv_sec = 0;
-            outtime.tv_nsec = 500000000;
-            if( pthread_cond_timedwait(&task_cond, &cond_mutex, &outtime) == ETIMEDOUT){
+            outtime.tv_nsec = 1000000;
+            ret = pthread_cond_timedwait(&task_cond, &cond_mutex, &outtime);
+                
+            if(ret == ETIMEDOUT){
                 uloga("%s(Yubo) main thread cond timedewait timeout\n",__func__);
             }
+            else if (ret != ETIMEDOUT || ret != 0){
+                uloga("%s(Yubo) Error pthread_cond_timedwait\n",__func__);
+            }
+            
             pthread_mutex_unlock(&task_cond);
+            */
+
+            //uloga("%s(Yubo) Debug main thread wake up\n",__func__);
 
             pthread_mutex_lock(&task_mutex);
-            main_thrd_ready_wait=0;
+            //main_thrd_ready_wait=0;
             main_thrd_wait = 0;
             pthread_mutex_unlock(&task_mutex);
         }
@@ -1067,12 +1090,12 @@ void finalize_threads(struct rpc_server* rpc_s_ptr)
 
     //tmp put worker thread to rpc_s
     
-/*
+
     for(i=0; i<MAX_WORKER_THREADS; i++){
         pthread_cancel(rpc_s->worker_thread[i]);
         pthread_join(rpc_s->worker_thread[i], NULL);
     }
-  */  
+ 
     pthread_mutex_destroy(&task_mutex);
     pthread_mutex_destroy(&cond_mutex);
     pthread_mutex_destroy(&worker_cond_mutex);

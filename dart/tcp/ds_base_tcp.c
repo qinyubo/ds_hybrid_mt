@@ -777,7 +777,7 @@ void ds_free(struct dart_server* ds) {
     finalize_threads(ds->rpc_s);
     //uloga("%s(Yubo) Debug #2\n", __func__);
     //Output debug counter
-    uloga("%s(Yubo): debug_counter_1=%d, debug_counter_2=%d\n",__func__,ds->rpc_s->debug_counter_1,ds->rpc_s->debug_counter_2);
+    //uloga("%s(Yubo): debug_counter_1=%d, debug_counter_2=%d\n",__func__,ds->rpc_s->debug_counter_1,ds->rpc_s->debug_counter_2);
 
 
     if (rpc_server_free(ds->rpc_s) < 0) {

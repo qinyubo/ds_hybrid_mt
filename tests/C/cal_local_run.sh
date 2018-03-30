@@ -7,7 +7,7 @@ CONF_DIMS_2=8192
 #CONF_DIMS_2=16384
 
 NUM_SERVER=1
-NUM_WRITER=1
+NUM_WRITER=4
 NUM_READER=1
 
 rm -f conf cred dataspaces.conf srv.lck
