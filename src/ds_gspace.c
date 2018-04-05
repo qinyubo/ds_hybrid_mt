@@ -1262,7 +1262,7 @@ static int obj_put_completion(struct rpc_server *rpc_s, struct msg_buf *msg)
     struct obj_data *od = msg->private;
     ls_add_obj(dsg->ls, od);
 
-    uloga("%s(Yubo) obj_put_completion at %f\n",__func__, timer_timestamp_1());
+  //  uloga("%s(Yubo) obj_put_completion at %f\n",__func__, timer_timestamp_1());
 
     free(msg);
 #ifdef DEBUG

@@ -36,7 +36,7 @@ int main_thrd_counter=0;
 
 
 
-#define MAX_WORKER_THREADS 1
+#define MAX_WORKER_THREADS 2
 
 int thrd_num=MAX_WORKER_THREADS; //number of threads is currently running
 
@@ -550,9 +550,7 @@ void* rpc_process_cmd_mt(void *tasks_request)
             tasks_received=0;
 
             pthread_mutex_lock(&task_mutex);
- /*           uloga("%s(Yubo) Debug #5\n",__func__);
             if(!list_empty(&local_rpc_s->ts_queue_high)){
-                uloga("%s(Yubo) Debug #6\n",__func__);
             
                 local_tasks_req = list_entry(local_rpc_s->ts_queue_high.next, struct tasks_request, tasks_entry);
                 list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
@@ -560,26 +558,20 @@ void* rpc_process_cmd_mt(void *tasks_request)
                 thrd_num--;
                 tasks_received = 1;
             }
-*/           if(!list_empty(&local_rpc_s->ts_queue_low)){
-                uloga("%s(Yubo) Debug #7\n",__func__);
+            else if(!list_empty(&local_rpc_s->ts_queue_low)){
                 
                 local_tasks_req = list_entry(local_rpc_s->ts_queue_low.next, struct tasks_request, tasks_entry);
-                 uloga("%s(Yubo) Debug #7.1\n",__func__);
                 list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
                 local_rpc_s->tasks_counter--;
                 thrd_num--;
                 tasks_received = 1;
-                 uloga("%s(Yubo) Debug #7.2\n",__func__);
             }
             pthread_mutex_unlock(&task_mutex);
-            uloga("%s(Yubo) Debug #8\n",__func__);
 
             if(tasks_received){
                 
                 tasks_received = 0;        
                 cmd = local_tasks_req->cmd;
-
-                uloga("%s(Yubo) Debug #9, rpc %d\n",__func__, cmd.cmd);
             
                 for (i = 0; i < num_service; ++i) {
                     if (cmd.cmd == rpc_commands[i].rpc_cmd) {
@@ -587,7 +579,7 @@ void* rpc_process_cmd_mt(void *tasks_request)
  /*                   if(cmd.cmd == 15 || cmd.cmd == 16 || cmd.cmd == 23){
                         uloga("%s(Yubo) worker_thrd rpc %d start at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
                     }
- */               
+ */ 
                     if (rpc_commands[i].rpc_func(local_rpc_s, &cmd) < 0) {
                         printf("[%s]: call RPC command function failed!\n", __func__);
                     goto err_out;
@@ -599,8 +591,8 @@ void* rpc_process_cmd_mt(void *tasks_request)
                     }
                 }
 
-            free(local_tasks_req);
-            local_tasks_req->peer->f_opened = 0; //after received all peer data, socket closed
+                local_tasks_req->peer->f_opened = 0; //after received all peer data, socket closed
+                free(local_tasks_req);
 
             if (i == num_service) {
                 printf("[%s]: unknown RPC command %d!\n", __func__, (int)cmd.cmd);
@@ -646,16 +638,12 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
 
             //uloga("%s(Yubo) thread receive cmd %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
             pthread_mutex_lock(&task_mutex);
-            uloga("%s(Yubo) Debug #1\n",__func__);
-/*            if(cmd.pl == 1){ //high priority queue
-                uloga("%s(Yubo) Debug #2\n",__func__);
+            if(cmd.pl == 1){ //high priority queue
                 list_add_tail(&tasks_req->tasks_entry, &rpc_s->ts_queue_high);  
             }
             else{ //any other request go to low priority queue
-*/                uloga("%s(Yubo) Debug #3\n",__func__);
                 list_add_tail(&tasks_req->tasks_entry, &rpc_s->ts_queue_low);
- //           }
-            uloga("%s(Yubo) Debug #4\n",__func__);
+            }
             
             rpc_s->tasks_counter++;
             peer->f_opened = 1;
