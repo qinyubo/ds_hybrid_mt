@@ -1,14 +1,14 @@
 #!/bin/bash
 DIR=.
-CONF_DIMS_1=8192
-CONF_DIMS_2=8192
+#CONF_DIMS_1=8192
+#CONF_DIMS_2=8192
 
-#CONF_DIMS_1=16384
-#CONF_DIMS_2=16384
+CONF_DIMS_1=16384
+CONF_DIMS_2=16384
 
-NUM_SERVER=2
-NUM_WRITER=16
-NUM_READER=16
+NUM_SERVER=1
+NUM_WRITER=1
+NUM_READER=1
 
 rm -f conf cred dataspaces.conf srv.lck
 #bash /home1/yq47/code/dataspace/dataspaces_service_clean/tests/C/cleanall.sh
