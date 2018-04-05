@@ -74,6 +74,7 @@ struct rpc_cmd {
         unsigned char            cmd;            // type of command
         unsigned char            num_msg;
         unsigned int           id; //Dart ID
+        unsigned int           pl; //priority level, so far 0 is low, 1 is high priority
 
         unsigned char            pad[280+(BBOX_MAX_NDIM-3)*24];// payload of the command
 } __attribute__((__packed__));
@@ -183,13 +184,11 @@ struct rpc_server {
     int thread_alive;
 
     void *dart_ref; /* Points to dart_server or dart_client struct */
-    //struct queue *tasks_q; /* Tasks queue of received RPC requests */
-    struct list_head tasks_list;
-    int tasks_counter; //count the number of tasks in the tasks list
 
-        //Debug counter Yubo
-    int debug_counter_1;
-    int debug_counter_2;
+    struct list_head ts_queue_low; //low priority queue, by default all tasks go to here
+    struct list_head ts_queue_high; //high priority queue
+    int tasks_counter; //count the total number of tasks in the task_queue
+
 };
 
 struct node_id {

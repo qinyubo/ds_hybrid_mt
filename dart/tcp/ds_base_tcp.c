@@ -738,9 +738,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
         printf("[%s]: boot DART server failed!\n", __func__);
         goto err_out;
     }
-        //Debug counter Yubo
-    ds->rpc_s->debug_counter_1=0;    
-    ds->rpc_s->debug_counter_2=0;  
+
 
     ds_register_cp(ds);
 
@@ -772,12 +770,7 @@ void ds_free(struct dart_server* ds) {
     pthread_cancel(ds->rpc_s->comm_thread);
     pthread_join(ds->rpc_s->comm_thread, NULL);
     
-    //Finalize worker threads
-    //uloga("%s(Yubo) Debug #1\n", __func__);
     finalize_threads(ds->rpc_s);
-    //uloga("%s(Yubo) Debug #2\n", __func__);
-    //Output debug counter
-    //uloga("%s(Yubo): debug_counter_1=%d, debug_counter_2=%d\n",__func__,ds->rpc_s->debug_counter_1,ds->rpc_s->debug_counter_2);
 
 
     if (rpc_server_free(ds->rpc_s) < 0) {
