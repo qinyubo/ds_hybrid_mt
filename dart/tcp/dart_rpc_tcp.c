@@ -36,7 +36,7 @@ int main_thrd_counter=0;
 
 
 
-#define MAX_WORKER_THREADS 4
+#define MAX_WORKER_THREADS 1
 
 int thrd_num=MAX_WORKER_THREADS; //number of threads is currently running
 
@@ -440,9 +440,16 @@ static int rpc_process_cmd(struct rpc_server *rpc_s, struct rpc_cmd *cmd) {
     for (i = 0; i < num_service; ++i) {
         if (cmd->cmd == rpc_commands[i].rpc_cmd) {
             //uloga("%s(Yubo) client rpc %d at timestamp %f\n", __func__, cmd->cmd, timer_timestamp_2());
+            if(cmd->cmd == 15 || cmd->cmd == 16 || cmd->cmd == 23){
+                        uloga("%s(Yubo) worker_thrd rpc %d start at timestamp %f\n", __func__, cmd->cmd, timer_timestamp_2());
+            }
+                
             if (rpc_commands[i].rpc_func(rpc_s, cmd) < 0) {
                 printf("[%s]: call RPC command function failed!\n", __func__);
                 goto err_out;
+            }
+            if(cmd->cmd == 15 || cmd->cmd == 16 || cmd->cmd == 23){
+                        uloga("%s(Yubo) worker_thrd rpc %d end at timestamp %f\n", __func__, cmd->cmd, timer_timestamp_2());
             }
              //uloga("%s(Yubo) exec_end rpc %d at timestamp %f\n", __func__, cmd->cmd, MPI_Wtime());
 
@@ -561,13 +568,20 @@ void* rpc_process_cmd_mt(void *tasks_request)
                 pthread_mutex_unlock(&task_mutex);
             }
 
-            //uloga("%s(Yubo) worker_thrd rpc %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
+            
             for (i = 0; i < num_service; ++i) {
                 if (cmd.cmd == rpc_commands[i].rpc_cmd) {
                // uloga("%s(Yubo) worker thread is on CPU %d\n", __func__, sched_getcpu());
+                    if(cmd.cmd == 15 || cmd.cmd == 16 || cmd.cmd == 23){
+                        uloga("%s(Yubo) worker_thrd rpc %d start at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
+                    }
+                
                  if (rpc_commands[i].rpc_func(local_rpc_s, &cmd) < 0) {
                         printf("[%s]: call RPC command function failed!\n", __func__);
                     goto err_out;
+                    }
+                    if(cmd.cmd == 15 || cmd.cmd == 16 || cmd.cmd == 23){
+                        uloga("%s(Yubo) worker_thrd rpc %d end at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
                     }
                 break;
                 }
@@ -637,21 +651,6 @@ void* rpc_process_cmd_mt(void *tasks_request)
                 }
                 debug_counter = 0;
             }
-
-
-
-
-/*
-            if(debug_counter > 10){
-            pthread_mutex_lock(&worker_cond_mutex);
-            gettimeofday(&now, NULL);
-            outtime.tv_sec = now.tv_sec+1;
-            outtime.tv_nsec = now.tv_usec;
-            pthread_cond_timedwait(&worker_self_cond, &worker_cond_mutex, &outtime);
-            pthread_mutex_unlock(&worker_cond_mutex);
-            }
- */           
-
         }    
             
 
@@ -745,23 +744,6 @@ int rpc_process_event_mt(struct rpc_server *rpc_s) {
 
             pthread_mutex_unlock(&cond_mutex);
             
-            /*
-            pthread_mutex_lock(&task_cond);
-            outtime.tv_sec = 0;
-            outtime.tv_nsec = 1000000;
-            ret = pthread_cond_timedwait(&task_cond, &cond_mutex, &outtime);
-                
-            if(ret == ETIMEDOUT){
-                uloga("%s(Yubo) main thread cond timedewait timeout\n",__func__);
-            }
-            else if (ret != ETIMEDOUT || ret != 0){
-                uloga("%s(Yubo) Error pthread_cond_timedwait\n",__func__);
-            }
-            
-            pthread_mutex_unlock(&task_cond);
-            */
-
-            //uloga("%s(Yubo) Debug main thread wake up\n",__func__);
 
             pthread_mutex_lock(&task_mutex);
             //main_thrd_ready_wait=0;
@@ -773,18 +755,7 @@ int rpc_process_event_mt(struct rpc_server *rpc_s) {
         }
 
  
-
-/*
-    if(main_thrd_counter > rpc_s->num_peers*2){
-        pthread_mutex_lock(&worker_cond_mutex);
-            gettimeofday(&now, NULL);
-            outtime.tv_sec = now.tv_sec+1;
-            outtime.tv_nsec = now.tv_usec;
-            pthread_cond_timedwait(&worker_self_cond, &worker_cond_mutex, &outtime);
-            pthread_mutex_unlock(&worker_cond_mutex);
-            main_thrd_counter = 0;
-    }       
- */           
+    
         
         if (!peer->f_connected || peer->f_opened) {
             main_thrd_counter++;
@@ -1091,12 +1062,12 @@ void finalize_threads(struct rpc_server* rpc_s_ptr)
 
     //tmp put worker thread to rpc_s
     
-
+/*
     for(i=0; i<MAX_WORKER_THREADS; i++){
         pthread_cancel(rpc_s->worker_thread[i]);
         pthread_join(rpc_s->worker_thread[i], NULL);
     }
- 
+*/ 
     pthread_mutex_destroy(&task_mutex);
     pthread_mutex_destroy(&cond_mutex);
     pthread_mutex_destroy(&worker_cond_mutex);

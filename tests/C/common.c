@@ -300,6 +300,8 @@ void check_data(const char *var_name, double *buf, int num_elem, int rank, int t
                 uloga("%s(): var= %s, rank= %d, ts= %d, "
                 "error elem cnt= %d, total elem= %d\n",
                         __func__, var_name, rank, ts, cnt, num_elem);
+                uloga("%s(): var= %s, rank= %d, max= %f, min= %f, avg= %f\n",
+                          __func__, var_name, rank, max, min, avg);
         }
 
         return;

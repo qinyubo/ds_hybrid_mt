@@ -388,7 +388,25 @@ All ok.
 TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.334263
 TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.670868
 
+New MT
+16:1:4 2 thread
+thread_handle_new(Yubo) current # thread=2
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.153127
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.298590
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.136267
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.307489
+test_get_run(): done
+All ok.
 
+4 threads
+TS= 1 TRANSPORT_TYPE= DATASPACES write MAX time= 0.112543
+TS= 1 TRANSPORT_TYPE= DATASPACES read MAX time= 0.270337
+TS= 2 TRANSPORT_TYPE= DATASPACES write MAX time= 0.108212
+test_put_run(): done
+TS= 2 TRANSPORT_TYPE= DATASPACES read MAX time= 0.280281
+test_get_run(): done
+All ok.
 
 
 

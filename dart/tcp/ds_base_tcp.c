@@ -745,7 +745,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
     ds_register_cp(ds);
 
     //uloga("%s(Yubo), #2 before create thread_handle, the rpc_s->ptlmap.id=%d\n", __func__, ds->rpc_s->ptlmap.id);
-    thread_boot(ds);
+    //thread_boot(ds);
 
     int id = ds->self->ptlmap.id;
     ds->num_charge_cp = (num_cp - 1 - id + num_sp) / num_sp;
@@ -802,7 +802,7 @@ void ds_free(struct dart_server* ds) {
 
 
 int ds_process(struct dart_server* ds) {
-    return rpc_process_event_mt(ds->rpc_s);
+    return rpc_process_event(ds->rpc_s);
 }
 
 
