@@ -258,7 +258,6 @@ static int dsrpc_cn_unregister(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
 	int err = -ENOMEM;
 	int i;
 
-
     hreg->num_cp = 0;
     peer = ds_get_peer(ds, cmd->id);
 
@@ -278,6 +277,7 @@ static int dsrpc_cn_unregister(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         goto err_out;
     }
     struct node_id *temp_peer, *t;
+    pthread_mutex_lock(&task_mutex);
     list_for_each_entry_safe(temp_peer, t, &ds->rpc_s->peer_list, struct node_id, peer_entry) {
         //        printf("Clientpeer# %d (%s:%d)\n",temp_peer->ptlmap.id, inet_ntoa(temp_peer->ptlmap.address.sin_addr),ntohs(temp_peer->ptlmap.address.sin_port));
 
@@ -317,6 +317,7 @@ static int dsrpc_cn_unregister(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         }
 
     }
+    pthread_mutex_unlock(&task_mutex);
 
     struct app_info *app = app_find(ds, appid);
     if(app){
@@ -1788,12 +1789,28 @@ int ds_boot_slave(struct dart_server *ds)   //Done
     return err;
 }
 
+/*
 int thread_boot(struct dart_server *ds){
 
     if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle_new, (void*)ds->rpc_s) != 0){
         printf("[%s]: create pthread_handle failed!\n", __func__);
         return -1;
     }
+    //uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
+    return 0;
+
+}
+*/
+
+int thread_boot(struct dart_server *ds){
+
+/*
+    if (pthread_create(&ds->rpc_s->task_thread, NULL, thread_handle_new, (void*)ds->rpc_s) != 0){
+        printf("[%s]: create pthread_handle failed!\n", __func__);
+        return -1;
+    }
+*/
+    thread_handle_new(ds->rpc_s);
     //uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
     return 0;
 

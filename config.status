@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile dart/Makefile src/Makefile tests/Makefile tests/C/Makefile tests/Fortran/Makefile scripts/dspaces_config.makesrc"
+config_files=" Makefile dart/Makefile src/Makefile tests/Makefile tests/C/Makefile tests/Fortran/Makefile tests/MT/Makefile scripts/dspaces_config.makesrc"
 config_headers=" config.h"
 config_commands=" depfiles"
 
@@ -554,6 +554,7 @@ do
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "tests/C/Makefile") CONFIG_FILES="$CONFIG_FILES tests/C/Makefile" ;;
     "tests/Fortran/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Fortran/Makefile" ;;
+    "tests/MT/Makefile") CONFIG_FILES="$CONFIG_FILES tests/MT/Makefile" ;;
     "scripts/dspaces_config.makesrc") CONFIG_FILES="$CONFIG_FILES scripts/dspaces_config.makesrc" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

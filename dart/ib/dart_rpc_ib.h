@@ -53,6 +53,8 @@ struct rpc_server;
 struct rpc_cmd;
 struct node_id;
 
+pthread_mutex_t task_mutex;
+
 /*
    Rpc prototype function, should be called in response to a remote rpc request. 
 */
@@ -384,7 +386,7 @@ enum cmd_type {
 	cn_resume_transfer,	/* Hint for server to start async transfers. */
 	cn_suspend_transfer,	/* Hint for server to stop async transfers. */
 
-	sp_reg_request,
+	sp_reg_request,  //10
 	sp_reg_reply,
 	peer_rdma_done,		/* Added in IB version 12 */
 	sp_announce_cp,
@@ -394,19 +396,19 @@ enum cmd_type {
     cn_unregister_cp,
     cn_unregister_app,
     sp_announce_app,
-    cn_timing,
+    cn_timing,  //20
 	/* Synchronization primitives. */
 	cp_barrier,
 	cp_lock,
 	/* Shared spaces specific. */
-	ss_obj_put,
+	ss_obj_put,   //23
 	ss_obj_update,
 	ss_obj_get_dht_peers,
 	ss_obj_get_desc,
 	ss_obj_query,
 	ss_obj_cq_register,
 	ss_obj_cq_notify,
-	ss_obj_get,
+	ss_obj_get,  //30
 	ss_obj_filter,
 	ss_obj_info,
 	ss_info,
@@ -525,7 +527,8 @@ void rpc_server_find_local_peers(struct rpc_server *rpc_s,
 uint32_t rpc_server_get_nid(struct rpc_server *rpc_s);
 
 //Yubo 
-void* thread_handle_new(void* attr);
+//void* thread_handle_new(void* attr);
+void thread_handle_new(struct rpc_server* rpc_s);
 void finalize_threads(struct rpc_server* rpc_s_ptr);
 
 #endif

@@ -25,6 +25,9 @@ mpirun -machinefile cal_server --bind-to socket -n $NUM_SERVER $DIR/dataspaces_s
 mpirun -machinefile cal_server --bind-to socket -n $NUM_WRITER $DIR/test_writer DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 2 1 &
 mpirun -machinefile cal_server --bind-to socket -n $NUM_READER $DIR/test_reader DATASPACES $NUM_READER 2 $NUM_READER 1 $(($CONF_DIMS_1/$NUM_READER)) $CONF_DIMS_2 2 2 &
 
+#gdb $DIR/dataspaces_server -s $NUM_SERVER -c $(($NUM_WRITER+$NUM_READER))  & sleep 2
+#mpirun -n $NUM_WRITER $DIR/test_writer DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 2 1 &
+#mpirun -n $NUM_READER $DIR/test_reader DATASPACES $NUM_READER 2 $NUM_READER 1 $(($CONF_DIMS_1/$NUM_READER)) $CONF_DIMS_2 2 2 &
 
 #mpirun -machinefile cal_server -n $NUM_SERVER $DIR/dataspaces_server -s $NUM_SERVER -c $(($NUM_WRITER+$NUM_READER)) >& $DIR/server_$CONF_DIMS_1.log & sleep 2
 #mpirun -machinefile cal_server -n $NUM_WRITER $DIR/test_writer DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 1 1 >& $DIR/writer_$CONF_DIMS_1.log &

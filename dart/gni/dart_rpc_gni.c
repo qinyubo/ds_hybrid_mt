@@ -1615,7 +1615,7 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
   return status;
 }
 
-#else
+#else  //no DRC
 
 inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 {
@@ -1782,7 +1782,7 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 
 	  free(rr->msg->msg_rpc);
 	  free(rr);
-	  }
+	  }  //end of if(event_id >= INDEX_COUNT)
 
 	 if( event_id < INDEX_COUNT )
 	   {

@@ -93,7 +93,6 @@ static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type typ
 
 	common_lock_on_read("mnd_lock", &gcomm_);	//Test dspaces_barrier
 	//common_lock_on_read("mnd_lock", NULL);
-
 	set_offset_nd(rank_, dims);
 	uint64_t dims_size = 1;
 	int elem_size = elem_size_;
@@ -183,7 +182,7 @@ int test_get_run(enum transport_type type, int npapp, int ndims, int* npdim, uin
 	int app_id = appid;
 	double tm_st, tm_end;
 	tm_st = timer_read(&timer_);
-	common_init(npapp_, app_id, &gcomm_, NULL);
+	//common_init(npapp_, app_id, &gcomm_, NULL);
 	tm_end = timer_read(&timer_);
 	common_get_transport_type_str(type, transport_type_str_);
 
@@ -203,7 +202,6 @@ int test_get_run(enum transport_type type, int npapp, int ndims, int* npdim, uin
 	}
 
 	MPI_Barrier(gcomm_);
-
 	int ds_rank = common_rank();
 	tm_st = timer_read(&timer_);
 	common_finalize();

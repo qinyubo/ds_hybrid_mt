@@ -80,7 +80,7 @@ POST_UNINSTALL = :
 build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
 bin_PROGRAMS = dataspaces_server$(EXEEXT) test_writer$(EXEEXT) \
-	test_reader$(EXEEXT)
+	test_reader$(EXEEXT) test_rw$(EXEEXT)
 subdir = tests/C
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/config/depcomp $(noinst_HEADERS)
@@ -111,6 +111,10 @@ am_test_reader_OBJECTS = common.$(OBJEXT) test_get_run.$(OBJEXT) \
 	test_reader.$(OBJEXT)
 test_reader_OBJECTS = $(am_test_reader_OBJECTS)
 test_reader_DEPENDENCIES = $(am__DEPENDENCIES_1)
+am_test_rw_OBJECTS = common.$(OBJEXT) test_get_run.$(OBJEXT) \
+	test_put_run.$(OBJEXT) test_rw.$(OBJEXT)
+test_rw_OBJECTS = $(am_test_rw_OBJECTS)
+test_rw_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_test_writer_OBJECTS = common.$(OBJEXT) test_put_run.$(OBJEXT) \
 	test_writer.$(OBJEXT)
 test_writer_OBJECTS = $(am_test_writer_OBJECTS)
@@ -144,9 +148,9 @@ am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(dataspaces_server_SOURCES) $(test_reader_SOURCES) \
-	$(test_writer_SOURCES)
+	$(test_rw_SOURCES) $(test_writer_SOURCES)
 DIST_SOURCES = $(dataspaces_server_SOURCES) $(test_reader_SOURCES) \
-	$(test_writer_SOURCES)
+	$(test_rw_SOURCES) $(test_writer_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -332,6 +336,8 @@ test_writer_SOURCES = common.c test_put_run.c test_writer.c
 test_writer_LDADD = -L../../src -ldspaces -ldscommon  -L../../dart -ldart $(DSPACESLIB_LDADD)
 test_reader_SOURCES = common.c test_get_run.c test_reader.c
 test_reader_LDADD = -L../../src -ldspaces -ldscommon -L../../dart -ldart $(DSPACESLIB_LDADD)
+test_rw_SOURCES = common.c test_get_run.c test_put_run.c test_rw.c
+test_rw_LDADD = -L../../src -ldspaces -ldscommon -L../../dart -ldart $(DSPACESLIB_LDADD)
 noinst_HEADERS = common.h
 all: all-am
 
@@ -418,6 +424,10 @@ test_reader$(EXEEXT): $(test_reader_OBJECTS) $(test_reader_DEPENDENCIES) $(EXTRA
 	@rm -f test_reader$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_reader_OBJECTS) $(test_reader_LDADD) $(LIBS)
 
+test_rw$(EXEEXT): $(test_rw_OBJECTS) $(test_rw_DEPENDENCIES) $(EXTRA_test_rw_DEPENDENCIES) 
+	@rm -f test_rw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_rw_OBJECTS) $(test_rw_LDADD) $(LIBS)
+
 test_writer$(EXEEXT): $(test_writer_OBJECTS) $(test_writer_DEPENDENCIES) $(EXTRA_test_writer_DEPENDENCIES) 
 	@rm -f test_writer$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_writer_OBJECTS) $(test_writer_LDADD) $(LIBS)
@@ -433,6 +443,7 @@ include ./$(DEPDIR)/dataspaces_server.Po
 include ./$(DEPDIR)/test_get_run.Po
 include ./$(DEPDIR)/test_put_run.Po
 include ./$(DEPDIR)/test_reader.Po
+include ./$(DEPDIR)/test_rw.Po
 include ./$(DEPDIR)/test_writer.Po
 
 .c.o:

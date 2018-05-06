@@ -231,11 +231,12 @@ int test_put_run(enum transport_type type, int npapp, int ndims, int* npdim,
 	}
 
 	MPI_Barrier(gcomm_);
-
+/*
 	int ds_rank = common_rank();
 	tm_st = timer_read(&timer_);
 	common_finalize();
 	tm_end = timer_read(&timer_);
+	*/
 
 #ifdef TIMING_PERF
 	uloga("TIMING_PERF fini_dspaces peer %d time= %lf\n", ds_rank, tm_end-tm_st);
