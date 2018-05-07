@@ -7,8 +7,8 @@ CONF_DIMS_2=8192
 #CONF_DIMS_2=16384
 
 NUM_SERVER=1
-NUM_WRITER_TOT=1
-NUM_READER_TOT=1
+NUM_WRITER_TOT=2
+NUM_READER_TOT=2
 NUM_WRITER=1
 NUM_READER=1
 
@@ -24,12 +24,12 @@ lock_type = 2
 " > dataspaces.conf
 
 mpirun -machinefile cal_server --bind-to socket -n $NUM_SERVER $DIR/dataspaces_server -s $NUM_SERVER -c $(($NUM_WRITER_TOT+$NUM_READER_TOT)) & sleep 2
-mpirun -machinefile cal_server --bind-to socket -n $NUM_WRITER $DIR/test_writer_1 DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 2 1 8 1 0 &
-mpirun -machinefile cal_server --bind-to socket -n $NUM_READER $DIR/test_reader_1 DATASPACES $NUM_READER 2 $NUM_READER 1 $(($CONF_DIMS_1/$NUM_READER)) $CONF_DIMS_2 2 3 8 1 0 
+mpirun -machinefile cal_server --bind-to socket -n $NUM_WRITER $DIR/test_lev1_w1 DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 2 1 8 1 &
+mpirun -machinefile cal_server --bind-to socket -n $NUM_READER $DIR/test_lev1_w2 DATASPACES $NUM_READER 2 $NUM_READER 1 $(($CONF_DIMS_1/$NUM_READER)) $CONF_DIMS_2 2 3 8 1 &
 
-mpirun -machinefile cal_server --bind-to socket -n $NUM_WRITER $DIR/test_writer_2 DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 2 2 8 1 1  &
+mpirun -machinefile cal_server --bind-to socket -n $NUM_WRITER $DIR/test_lev2 DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 2 2 8 1  &
 
-mpirun -machinefile cal_server --bind-to socket -n $NUM_READER $DIR/test_reader_2 DATASPACES $NUM_READER 2 $NUM_READER 1 $(($CONF_DIMS_1/$NUM_READER)) $CONF_DIMS_2 2 4 8 1 1 
+mpirun -machinefile cal_server --bind-to socket -n $NUM_READER $DIR/test_lev3 DATASPACES $NUM_READER 2 $NUM_READER 1 $(($CONF_DIMS_1/$NUM_READER)) $CONF_DIMS_2 2 4 8 1  &
 
 #gdb $DIR/dataspaces_server -s $NUM_SERVER -c $(($NUM_WRITER+$NUM_READER))  & sleep 2
 #mpirun -n $NUM_WRITER $DIR/test_writer DATASPACES $NUM_WRITER 2 $NUM_WRITER 1 $(($CONF_DIMS_1/$NUM_WRITER)) $CONF_DIMS_2 2 1 &

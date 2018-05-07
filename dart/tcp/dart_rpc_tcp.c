@@ -639,9 +639,11 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
             //uloga("%s(Yubo) thread receive cmd %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
             pthread_mutex_lock(&task_mutex);
             if(cmd.pl == 1){ //high priority queue
+                uloga("%s(Yubo) add cmd to high priority queue\n",__func__);
                 list_add_tail(&tasks_req->tasks_entry, &rpc_s->ts_queue_high);  
             }
             else{ //any other request go to low priority queue
+                uloga("%s(Yubo) add cmd to low priority queue\n",__func__);
                 list_add_tail(&tasks_req->tasks_entry, &rpc_s->ts_queue_low);
             }
             

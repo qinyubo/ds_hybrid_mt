@@ -1187,6 +1187,7 @@ static int dcg_obj_data_get(struct query_tran_entry *qte)
 
                 msg->msg_rpc->cmd = ss_obj_get;
                 msg->msg_rpc->id = DCG_ID;
+                msg->msg_rpc->pl = od->obj_desc.p_lev; //Assign request priority level information
 
                 oh = (struct hdr_obj_get *) msg->msg_rpc->pad;
                 oh->qid = qte->q_id;
@@ -1621,6 +1622,7 @@ int dcg_obj_put(struct obj_data *od)
 
         msg->msg_rpc->cmd = ss_obj_put;
         msg->msg_rpc->id = DCG_ID; // dcg->dc->self->id;
+        msg->msg_rpc->pl = od->obj_desc.p_lev; //Assign priority level information
 
         hdr = msg->msg_rpc->pad;
         hdr->odsc = od->obj_desc;

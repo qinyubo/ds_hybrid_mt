@@ -1,1 +1,1 @@
-SUBDIRS=C Fortran MT
+SUBDIRS=3lev

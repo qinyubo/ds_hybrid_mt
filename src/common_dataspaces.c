@@ -224,7 +224,8 @@ int common_dspaces_get(const char *var_name,
 	int ndim,
 	uint64_t *lb,
 	uint64_t *ub,
-	void *data)
+	void *data,
+    int p_lev)
 {
     if (!is_dspaces_lib_init() || !is_ndim_within_bound(ndim)) {
         return -EINVAL;
@@ -234,6 +235,7 @@ int common_dspaces_get(const char *var_name,
             .version = ver, .owner = -1, 
             .st = st,
             .size = size,
+            .p_lev = p_lev,
             .bb = {.num_dims = ndim,}
     };
     memset(odsc.bb.lb.c, 0, sizeof(uint64_t)*BBOX_MAX_NDIM);
@@ -280,7 +282,8 @@ int common_dspaces_put(const char *var_name,
         int ndim,
         uint64_t *lb,
         uint64_t *ub,
-        const void *data)
+        const void *data,
+        int p_lev)
 {
 #if defined(DS_HAVE_DSPACES_LOCATION_AWARE_WRITE)
         return common_dspaces_put_location_aware(var_name, ver, size, ndim,
@@ -294,6 +297,7 @@ int common_dspaces_put(const char *var_name,
                 .version = ver, .owner = -1, 
                 .st = st,
                 .size = size,
+                .p_lev = p_lev,
                 .bb = {.num_dims = ndim,}
         };
 

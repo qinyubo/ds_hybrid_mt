@@ -325,7 +325,7 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-SUBDIRS = C Fortran MT
+SUBDIRS = 3lev
 all: all-recursive
 
 .SUFFIXES:
