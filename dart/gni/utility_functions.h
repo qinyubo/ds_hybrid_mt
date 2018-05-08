@@ -62,6 +62,7 @@ static int             passed = 0;
 /*
  * allgather gather the requested information from all of the ranks.
  */
+
 static void
 allgather(void *in, void *out, int len, void *comm)
 {
@@ -70,27 +71,27 @@ allgather(void *in, void *out, int len, void *comm)
     static int     *ivec_ptr = NULL;
     static int      job_size = 0;
     static int      my_rank;
-    int         my_app_rank;
-    int         app_job_size;
-    int         appnum;
+    int		    my_app_rank;
+    int		    app_job_size;
+    int		    appnum;
     char           *out_ptr;
     int             rc;
     char           *tmp_buf;
 
     if (!already_called) {
-        if(comm) {
-            rc = MPI_Comm_size(*((MPI_Comm *)comm), &job_size);
+	if(comm) {
+	    rc = MPI_Comm_size(*((MPI_Comm *)comm), &job_size);
             assert(rc == MPI_SUCCESS);
 
             rc = MPI_Comm_rank(*((MPI_Comm *)comm), &my_rank);
             assert(rc == MPI_SUCCESS);
 
-            ivec_ptr = (int *) malloc(sizeof(int) * job_size);
+	    ivec_ptr = (int *) malloc(sizeof(int) * job_size);
             assert(ivec_ptr != NULL);
-            rc = MPI_Allgather(&my_rank, 1, MPI_INT, ivec_ptr, 1, MPI_INT, *((MPI_Comm *)comm));
-            assert(rc == MPI_SUCCESS);
+	    rc = MPI_Allgather(&my_rank, 1, MPI_INT, ivec_ptr, 1, MPI_INT, *((MPI_Comm *)comm));
+	    assert(rc == MPI_SUCCESS);
 
-        } else {
+	} else {
             rc = PMI_Get_size(&job_size);
             assert(rc == PMI_SUCCESS);
 
@@ -102,7 +103,7 @@ allgather(void *in, void *out, int len, void *comm)
 
             rc = PMI_Allgather(&my_rank, ivec_ptr, sizeof(int));
             assert(rc == PMI_SUCCESS);
-        }
+	}
         already_called = 1;
     }
 
@@ -110,8 +111,8 @@ allgather(void *in, void *out, int len, void *comm)
     assert(tmp_buf);
 
     if(comm) {
-    rc = MPI_Allgather(in, len, MPI_BYTE, tmp_buf, len, MPI_BYTE, *((MPI_Comm *)comm));
-    assert(rc == MPI_SUCCESS);
+	rc = MPI_Allgather(in, len, MPI_BYTE, tmp_buf, len, MPI_BYTE, *((MPI_Comm *)comm));
+	assert(rc == MPI_SUCCESS);
     } else {
         rc = PMI_Allgather(in, tmp_buf, len);
         assert(rc == PMI_SUCCESS);
@@ -332,7 +333,7 @@ static int get_named_dom_aries(const char *pname, uint32_t *_cookie, uint32_t *_
           break;
         sscanf(buffer, "%s %*s %*d %x %x",
                &name, &cookie, &cookie2);
-        //printf("Buffer info: name (%s), cookie(%x), cookie2(%x).\n", name, cookie, cookie2);                                                
+        //uloga("Buffer info: name (%s), cookie(%x), cookie2(%x).\n", name, cookie, cookie2);                                                
         if(!strcasecmp(name, pname))
           {
             *_cookie = cookie;
