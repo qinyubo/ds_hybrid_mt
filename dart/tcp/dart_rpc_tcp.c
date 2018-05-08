@@ -32,6 +32,8 @@ int main_thrd_ready_wait=0;
 
 int main_thrd_counter=0;
 
+int num_thrd_in_low_pq=0; //number of thread in low priority queue
+
 
 
 
@@ -532,6 +534,49 @@ int rpc_process_event(struct rpc_server *rpc_s) {
 * MT version *
 ********************************/
 
+//Determine where to fetch tasks
+int thread_manager(struct rpc_server *rpc_s, struct tasks_request **tasks_req){
+//**tasks_req is the pointer of pointer local_tasks_req in function rpc_processe_cmd_mt
+//*tasks_req = local_tasks_req in below is assign local_tasks_req to pointer tasks_req, here is dereference operation
+//https://stackoverflow.com/questions/4844914/having-a-function-change-the-value-a-pointer-represents-in-c
+    
+    struct tasks_request *local_tasks_req;
+
+    if(list_empty(&rpc_s->ts_queue_high) && !list_empty(&rpc_s->ts_queue_low)){ //fetch from low priority queue
+        local_tasks_req = list_entry(rpc_s->ts_queue_low.next,  struct tasks_request, tasks_entry);
+        list_del(&local_tasks_req->tasks_entry); 
+        num_thrd_in_low_pq++;
+        *tasks_req = local_tasks_req;
+        return 1;
+    }
+    else if(!list_empty(&rpc_s->ts_queue_high) && list_empty(&rpc_s->ts_queue_low)){//fetch from high priority queue
+        local_tasks_req = list_entry(rpc_s->ts_queue_high.next,  struct tasks_request, tasks_entry);
+        list_del(&local_tasks_req->tasks_entry);
+        *tasks_req = local_tasks_req;
+        return 2;
+    }
+    else if(!list_empty(&rpc_s->ts_queue_high) && !list_empty(&rpc_s->ts_queue_low)){
+        if(num_thrd_in_low_pq >= 1){ //At lease one thread in low PQ, fetch from high PQ
+            local_tasks_req = list_entry(rpc_s->ts_queue_high.next,  struct tasks_request, tasks_entry);
+            list_del(&local_tasks_req->tasks_entry);   
+            *tasks_req = local_tasks_req;
+            return 2;
+        }
+        else{//fetch from low priority queue
+            local_tasks_req = list_entry(rpc_s->ts_queue_low.next,  struct tasks_request, tasks_entry);
+            list_del(&local_tasks_req->tasks_entry);
+            num_thrd_in_low_pq++;
+            *tasks_req = local_tasks_req;
+            return 1;
+        }
+    }
+    else if(!list_empty(&rpc_s->ts_queue_high) && !list_empty(&rpc_s->ts_queue_low)){//no task in the queue
+        return 0; 
+    }
+
+    return 0;
+}
+
 //Thread process RPC cmd
 void* rpc_process_cmd_mt(void *tasks_request)
 {
@@ -543,62 +588,75 @@ void* rpc_process_cmd_mt(void *tasks_request)
     int i;
     double tm_start, tm_end, tm_tot;
     int cpuid;
-    int tasks_received = 0;
-    
+    int tasks_received = 0; //0 no task received, 1 task received from low priority queue, 2 task received from high pq
 
     while(1){
             tasks_received=0;
 
-            pthread_mutex_lock(&task_mutex);
-            if(!list_empty(&local_rpc_s->ts_queue_high)){
             
-                local_tasks_req = list_entry(local_rpc_s->ts_queue_high.next, struct tasks_request, tasks_entry);
-                list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
-                local_rpc_s->tasks_counter--;
-                thrd_num--;
-                tasks_received = 1;
-            }
-            else if(!list_empty(&local_rpc_s->ts_queue_low)){
-                
-                local_tasks_req = list_entry(local_rpc_s->ts_queue_low.next, struct tasks_request, tasks_entry);
-                list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
-                local_rpc_s->tasks_counter--;
-                thrd_num--;
-                tasks_received = 1;
-            }
+
+            pthread_mutex_lock(&task_mutex);
+
+            tasks_received = thread_manager(local_rpc_s, &local_tasks_req);   
+
             pthread_mutex_unlock(&task_mutex);
 
-            if(tasks_received){
-                
-                tasks_received = 0;        
+            if(tasks_received == 1){//low priority queue
+                tasks_received = 0;     
+                 
                 cmd = local_tasks_req->cmd;
-            
+
+           // uloga("%s(Yubo) fetch from low priority queue\n",__func__);
                 for (i = 0; i < num_service; ++i) {
                     if (cmd.cmd == rpc_commands[i].rpc_cmd) {
-               // uloga("%s(Yubo) worker thread is on CPU %d\n", __func__, sched_getcpu());
- /*                   if(cmd.cmd == 15 || cmd.cmd == 16 || cmd.cmd == 23){
-                        uloga("%s(Yubo) worker_thrd rpc %d start at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
-                    }
- */ 
                     if (rpc_commands[i].rpc_func(local_rpc_s, &cmd) < 0) {
                         printf("[%s]: call RPC command function failed!\n", __func__);
                     goto err_out;
                         }
-  /*                  if(cmd.cmd == 15 || cmd.cmd == 16 || cmd.cmd == 23){
-                        uloga("%s(Yubo) worker_thrd rpc %d end at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
-                    }
-  */                break;
+                        pthread_mutex_lock(&task_mutex);
+                        num_thrd_in_low_pq--;
+                        pthread_mutex_unlock(&task_mutex);
+
+                 break;
                     }
                 }
 
                 local_tasks_req->peer->f_opened = 0; //after received all peer data, socket closed
                 free(local_tasks_req);
 
-            if (i == num_service) {
-                printf("[%s]: unknown RPC command %d!\n", __func__, (int)cmd.cmd);
-                goto err_out;
+                if (i == num_service) {
+                    printf("[%s]: unknown RPC command %d!\n", __func__, (int)cmd.cmd);
+                    goto err_out;
+                }
             }
-        }//end of if tasks_received
+            else if(tasks_received == 2){//high priority queue
+                
+                tasks_received = 0;        
+                cmd = local_tasks_req->cmd;
+            
+           // uloga("%s(Yubo) fetch from high priority queue\n",__func__);
+                for (i = 0; i < num_service; ++i) {
+                    if (cmd.cmd == rpc_commands[i].rpc_cmd) {
+
+                    if (rpc_commands[i].rpc_func(local_rpc_s, &cmd) < 0) {
+                        printf("[%s]: call RPC command function failed!\n", __func__);
+                    goto err_out;
+                        }
+
+                 break;
+                    }
+                }
+
+                local_tasks_req->peer->f_opened = 0; //after received all peer data, socket closed
+                free(local_tasks_req);
+
+                if (i == num_service) {
+                    printf("[%s]: unknown RPC command %d!\n", __func__, (int)cmd.cmd);
+                    goto err_out;
+                }
+            }
+
+        //end of if tasks_received
 
     }// end of while
 
@@ -606,6 +664,24 @@ void* rpc_process_cmd_mt(void *tasks_request)
     exit(-1);
 
 }
+
+
+int task_scheduler(struct rpc_cmd cmd, struct rpc_server *rpc_s, struct tasks_request *tasks_req){
+            
+            if(cmd.pl == 1){ //high priority queue
+             //   uloga("%s(Yubo) add cmd to high priority queue\n",__func__);
+                list_add_tail(&tasks_req->tasks_entry, &rpc_s->ts_queue_high);  
+            }
+            else{ //any other request go to low priority queue
+              //  uloga("%s(Yubo) add cmd to low priority queue\n",__func__);
+                list_add_tail(&tasks_req->tasks_entry, &rpc_s->ts_queue_low);
+            }
+            
+
+
+    return 0;
+}
+
 
 
 /* Process the RPC requests from a specific peer */
@@ -638,18 +714,10 @@ static int rpc_process_event_peer_mt(struct rpc_server *rpc_s, struct node_id *p
 
             //uloga("%s(Yubo) thread receive cmd %d at timestamp %f\n", __func__, cmd.cmd, timer_timestamp_2());
             pthread_mutex_lock(&task_mutex);
-            if(cmd.pl == 1){ //high priority queue
-                uloga("%s(Yubo) add cmd to high priority queue\n",__func__);
-                list_add_tail(&tasks_req->tasks_entry, &rpc_s->ts_queue_high);  
-            }
-            else{ //any other request go to low priority queue
-                uloga("%s(Yubo) add cmd to low priority queue\n",__func__);
-                list_add_tail(&tasks_req->tasks_entry, &rpc_s->ts_queue_low);
-            }
-            
-            rpc_s->tasks_counter++;
-            peer->f_opened = 1;
+            task_scheduler(cmd, rpc_s, tasks_req);
             //uloga("%s(Yubo) put tasks_request from peer %d to list, which has #%d tasks \n", __func__,peer->ptlmap.id, rpc_s->tasks_counter);
+            //rpc_s->tasks_counter++;
+            peer->f_opened = 1;
             pthread_mutex_unlock(&task_mutex);
 
             //uloga("%s(Yubo) signaled and unlock mutex \n", __func__);
