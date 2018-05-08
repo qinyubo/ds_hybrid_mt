@@ -128,15 +128,6 @@ else
         AM_CONDITIONAL(BUILD_DIMES, false)
 fi
 
-dnl Check if DataSpaces location-aware write is enabled
-AC_ARG_ENABLE(dataspaces_location_aware_write,
-    [AS_HELP_STRING([--enable-dataspaces-location-aware-write],
-        [Include experimental feature. DataSpaces client writes data to
-         servers that running on local compute node. This feature is useful
-         when co-locating the execution of DataSpaces servers with application
-         on the same set of compute nodes. By default this is not included.])])
-AM_CONDITIONAL([DATASPACES_LOCATION_AWARE_WRITE], [test "x$enable_dataspaces_location_aware_write" == "xyes"])
-
 dnl Check the max array dimension
 
 if test -z "${HAVE_UGNI_TRUE}"; then
@@ -212,13 +203,10 @@ AC_CONFIG_FILES([
                 tests/Makefile
                 tests/C/Makefile
                 tests/Fortran/Makefile
-                tests/MT/Makefile
-                tests/3lev/Makefile
                 scripts/dspaces_config.makesrc
                 ])
 
 AC_OUTPUT
-
 
 echo "Network transport layer"
 if test -z "${HAVE_UGNI_TRUE}"; then
