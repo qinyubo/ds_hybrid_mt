@@ -100,7 +100,7 @@ static int generate_nd(double *mnd, unsigned int ts, int dims)
     return 0;
 }
 
-static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type type, int dims, int lock_num)
+static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type type, int dims, int lock_num, int p_lev)
 {
 	double **data_tab = (double **)malloc(sizeof(double *) * num_vars);
 	char var_name[128];
@@ -160,7 +160,7 @@ static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type ty
 		sprintf(var_name, "mnd_%d", variable_names[i]);  //Yubo, customize the variable names
 		printf("wrter put var %d with lock #%d at time %f\n", variable_names[i],lock_num, timer_read(&timer_) );
 		common_put(var_name, ts, elem_size, dims, lb, ub,
-			data_tab[i], type);
+			data_tab[i], type, p_lev);
 		if(type == USE_DSPACES){
 			common_put_sync(type);
 		}
@@ -194,9 +194,9 @@ static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type ty
     return 0;
 }
 
-int test_put_run(enum transport_type type, int npapp, int ndims, int* npdim, 
+int test_put_run_noinit(enum transport_type type, int npapp, int ndims, int* npdim, 
 	uint64_t *spdim, int timestep, int appid, size_t elem_size, int num_vars, int* vars_name,
-	MPI_Comm gcomm, int lock_num)
+	MPI_Comm gcomm, int lock_num, int p_lev)
 {
 	gcomm_ = gcomm;
 	elem_size_ = elem_size;
@@ -213,16 +213,18 @@ int test_put_run(enum transport_type type, int npapp, int ndims, int* npdim,
 		variable_names[i] = vars_name[i];
 	}
 
+	common_get_transport_type_str(type, transport_type_str_);
+
 	timer_init(&timer_, 1);
         timer_start(&timer_);
-
+/*
 	int app_id = appid;
 	double tm_st, tm_end;
 	tm_st = timer_read(&timer_);
 	common_init(npapp_, app_id, &gcomm_, NULL);
 	tm_end = timer_read(&timer_);
 	common_get_transport_type_str(type, transport_type_str_);
-
+*/
 	MPI_Comm_rank(gcomm_, &rank_);
     MPI_Comm_size(gcomm_, &nproc_);
 
@@ -232,7 +234,7 @@ int test_put_run(enum transport_type type, int npapp, int ndims, int* npdim,
 
 	unsigned int ts;
 	for(ts = 1; ts <= timesteps_; ts++){
-		couple_write_nd(ts, num_vars, type, ndims, lock_num); 
+		couple_write_nd(ts, num_vars, type, ndims, lock_num, p_lev); 
 	}
 
 	if(type == USE_DIMES){
@@ -244,14 +246,14 @@ int test_put_run(enum transport_type type, int npapp, int ndims, int* npdim,
 	if(rank_ == 0){
 		uloga("%s(): done\n", __func__);
 	}
-
+/*
 	MPI_Barrier(gcomm_);
 
 	int ds_rank = common_rank();
 	tm_st = timer_read(&timer_);
 	common_finalize();
 	tm_end = timer_read(&timer_);
-
+*/
 #ifdef TIMING_PERF
 	uloga("TIMING_PERF fini_dspaces peer %d time= %lf\n", ds_rank, tm_end-tm_st);
 #endif

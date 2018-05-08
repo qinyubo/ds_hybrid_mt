@@ -84,7 +84,7 @@ static void set_offset_nd(int rank, int dims)
 	}
 }
 
-static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type type, int dims, int lock_num)
+static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type type, int dims, int lock_num, int p_lev)
 {
 	double **data_tab = (double **)malloc(sizeof(double*) * num_vars);
 	char var_name[128];
@@ -141,7 +141,7 @@ static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type typ
 		sprintf(var_name, "mnd_%d", variable_names[i]);  //Yubo, customize the variable names
 		printf("reader get var %d with lock #%d at time %f\n", variable_names[i],lock_num, timer_read(&timer_) );
 		common_get(var_name, ts, elem_size, dims, lb, ub,
-			data_tab[i], type);
+			data_tab[i], type, p_lev);
 	}
 	tm_end = timer_read(&timer_);
 	//common_unlock_on_read("mnd_lock", &gcomm_); 
@@ -175,7 +175,7 @@ static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type typ
 }
 
 int test_get_run(enum transport_type type, int npapp, int ndims, int* npdim, uint64_t* spdim, int timestep, int appid, size_t elem_size, int num_vars, int* vars_name,
- MPI_Comm gcomm, int lock_num)
+ MPI_Comm gcomm, int lock_num, int p_lev)
 {
 	gcomm_ = gcomm;
 	elem_size_ = elem_size;
@@ -210,7 +210,7 @@ int test_get_run(enum transport_type type, int npapp, int ndims, int* npdim, uin
 #endif
 	unsigned int ts;
 	for(ts = 1; ts <= timesteps_; ts++){
-		couple_read_nd(ts, num_vars, type, ndims, lock_num);
+		couple_read_nd(ts, num_vars, type, ndims, lock_num, p_lev);
 	}
 
 	if(rank_ == 0){
