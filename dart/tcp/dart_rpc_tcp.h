@@ -15,12 +15,9 @@ extern "C" {
 #include <net/if.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
-#include "../../include/queue.h"  //for rpc_server task queue
-                                  //why it need absolute directory
 
 #include "config.h"
 #include "list.h"
-//#include "ds_base_tcp.h"
 
 #define ALIGN_ADDR_QUAD_BYTES(a)                                \
         unsigned long _a = (unsigned long) (a);                 \
@@ -38,12 +35,6 @@ struct rpc_server;
 struct rpc_cmd;
 struct node_id;
 struct rpc_request;
-
-int debug_flag;
-int debug_counter;
-
-
-
 
 /*
   Service function for rpc message
@@ -75,7 +66,6 @@ struct rpc_cmd {
         unsigned char            cmd;            // type of command
         unsigned char            num_msg;
         unsigned int           id; //Dart ID
-        unsigned int           pl; //priority level, so far 0 is low, 1 is high priority
 
         unsigned char            pad[280+(BBOX_MAX_NDIM-3)*24];// payload of the command
 } __attribute__((__packed__));
@@ -135,15 +125,7 @@ struct rpc_request{
     void    *data;
     size_t  size;
 
-
     request_callback cb;
-};
-
-struct tasks_request{
-    struct list_head tasks_entry;
-    struct rpc_server *rpc_s;
-    struct rpc_cmd cmd;
-    struct node_id *peer;
 };
 
 struct msg_buf{
@@ -180,16 +162,9 @@ struct rpc_server {
     int app_num_peers; /* Number of peers in app */
 
     pthread_t comm_thread; /* Thread for managing connections */
-    pthread_t task_thread; /* Thread for listening tasks list */
-    pthread_t worker_thread[64];
     int thread_alive;
 
     void *dart_ref; /* Points to dart_server or dart_client struct */
-
-    struct list_head ts_queue_low; //low priority queue, by default all tasks go to here
-    struct list_head ts_queue_high; //high priority queue
-    int tasks_counter; //count the total number of tasks in the task_queue
-
 };
 
 struct node_id {
@@ -208,7 +183,6 @@ struct node_id {
 
     int sockfd; /* Socket */
     int f_connected; /* Flag: if the peer is connected through `sockfd` */
-    int f_opened; /* Flag: if the peer socket is opening for data transfer */
 };
 
 enum cmd_type { 
@@ -216,12 +190,12 @@ enum cmd_type {
     cn_init_read,
     cn_read,
     cn_large_file, 
-    cn_register, //5 
+    cn_register, 
     cn_route, 
     cn_unregister,
     cn_resume_transfer,     /* Hint for server to start async transfers. */
     cn_suspend_transfer,    /* Hint for server to stop async transfers. */
-    sp_reg_request, //10
+    sp_reg_request,
     sp_reg_reply,
     sp_announce_cp,
     cn_timing,
@@ -229,17 +203,17 @@ enum cmd_type {
     cp_barrier,
     cp_lock,
     /* Shared spaces specific. */
-    ss_obj_put, //16
+    ss_obj_put,
     ss_obj_update,
     ss_obj_get_dht_peers,
     ss_obj_get_desc,
     ss_obj_query,
     ss_obj_cq_register,
     ss_obj_cq_notify,
-    ss_obj_get, //23 
+    ss_obj_get,
     ss_obj_filter,
     ss_obj_info,
-    ss_info,  //26
+    ss_info,
     cp_remove,
 #ifdef DS_HAVE_ACTIVESPACE
     ss_code_put,
@@ -327,9 +301,6 @@ int rpc_write_config(struct rpc_server *rpc_s, const char *filename);
 int rpc_read_config(struct sockaddr_in *address, const char *filename);
 int rpc_connect(struct rpc_server *rpc_s, struct node_id *peer);
 int rpc_process_event(struct rpc_server *rpc_s);
-int rpc_process_event_mt(struct rpc_server *rpc_s);
-int rpc_process_event_direct(struct rpc_server *rpc_s);
-int rpc_process_event_direct_mt(struct rpc_server *rpc_s);
 int rpc_barrier(struct rpc_server *rpc_s, void *comm);
 int rpc_send(struct rpc_server *rpc_s, struct node_id *peer, struct msg_buf *msg);
 int rpc_send_direct(struct rpc_server *rpc_s, struct node_id *peer, struct msg_buf *msg);
@@ -345,10 +316,6 @@ int rpc_send_directv(struct rpc_server *, struct node_id *, struct msg_buf *); /
 // void rpc_mem_info_reset(struct node_id *peer, struct msg_buf *msg, struct rpc_cmd *cmd);
 
 // void rpc_report_md_usage(struct rpc_server *);
-void* thread_handle(void* attr);
-//void* thread_handle_new(void* attr);
-void thread_handle_new(struct rpc_server *rpc_s);
-void finalize_threads(struct rpc_server* rpc_s_ptr);
 
 #ifdef __cplusplus
 }

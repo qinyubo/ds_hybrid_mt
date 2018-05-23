@@ -85,7 +85,6 @@ int dcg_barrier(struct dcg_space *);
 void dcg_free(struct dcg_space *);
 int dcg_obj_put(struct obj_data *);
 int dcg_obj_get(struct obj_data *);
-int dcg_obj_put_to_server(struct obj_data *, int);
 int dcg_get_versions(int **);
 int dcg_obj_filter(struct obj_data *);
 int dcg_obj_cq_register(struct obj_data *);
@@ -106,7 +105,6 @@ int dcg_get_num_peers(struct dcg_space *);
 int dcg_get_num_servers(struct dcg_space *);
 int dcg_get_num_space_peers(struct dcg_space *);
 int dcg_ss_info(struct dcg_space *, int *);
-void dcg_find_local_server(struct dcg_space *dcg, int max_num_peer);
 
 int dcg_time_log(double [], int);
 

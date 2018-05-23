@@ -53,7 +53,6 @@ struct dart_server {
     int f_nacc;
     void *dart_ref;
 
-
     MPI_Comm *comm;
 
 };

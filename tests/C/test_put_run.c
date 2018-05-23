@@ -60,8 +60,6 @@ static size_t elem_size_;
 
 static char transport_type_str_[256];
 
-static int variable_names[16] = {0}; //Yubo
-
 static double* allocate_nd(int dims)
 {
         double* tmp = NULL;
@@ -100,23 +98,16 @@ static int generate_nd(double *mnd, unsigned int ts, int dims)
     return 0;
 }
 
-static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type type, int dims, int lock_num, int p_lev)
+static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type type, int dims)
 {
 	double **data_tab = (double **)malloc(sizeof(double *) * num_vars);
 	char var_name[128];
-	char lock_name[128]; //Yubo
-
-	sprintf(lock_name, "mnd_lock_%d", lock_num);
-
 	int i;
 	for(i = 0; i < num_vars; i++)
 		data_tab[i] = NULL;
 
-	//common_lock_on_write("mnd_lock", &gcomm_);
-	//uloga("Debug #1\n");
-	common_lock_on_write(lock_name, &gcomm_);
-	//uloga("Debug #2\n");
-
+	common_lock_on_write("mnd_lock", &gcomm_);
+	//common_lock_on_write("mnd_lock", NULL);	//Test dspaces_barrier()
 	if (type == USE_DIMES) {
 		common_put_sync(type);
 	}
@@ -157,10 +148,9 @@ static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type ty
     tm_st = timer_read(&timer_);
 
 	for(i = 0; i < num_vars; i++){
-		sprintf(var_name, "mnd_%d", variable_names[i]);  //Yubo, customize the variable names
-//		printf("wrter put var %d with lock #%d at time %f\n", variable_names[i],lock_num, timer_read(&timer_) );
+		sprintf(var_name, "mnd_%d", i);
 		common_put(var_name, ts, elem_size, dims, lb, ub,
-			data_tab[i], type, p_lev);
+			data_tab[i], type);
 		if(type == USE_DSPACES){
 			common_put_sync(type);
 		}
@@ -168,8 +158,7 @@ static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type ty
 	tm_end = timer_read(&timer_);
 
 	sleep(3);
-	//common_unlock_on_write("mnd_lock", &gcomm_);lock_name
-	common_unlock_on_write(lock_name, &gcomm_);
+	common_unlock_on_write("mnd_lock", &gcomm_);
 	//common_unlock_on_write("mnd_lock", NULL);	//Test dspaces_barrier
 
 	tm_diff = tm_end-tm_st;
@@ -180,8 +169,8 @@ static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type ty
             ts, common_rank(), tm_diff);
 #endif
     if (rank_ == root) {
-        uloga("TS= %u #%d TRANSPORT_TYPE= %s write MAX time= %lf\n",
-                ts, lock_num, transport_type_str_, tm_max);
+        uloga("TS= %u TRANSPORT_TYPE= %s write MAX time= %lf\n",
+                ts, transport_type_str_, tm_max);
     }
 
 	for (i = 0; i < num_vars; i++) {
@@ -195,8 +184,8 @@ static int couple_write_nd(unsigned int ts, int num_vars, enum transport_type ty
 }
 
 int test_put_run(enum transport_type type, int npapp, int ndims, int* npdim, 
-	uint64_t *spdim, int timestep, int appid, size_t elem_size, int num_vars, int* vars_name,
-	MPI_Comm gcomm, int lock_num, int p_lev)
+	uint64_t *spdim, int timestep, int appid, size_t elem_size, int num_vars, 
+	MPI_Comm gcomm)
 {
 	gcomm_ = gcomm;
 	elem_size_ = elem_size;
@@ -207,10 +196,6 @@ int test_put_run(enum transport_type type, int npapp, int ndims, int* npdim,
 	for(i = 0; i < ndims; i++){
         np[i] = npdim[i];
         sp[i] = spdim[i];
-	}
-
-	for (i = 0; i < num_vars; i++){
-		variable_names[i] = vars_name[i];
 	}
 
 	timer_init(&timer_, 1);
@@ -232,7 +217,7 @@ int test_put_run(enum transport_type type, int npapp, int ndims, int* npdim,
 
 	unsigned int ts;
 	for(ts = 1; ts <= timesteps_; ts++){
-		couple_write_nd(ts, num_vars, type, ndims, lock_num, p_lev); 
+		couple_write_nd(ts, num_vars, type, ndims);
 	}
 
 	if(type == USE_DIMES){

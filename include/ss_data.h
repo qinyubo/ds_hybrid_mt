@@ -58,9 +58,6 @@ struct obj_descriptor {
         /* Size of one element of a data object. */
         size_t                  size;
 
-        /* Data Priority level information */
-        int                     p_lev;
-
         char pad[2];//added by Tong Jin for 4 byte aligned in GEMINI
 } __attribute__((__packed__));
 

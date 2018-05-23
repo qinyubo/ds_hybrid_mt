@@ -21,7 +21,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <getopt.h>
-//#include <rdma/rdma_cma.h>
+#include <rdma/rdma_cma.h>
 #include <rdma/rdma_verbs.h>
 #include "list.h"
 #include "../../include/bbox.h"
@@ -47,13 +47,16 @@
 }
 
 #define FPTR_DEF  void * _fptr[] = {&malloc, &free, &memset};
-
+/*
+typedef unsigned char __u8;
+typedef unsigned int __u32;
+typedef int __s32;
+typedef uint64_t __u64;
+*/
 struct msg_buf;
 struct rpc_server;
 struct rpc_cmd;
 struct node_id;
-
-pthread_mutex_t task_mutex;
 
 /*
    Rpc prototype function, should be called in response to a remote rpc request. 
@@ -137,14 +140,6 @@ struct hdr_fn_kernel {
 	int fn_kernel_size;
 	int fn_reduce_size;
 } __attribute__ ((__packed__));
-
-//Used for passing thread arguments
-struct tasks_request{
-	struct list_head tasks_entry;
-    struct rpc_server *rpc_s;
-    struct ibv_wc wc;
-    struct node_id *peer;
-}; 
 
 
 /* Rpc command structure. */
@@ -293,13 +288,16 @@ struct rpc_server {
 
 	// Reference  to peers  table; storage  space is  allocated in dart client or server.
 	int num_peers;		// total number of peers
-
-    struct list_head peer_list; //list of peers(servers and clients)
+	struct node_id *peer_tab;
 
 	//Fields for barrier implementation.
 	int bar_num;
 	int *bar_tab;
-	int app_minid, app_num_peers, num_sp; //app min id, number of peer in app (fixed during execution) and numer of server
+	int app_minid, app_num_peers, num_sp;
+
+	//Added in IB version. Just used at the beginning of registration.
+	int num_reg;
+	//struct node_id                *tmp_peer_tab;
 
 	/* List of buffers for incoming RPC calls. */
 	struct list_head rpc_list;
@@ -309,21 +307,19 @@ struct rpc_server {
 
 	void *dart_ref;
 	enum rpc_component com_type;
+	int cur_num_peer;
 
 	int num_qp;
 
 	pthread_t comm_thread;
 	int thread_alive;
 	char *localip;
+	int no_more;
+	int p_count;
 
 	int alloc_pd_flag;
 	struct ibv_pd *global_pd;
 	struct ibv_context *global_ctx;
-
-	pthread_t task_thread; /* Thread for listening tasks list */
-	pthread_t worker_thread[64];
-	struct list_head tasks_list;
-	int tasks_counter;
 };
 
 struct rdma_mr {
@@ -332,11 +328,8 @@ struct rdma_mr {
 };
 
 struct node_id {
-    struct list_head peer_entry;
 	struct ptlid_map ptlmap;
-    
-    int local_id;
-    int num_peer_in_app;
+	struct rdma_mr peer_mr;
 
 	// struct for peer connection
 	struct rdma_event_channel *rpc_ec;
@@ -386,29 +379,24 @@ enum cmd_type {
 	cn_resume_transfer,	/* Hint for server to start async transfers. */
 	cn_suspend_transfer,	/* Hint for server to stop async transfers. */
 
-	sp_reg_request,  //10
+	sp_reg_request,
 	sp_reg_reply,
 	peer_rdma_done,		/* Added in IB version 12 */
 	sp_announce_cp,
-    cp_announce_cp,
-    sp_announce_cp_all,
-    cp_disseminate_cs,
-    cn_unregister_cp,
-    cn_unregister_app,
-    sp_announce_app,
-    cn_timing,  //20
+	sp_announce_cp_all,
+	cn_timing,
 	/* Synchronization primitives. */
 	cp_barrier,
 	cp_lock,
 	/* Shared spaces specific. */
-	ss_obj_put,   //23
+	ss_obj_put,
 	ss_obj_update,
 	ss_obj_get_dht_peers,
 	ss_obj_get_desc,
 	ss_obj_query,
 	ss_obj_cq_register,
 	ss_obj_cq_notify,
-	ss_obj_get,  //30
+	ss_obj_get,
 	ss_obj_filter,
 	ss_obj_info,
 	ss_info,
@@ -416,15 +404,11 @@ enum cmd_type {
 	ss_code_reply,
 	cp_remove,
 #ifdef DS_HAVE_DIMES
-    dimes_ss_info_msg,
-    dimes_locate_data_msg,
-    dimes_put_msg,
-#ifdef DS_HAVE_DIMES_SHMEM
-    dimes_shmem_reset_server_msg,
-    dimes_shmem_update_server_msg,
+	dimes_ss_info_msg,
+	dimes_locate_data_msg,
+	dimes_put_msg,
 #endif
-#endif
-    //Added for CCGrid Demo
+	//Added for CCGrid Demo
 	CN_TIMING_AVG,
 	_CMD_COUNT,
 	cn_s_unregister
@@ -437,26 +421,6 @@ enum lock_type {
 	lk_write_release,
 	lk_grant
 };
-
-static int file_lock(int fd, int op)
-{
-    if(op) {
-        while(lockf(fd, F_TLOCK, (off_t) 1) != 0) {
-        }
-        return 0;
-    } else
-        return lockf(fd, F_ULOCK, (off_t) 1);
-}
-
-static struct node_id *peer_alloc()
-{
-    struct node_id *peer = 0;
-    peer = malloc(sizeof(*peer));
-    if(!peer)
-        return 0;
-    memset(peer, 0, sizeof(*peer));
-    return peer;
-}
 
 /*
   Default instance for completion_callback; it frees the memory.
@@ -496,11 +460,10 @@ void rpc_server_set_rpc_per_buff(struct rpc_server *rpc_s, int num_rpc_per_buff)
 struct rpc_server *rpc_server_get_instance(void);
 int rpc_server_get_id(void);
 
-int rpc_read_config(int appid, struct sockaddr_in *address);	//
-int rpc_write_config(int appid, struct rpc_server *rpc_s);	//
+int rpc_read_config(struct sockaddr_in *address);	//
+int rpc_write_config(struct rpc_server *rpc_s);	//
 
 int rpc_process_event(struct rpc_server *rpc_s);
-int rpc_process_event_mt(struct rpc_server *rpc_s);
 int rpc_process_event_with_timeout(struct rpc_server *rpc_s, int timeout);
 
 void rpc_add_service(enum cmd_type rpc_cmd, rpc_service rpc_func);
@@ -520,15 +483,5 @@ void rpc_mem_info_reset(struct node_id *peer, struct msg_buf *msg, struct rpc_cm
 struct msg_buf *msg_buf_alloc(struct rpc_server *rpc_s, const struct node_id *peer, int num_rpcs);
 
 void rpc_print_connection_err(struct rpc_server *rpc_s, struct node_id *peer, struct rdma_cm_event event);
-
-struct node_id *rpc_server_find(struct rpc_server *rpc_s, int nodeid);
-void rpc_server_find_local_peers(struct rpc_server *rpc_s,
-            struct node_id **peer_tab, int *num_local_peer, int peer_tab_size);
-uint32_t rpc_server_get_nid(struct rpc_server *rpc_s);
-
-//Yubo 
-//void* thread_handle_new(void* attr);
-void thread_handle_new(struct rpc_server* rpc_s);
-void finalize_threads(struct rpc_server* rpc_s_ptr);
 
 #endif

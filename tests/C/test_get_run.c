@@ -59,8 +59,6 @@ static size_t elem_size_;
 
 static char transport_type_str_[256];
 
-static int variable_names[16] = {0}; //Yubo
-
 static double* allocate_nd(int dims)
 {
         double* tmp = NULL;
@@ -84,22 +82,17 @@ static void set_offset_nd(int rank, int dims)
 	}
 }
 
-static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type type, int dims, int lock_num, int p_lev)
+static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type type, int dims)
 {
 	double **data_tab = (double **)malloc(sizeof(double*) * num_vars);
 	char var_name[128];
-	char lock_name[128]; //Yubo
 	int i;
-
 	for(i = 0; i < num_vars; i++){
 		data_tab[i] = NULL;
 	}	
 
-	sprintf(lock_name, "mnd_lock_%d", lock_num);
-
-	//common_lock_on_read("mnd_lock", &gcomm_);	//Test dspaces_barrier
+	common_lock_on_read("mnd_lock", &gcomm_);	//Test dspaces_barrier
 	//common_lock_on_read("mnd_lock", NULL);
-	common_lock_on_read(lock_name, &gcomm_);
 
 	set_offset_nd(rank_, dims);
 	uint64_t dims_size = 1;
@@ -138,14 +131,12 @@ static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type typ
     tm_st = timer_read(&timer_);
 
 	for(i = 0; i < num_vars; i++){
-		sprintf(var_name, "mnd_%d", variable_names[i]);  //Yubo, customize the variable names
-		//printf("reader get var %d with lock #%d at time %f\n", variable_names[i],lock_num, timer_read(&timer_) );
+		sprintf(var_name, "mnd_%d", i);
 		common_get(var_name, ts, elem_size, dims, lb, ub,
-			data_tab[i], type, p_lev);
+			data_tab[i], type);
 	}
 	tm_end = timer_read(&timer_);
-	//common_unlock_on_read("mnd_lock", &gcomm_); 
-	common_unlock_on_read(lock_name, &gcomm_);
+	common_unlock_on_read("mnd_lock", &gcomm_);
 	//common_unlock_on_read("mnd_lock", NULL);	//Test dspaces_barrier
 		
 	tm_diff = tm_end-tm_st;
@@ -156,13 +147,12 @@ static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type typ
             ts, common_rank(), tm_diff);
 #endif
     if (rank_ == root) {
-        uloga("TS= %u #%d TRANSPORT_TYPE= %s read MAX time= %lf\n",
-                ts, lock_num, transport_type_str_, tm_max);
+        uloga("TS= %u TRANSPORT_TYPE= %s read MAX time= %lf\n",
+                ts, transport_type_str_, tm_max);
     }
 
 	for (i = 0; i < num_vars; i++) {
-		sprintf(var_name, "mnd_%d", variable_names[i]);  //Yubo, customize the variable names
-
+		sprintf(var_name, "mnd_%d", i);
 		check_data(var_name, data_tab[i],dims_size*elem_size_/sizeof(double),
 			rank_, ts);
         if (data_tab[i]) {
@@ -174,8 +164,7 @@ static int couple_read_nd(unsigned int ts, int num_vars, enum transport_type typ
     return 0;
 }
 
-int test_get_run(enum transport_type type, int npapp, int ndims, int* npdim, uint64_t* spdim, int timestep, int appid, size_t elem_size, int num_vars, int* vars_name,
- MPI_Comm gcomm, int lock_num, int p_lev)
+int test_get_run(enum transport_type type, int npapp, int ndims, int* npdim, uint64_t* spdim, int timestep, int appid, size_t elem_size, int num_vars, MPI_Comm gcomm)
 {
 	gcomm_ = gcomm;
 	elem_size_ = elem_size;
@@ -186,10 +175,6 @@ int test_get_run(enum transport_type type, int npapp, int ndims, int* npdim, uin
 	for(i = 0; i < ndims; i++){
         np[i] = npdim[i];
 		sp[i] = spdim[i];
-	}
-
-	for (i = 0; i < num_vars; i++){
-		variable_names[i] = vars_name[i];
 	}
 
 	timer_init(&timer_, 1);
@@ -210,7 +195,7 @@ int test_get_run(enum transport_type type, int npapp, int ndims, int* npdim, uin
 #endif
 	unsigned int ts;
 	for(ts = 1; ts <= timesteps_; ts++){
-		couple_read_nd(ts, num_vars, type, ndims, lock_num, p_lev);
+		couple_read_nd(ts, num_vars, type, ndims);
 	}
 
 	if(rank_ == 0){

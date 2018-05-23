@@ -1,0 +1,45 @@
+#!/bin/bash
+#PBS -A CSC143TITAN
+#PBS -N dataspaces_as_service
+#PBS -j eo
+#PBS -q debug
+#PBS -l walltime=00:10:00
+#PBS -l nodes=3
+
+cd /lustre/atlas/scratch/subedip1/csc143/yubo/dataspaces/tests/C
+rm -rf conf* srv.lck*
+rm -rf dataspaces.conf
+
+# Write dataspaces config file
+echo "## Config file for DataSpaces
+ndim = 3
+dims= 32768,32768,32768
+lock_type = 3
+" > dataspaces.conf
+TD=32768
+NS=1
+NW=4
+NR=4
+let "DR=TD/NR"
+let "DW=TD/NW"
+
+## Run DataSpaces servers
+aprun -N 1 -n $NS ./dataspaces_server -s $NS -c $((NW+NR))  >& 2nd_server_"$NS"_"$NW"_"$NR".log &
+DSPID=$!
+
+## Give some time for the servers to load and startup
+while [ ! -f conf ]; do
+    sleep 1s
+done
+sleep 5s  # wait server to fill up the conf file
+
+## Run writer application
+aprun -N $NW -n $NW ./test_writer DATASPACES $NW 3 1 1 $NW 64 128 $DW 10 1 >& 2nd_writer_"$NS"_"$NW"_"$NR".log &
+
+
+## Run reader application
+aprun -N $NR -n $NR ./test_reader DATASPACES $NR 3 1 1 $NW 64 128 $DR 10 2 >& 2nd_reader_"$NS"_"$NW"_"$NR".log
+
+#kill DS Server ##
+kill ${DSPID}
+

@@ -158,7 +158,7 @@ static int dc_unregister(struct dart_client *dc)
 
 	while (dc->f_reg) 
 	{
-		err = rpc_process_event(dc->rpc_s);
+		err = rpc_process_event_mt(dc->rpc_s);
 		if (err < 0)
 			goto err_out;
 	}
@@ -943,7 +943,7 @@ struct dart_client *dc_alloc(int num_peers, int appid, void *dart_ref, void *com
 		dc->comm = NULL;
 	}
 
-	dc->rpc_s = rpc_server_init(30, num_peers, dc, DART_CLIENT, appid, dc->comm);
+	dc->rpc_s = rpc_server_init(60, num_peers, dc, DART_CLIENT, appid, dc->comm);
         if (!dc->rpc_s) {
                 free(dc);
                 return NULL;
@@ -1044,5 +1044,6 @@ void dc_free(struct dart_client *dc)
 
 int dc_process(struct dart_client *dc)//done
 {
-  return rpc_process_event(dc->rpc_s);
+  return rpc_process_event_mt(dc->rpc_s);
 }
+

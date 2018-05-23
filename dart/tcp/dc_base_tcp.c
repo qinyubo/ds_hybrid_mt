@@ -197,11 +197,6 @@ static int dc_register_at_master(struct dart_client *dc, int appid) {
 
 struct dart_client *dc_alloc(int num_peers, int appid, void *dart_ref, void *comm) {
 
-    //struct queue tasks_queue;
-
-    //queue_init(&tasks_queue);
-   // uloga("%s(YUbo) client queue_init\n", __func__);
-
     struct dart_client *dc = (struct dart_client *)malloc(sizeof(struct dart_client));
     if (dc == NULL) {
         printf("[%s]: allocate DART client failed!\n", __func__);
@@ -220,7 +215,7 @@ struct dart_client *dc_alloc(int num_peers, int appid, void *dart_ref, void *com
     dc->cp_in_job = num_peers;
 
     char *interface = getenv("DATASPACES_TCP_INTERFACE");
-    dc->rpc_s = rpc_server_init(interface, dc->cp_in_job, dc, DART_CLIENT); 
+    dc->rpc_s = rpc_server_init(interface, dc->cp_in_job, dc, DART_CLIENT);
     dc->rpc_s->ptlmap.appid = appid;
     if (dc->rpc_s == NULL) {
         printf("[%s]: initialize RPC server failed!\n", __func__);
@@ -285,7 +280,6 @@ static int dc_unregister(struct dart_client *dc) {
 }
 
 void dc_free(struct dart_client *dc) {
-    //int dc_id = dc->rpc_s->ptlmap.id;
     dc_unregister(dc);
 
     dc->rpc_s->thread_alive = 0;
@@ -302,15 +296,6 @@ void dc_free(struct dart_client *dc) {
     if(dc->comm) {
         free(dc->comm);
     }
-    
-    /*
-    //Print content in tasks_list for debuging purpose
-    struct tasks_request *tmp_tr;
-    list_for_each_entry(tmp_tr, &dc->rpc_s->tasks_list, struct tasks_request, tasks_entry)
-    {
-        uloga("%s(Yubo) client %d has rpc_cmd=%d\n",__func__,dc_id, tmp_tr->cmd->cmd);
-    }
-    */
 
     free(dc);
 }

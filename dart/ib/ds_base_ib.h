@@ -16,8 +16,6 @@ struct app_info {
 	char *app_name;		/* Application name */
 	int app_id;		/* Application identifier */
 
-    int app_min_id;
-
 	int app_num_peers;	/* Total number of peers in app */
 	struct node_id *app_peer_tab;	/* Reference to app nodes info */
 
@@ -29,20 +27,14 @@ struct dart_server {
 
 	/* List (array) of peer nodes; this should be of fixed size. */
 	int peer_size;
-
-    int current_client_size;
-	//struct node_id *peer_tab;
+	struct node_id *peer_tab;
 	struct node_id *cn_peers;
-
-    int s_connected;
 
 	/* Number of compute node peers; number of server peers. */
 	int num_cp, num_sp;
 	int size_cp, size_sp;
 
 	struct list_head app_list;	/* List of applications */
-
-    int connected;
 
 	/* Reference for self instance in 'peer_tab'. */
 	struct node_id *self;
@@ -81,7 +73,7 @@ static inline int ds_get_rank(struct dart_server *ds)
 
 static inline struct node_id *ds_get_peer(struct dart_server *ds, int n)
 {
-    return rpc_server_find(ds->rpc_s, n);
+	return (ds->peer_tab + n);
 }				// //
 
 static inline int ds_stop(struct dart_server *ds)

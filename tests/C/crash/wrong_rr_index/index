@@ -1,0 +1,704 @@
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 1
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 1
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 1
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 0, rr->index 1
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 1
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 1
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 1
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 1
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 2
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 2
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 2
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 0, rr->index 2
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 2
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 2
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 2
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 2
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 3
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 0, rr->index 3
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 3
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 3
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 3
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 4
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 3
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 4
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 5
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 5
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 3
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 3
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 4
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 0, rr->index 4
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 4
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 4
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 4
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 6
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 4
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 6
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 0, rr->index 5
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 5
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 5
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 5
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 5
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 5
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 7
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 0, rr->index 6
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 7
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 6
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 6
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 6
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 8
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 0, rr->index 7
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 7
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 8
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 7
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 7
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 6
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 6
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 7
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 7
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 0, rr->index 8
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 8
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 8
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 8
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 8
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 8
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 9
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 9
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 11
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 11
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 11
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 11
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 11
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 11
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 12
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 12
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 12
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 12
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 13
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 13
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 13
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 13
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 13
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 13
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 14
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 14
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 14
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 14
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 15
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 15
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 15
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 15
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 16
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 16
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 17
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 17
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 18
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 18
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 15
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 15
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 16
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 5, rr->index 16
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 16
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 16
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 19
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 19
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 17
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 17
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 18
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 18
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 17
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 17
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 18
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 18
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 18
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 18
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 20
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 20
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 23
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 23
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 22
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 24
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 22
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 24
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 23
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 25
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 24
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 23
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 25
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 24
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 24
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 25
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 26
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 24
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 25
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 26
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 26
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 26
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 27
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 25
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 27
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 25
+ Rank 2: DEBUG info: event_id (23), rr->index (23), rr_num (5) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 0, rr->index 23
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 23
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 27
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 27
+Rank 2: DEBUG info: event_id (25), rr->index (25), rr_num (4) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 24
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 26
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 24
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 28
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 5, rr->index 26
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 28
+Rank 2: DEBUG info: event_id (26), rr->index (26), rr_num (3) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (24), rr->index (24), rr_num (5) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (27), rr->index (27), rr_num (2) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (22), rr->index (22), rr_num (4) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 25
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 29
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 25
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 6, rr->index 29
+Rank 3: DEBUG info: event_id (25), rr->index (25), rr_num (3) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (25), rr->index (25), rr_num (6) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (26), rr->index (26), rr_num (2) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (28), rr->index (28), rr_num (5) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 26
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 26
+ Rank 1: DEBUG info: event_id (24), rr->index (24), rr_num (4) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (26), rr->index (26), rr_num (3) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 28
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 28
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 28
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 28
+ Rank 2: DEBUG info: event_id (28), rr->index (28), rr_num (2) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (28), rr->index (28), rr_num (2) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 29
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 29
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 31
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 31
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 27
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 27
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 30
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 29
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 30
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 29
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 30
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 30
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 32
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 6, rr->index 32
+ Rank 0: DEBUG info: event_id (31), rr->index (31), rr_num (6) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 28
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 28
+ Rank 2: DEBUG info: event_id (29), rr->index (29), rr_num (3) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (23), rr->index (23), rr_num (4) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (27), rr->index (27), rr_num (5) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (30), rr->index (30), rr_num (2) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (27), rr->index (27), rr_num (3) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (29), rr->index (29), rr_num (3) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (30), rr->index (30), rr_num (2) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 29
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 29
+Rank 0: DEBUG info: event_id (24), rr->index (24), rr_num (4) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 30
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 30
+ Rank 0: DEBUG info: event_id (26), rr->index (26), rr_num (3) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (29), rr->index (29), rr_num (2) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (25), rr->index (25), rr_num (4) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (32), rr->index (32), rr_num (1) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (29), rr->index (29), rr_num (3) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (30), rr->index (30), rr_num (2) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (24), rr->index (24), rr_num (1) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (28), rr->index (28), rr_num (1) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (23), rr->index (23), rr_num (1) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 37
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 37
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 37
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 37
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 38
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 38
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 38
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 38
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 40
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 37
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 40
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 37
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 41
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 41
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 37
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 37
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 43
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 43
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 44
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 44
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 40
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 40
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 41
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 41
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 39
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 39
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 39
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 39
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 46
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 46
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 43
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 43
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 41
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 41
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 41
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 41
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 42
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 42
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 42
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 5, rr->index 42
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 44
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 44
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 43
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 43
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 44
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 44
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 43
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 43
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 44
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 44
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 47
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 47
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 48
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 48
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 53
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 53
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 48
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 48
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 49
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 54
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 49
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 54
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 48
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 48
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 55
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 55
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 49
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 50
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 49
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 49
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 49
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 50
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 56
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 56
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 50
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 51
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 50
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 50
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 51
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 50
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 51
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 57
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 51
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 52
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 57
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 52
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 51
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 51
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 58
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 52
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 6, rr->index 58
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 52
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 6, rr->index 52
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 53
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 5, rr->index 52
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 53
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 6, rr->index 53
+ Rank 0: DEBUG info: event_id (53), rr->index (53), rr_num (6) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 5, rr->index 53
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 7, rr->index 53
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 54
+ Rank 0: DEBUG info: event_id (54), rr->index (54), rr_num (5) in (__process_event_mt).
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 6, rr->index 53
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 6, rr->index 54
+Rank 3: DEBUG info: event_id (50), rr->index (50), rr_num (6) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (49), rr->index (49), rr_num (6) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 55
+ Rank 1: DEBUG info: event_id (50), rr->index (50), rr_num (7) in (__process_event_mt).
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 6, rr->index 55
+ Rank 0: DEBUG info: event_id (56), rr->index (56), rr_num (4) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (48), rr->index (48), rr_num (6) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (57), rr->index (57), rr_num (3) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (51), rr->index (51), rr_num (5) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 59
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 5, rr->index 54
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 59
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 6, rr->index 54
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 55
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 55
+ Rank 3: DEBUG info: event_id (51), rr->index (51), rr_num (6) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 60
+ Rank 2: DEBUG info: event_id (54), rr->index (54), rr_num (6) in (__process_event_mt).
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 60
+ Rank 2: DEBUG info: event_id (55), rr->index (55), rr_num (5) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (52), rr->index (52), rr_num (4) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (53), rr->index (53), rr_num (3) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 56
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 6, rr->index 56
+ Rank 1: DEBUG info: event_id (53), rr->index (53), rr_num (6) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (52), rr->index (52), rr_num (5) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (59), rr->index (59), rr_num (4) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (53), rr->index (53), rr_num (5) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (55), rr->index (55), rr_num (4) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (60), rr->index (60), rr_num (3) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (48), rr->index (48), rr_num (4) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (55), rr->index (55), rr_num (2) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (49), rr->index (49), rr_num (3) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (56), rr->index (56), rr_num (3) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (51), rr->index (51), rr_num (2) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (49), rr->index (49), rr_num (2) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (58), rr->index (58), rr_num (1) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (50), rr->index (50), rr_num (1) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (54), rr->index (54), rr_num (2) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (52), rr->index (52), rr_num (1) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 56
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 56
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 56
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 56
+ Rank 2: DEBUG info: event_id (56), rr->index (56), rr_num (1) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (56), rr->index (56), rr_num (1) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 66
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 66
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 63
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 63
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 63
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 63
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 69
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 69
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 63
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 63
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 70
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 70
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 64
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 64
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 65
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 65
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 66
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 66
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 65
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 65
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 66
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 66
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 72
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 72
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 66
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 66
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 68
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 68
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 68
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 68
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 74
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 74
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 68
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 68
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 69
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 69
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 70
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 70
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 69
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 69
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 70
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 70
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 69
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 69
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 70
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 70
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 75
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 75
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 76
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 76
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 77
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 77
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 81
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 81
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 75
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 75
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 83
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 0, rr->index 75
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 83
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 75
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 76
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 76
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 84
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 84
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 76
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 76
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 85
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 85
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 77
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 77
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 74
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 74
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 77
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 78
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 77
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 78
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 86
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 75
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 86
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 79
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 75
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 79
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 78
+ Rank 2: DEBUG info: event_id (76), rr->index (76), rr_num (5) in (__process_event_mt).
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 78
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 87
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 76
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 6, rr->index 87
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 76
+ Rank 2: DEBUG info: event_id (77), rr->index (77), rr_num (4) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (79), rr->index (79), rr_num (3) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 79
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 77
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 6, rr->index 88
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 6, rr->index 79
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 77
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 7, rr->index 88
+ Rank 1: DEBUG info: event_id (75), rr->index (75), rr_num (6) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (75), rr->index (75), rr_num (4) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (78), rr->index (78), rr_num (5) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (76), rr->index (76), rr_num (3) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (77), rr->index (77), rr_num (4) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 7, rr->index 89
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 8, rr->index 89
+ Rank 0: DEBUG info: event_id (81), rr->index (81), rr_num (8) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (83), rr->index (83), rr_num (7) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (79), rr->index (79), rr_num (3) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (77), rr->index (77), rr_num (2) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (76), rr->index (76), rr_num (2) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (88), rr->index (88), rr_num (6) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 80
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 80
+Rank 0: DEBUG info: event_id (89), rr->index (89), rr_num (5) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 81
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 81
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 80
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 80
+Rank 0: DEBUG info: event_id (86), rr->index (86), rr_num (4) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (84), rr->index (84), rr_num (3) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 78
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 78
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 81
+ Rank 1: DEBUG info: event_id (81), rr->index (81), rr_num (3) in (__process_event_mt).
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 81
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 79
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 79
+ Rank 2: DEBUG info: event_id (80), rr->index (80), rr_num (4) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 82
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 82
+Rank 2: DEBUG info: event_id (81), rr->index (81), rr_num (3) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 80
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 80
+ Rank 3: DEBUG info: event_id (78), rr->index (78), rr_num (4) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (79), rr->index (79), rr_num (3) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (78), rr->index (78), rr_num (2) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (80), rr->index (80), rr_num (2) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (85), rr->index (85), rr_num (2) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (80), rr->index (80), rr_num (3) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (87), rr->index (87), rr_num (1) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (82), rr->index (82), rr_num (2) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 82
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 82
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 82
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 82
+ Rank 2: DEBUG info: event_id (82), rr->index (82), rr_num (2) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (82), rr->index (82), rr_num (2) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (75), rr->index (75), rr_num (1) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (74), rr->index (74), rr_num (1) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 95
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 95
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 89
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 89
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 90
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 90
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 89
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 89
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 89
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 89
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 90
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 90
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 90
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 90
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 90
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 90
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 98
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 98
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 99
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 99
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 92
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 92
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 92
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 92
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 92
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 92
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 101
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 101
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 94
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 94
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 94
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 94
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 95
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 6, rr->index 95
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 103
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 103
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 94
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 94
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 95
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 6, rr->index 95
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 6, rr->index 96
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 7, rr->index 96
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 95
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 95
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 96
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 5, rr->index 96
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 96
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 96
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 104
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 104
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 105
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 105
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 106
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 106
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 110
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 110
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 111
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 111
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 1, rr->index 101
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 101
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 112
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 112
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 101
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 101
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 102
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 102
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 113
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 102
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 103
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 113
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 102
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 103
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 1, rr->index 103
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 103
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 114
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 114
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 103
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 2, rr->index 104
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 104
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 103
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 5, rr->index 115
+ Rank 3: DEBUG info: event_id (101), rr->index (101), rr_num (3) in (__process_event_mt).
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 6, rr->index 115
+ peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 106
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 106
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 105
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 105
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 107
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 6, rr->index 107
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 6, rr->index 118
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 104
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 7, rr->index 118
+ peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 106
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 104
+Rank 0: DEBUG info: event_id (114), rr->index (114), rr_num (7) in (__process_event_mt).
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 106
+Rank 3: DEBUG info: event_id (103), rr->index (103), rr_num (3) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (102), rr->index (102), rr_num (2) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 6, rr->index 108
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 7, rr->index 108
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 107
+ Rank 2: DEBUG info: event_id (102), rr->index (102), rr_num (7) in (__process_event_mt).
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 6, rr->index 107
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 105
+ Rank 1: DEBUG info: event_id (104), rr->index (104), rr_num (6) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (103), rr->index (103), rr_num (6) in (__process_event_mt).
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 105
+ Rank 1: DEBUG info: event_id (105), rr->index (105), rr_num (5) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (104), rr->index (104), rr_num (2) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 6, rr->index 119
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 7, rr->index 119
+ Rank 2: DEBUG info: event_id (107), rr->index (107), rr_num (5) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (106), rr->index (106), rr_num (4) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (108), rr->index (108), rr_num (3) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (115), rr->index (115), rr_num (7) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (110), rr->index (110), rr_num (6) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (105), rr->index (105), rr_num (1) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 108
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 108
+ Rank 1: DEBUG info: event_id (107), rr->index (107), rr_num (5) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (119), rr->index (119), rr_num (5) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (108), rr->index (108), rr_num (4) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 109
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 109
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 108
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 108
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 109
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 109
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 109
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 109
+ Rank 0: DEBUG info: event_id (111), rr->index (111), rr_num (4) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (101), rr->index (101), rr_num (3) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 110
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 110
+ Rank 1: DEBUG info: event_id (109), rr->index (109), rr_num (4) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (108), rr->index (108), rr_num (2) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 110
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 110
+ Rank 0: DEBUG info: event_id (112), rr->index (112), rr_num (3) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (113), rr->index (113), rr_num (2) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (103), rr->index (103), rr_num (4) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (110), rr->index (110), rr_num (3) in (__process_event_mt).
+Rank 0: DEBUG info: event_id (118), rr->index (118), rr_num (1) in (__process_event_mt).
+Rank 1: DEBUG info: event_id (106), rr->index (106), rr_num (2) in (__process_event_mt).
+Rank 2: DEBUG info: event_id (109), rr->index (109), rr_num (3) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (109), rr->index (109), rr_num (1) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 0, rr->index 110
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 1, rr->index 110
+ Rank 2: DEBUG info: event_id (110), rr->index (110), rr_num (2) in (__process_event_mt).
+Rank 3: DEBUG info: event_id (110), rr->index (110), rr_num (1) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 0, rr->index 124
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 124
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 117
+peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 117
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 2, rr->index 117
+peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 117
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 128
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 128
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 117
+ peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 129
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 117
+peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 129
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 118
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 118
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 119
+ peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 119
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 119
+peer_process_send_list(BEFORE) Rank_id 3 rpc_s.id 3, rr_num 3, rr->index 119
+ peer_process_send_list(AFTER) Rank_id 3 rpc_s.id 3, rr_num 4, rr->index 119
+Rank 3: SRC Indexing err with event_id (119), rr->index(3), rr_num (3) in (__process_event_mt).
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 131
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 131
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 132
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 132
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 120
+peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 120
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 121
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 121
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 122
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 122
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 5, rr->index 123
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 6, rr->index 123
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 3, rr->index 134
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 4, rr->index 134
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 123
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 5, rr->index 123
+peer_process_send_list(BEFORE) Rank_id 1 rpc_s.id 1, rr_num 3, rr->index 124
+ peer_process_send_list(AFTER) Rank_id 1 rpc_s.id 1, rr_num 4, rr->index 124
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 2, rr->index 124
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 124
+peer_process_send_list(BEFORE) Rank_id 2 rpc_s.id 2, rr_num 3, rr->index 125
+ peer_process_send_list(AFTER) Rank_id 2 rpc_s.id 2, rr_num 4, rr->index 125
+peer_process_send_list(BEFORE) Rank_id 0 rpc_s.id 0, rr_num 1, rr->index 135
+ peer_process_send_list(AFTER) Rank_id 0 rpc_s.id 0, rr_num 2, rr->index 135

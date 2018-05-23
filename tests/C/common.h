@@ -61,12 +61,12 @@ int common_put (const char *var_name,
         unsigned int ver, int size,
 	int ndim,
         uint64_t *lb, uint64_t *ub,
-	void *data, enum transport_type type, int p_lev);
+	void *data, enum transport_type type);
 int common_get (const char *var_name,
         unsigned int ver, int size,
 	int ndim,
 	uint64_t *lb, uint64_t *ub,
-        void *data, enum transport_type type, int p_lev); 
+        void *data, enum transport_type type); 
 int common_put_sync(enum transport_type type); 
 int common_run_server(int num_sp, int num_cp, enum transport_type type, void* gcomm);
 

@@ -77,8 +77,9 @@ struct rpc_server;
 struct rpc_cmd;
 struct node_id;
 
-pthread_mutex_t task_mutex;
-pthread_mutex_t cond_mutex;
+pthread_mutex_t client_mutex;
+pthread_mutex_t dht_mutex;
+
 
 /*
 typedef unsigned char	__u8;
@@ -518,3 +519,5 @@ void thread_handle(struct rpc_server* rpc_s);
 void finalize_threads(struct rpc_server* rpc_s_ptr);
 
 #endif
+
+

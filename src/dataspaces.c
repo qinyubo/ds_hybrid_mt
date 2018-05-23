@@ -139,17 +139,17 @@ void dspaces_define_gdim (const char *var_name,
 int dspaces_put (const char *var_name,
         unsigned int ver, int size,
         int ndim, uint64_t *lb, uint64_t *ub,
-        const void *data, int p_lev)
+        const void *data)
 {
-    return common_dspaces_put(var_name, ver, size, ndim, lb, ub, data, p_lev);
+    return common_dspaces_put(var_name, ver, size, ndim, lb, ub, data);
 }
 
 int dspaces_get (const char *var_name,
         unsigned int ver, int size,
         int ndim, uint64_t *lb, uint64_t *ub,
-        void *data, int p_lev)
+        void *data)
 {
-    return common_dspaces_get(var_name, ver, size, ndim, lb, ub, data, p_lev);    
+    return common_dspaces_get(var_name, ver, size, ndim, lb, ub, data);    
 }
 
 int dspaces_remove (const char *var_name,
@@ -212,68 +212,6 @@ int dimes_put_sync_group(const char *group_name, int step)
 {
     return common_dimes_put_sync_group(group_name, step);
 }
-#ifdef DS_HAVE_DIMES_SHMEM
-int dimes_shmem_init(void *comm, size_t shmem_obj_size)
-{
-        return common_dimes_shmem_init(comm, shmem_obj_size);
-}
-
-int dimes_shmem_finalize(unsigned int unlink)
-{
-        return common_dimes_shmem_finalize(unlink);
-}
-
-int dimes_shmem_checkpoint()
-{
-        return common_dimes_shmem_checkpoint();
-}
-
-int dimes_shmem_restart(void *comm)
-{
-        return common_dimes_shmem_restart(comm);
-}
-
-int dimes_shmem_clear()
-{
-        return common_dimes_shmem_clear();
-}
-
-int dimes_shmem_reset_server_state(int server_id)
-{
-        return common_dimes_shmem_reset_server_state(server_id);
-}
-
-int dimes_shmem_update_server_state()
-{
-        return common_dimes_shmem_update_server_state();
-}
-
-uint32_t dimes_shmem_get_nid()
-{
-        return common_dimes_shmem_get_nid();
-}
-
-int dimes_shmem_get_node_rank()
-{
-        return common_dimes_shmem_get_node_rank();
-}
-
-int dimes_shmem_put_local(const char *var_name,
-                unsigned int ver, int size,
-                        int ndim, uint64_t *lb, uint64_t *ub,
-                                void *data)
-{
-        return common_dimes_shmem_put_local(var_name, ver, size, ndim, lb, ub, data);
-}
-
-int dimes_shmem_get_local(const char *var_name,
-                unsigned int ver, int size,
-                        int ndim, uint64_t *lb, uint64_t *ub,
-                                void *data)
-{
-        return common_dimes_shmem_get_local(var_name, ver, size, ndim, lb, ub, data);
-}
-#endif
 #endif
 
 void dspaces_set_mpi_rank_hint(int rank)

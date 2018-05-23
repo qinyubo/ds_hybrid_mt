@@ -48,22 +48,6 @@
 
 #define DSG_ID                  dsg->ds->self->ptlmap.id
 
-double timer_timestamp_1(void)
-{
-        double ret;
-
-#ifdef XT3
-        ret = dclock();
-#else
-        struct timeval tv;
-
-        gettimeofday( &tv, 0 );
-        ret = (double) tv.tv_usec + tv.tv_sec * 1.e6;
-#endif
-        return ret;
-}
-
-
 struct cont_query {
         int                     cq_id;
         int                     cq_rank;
@@ -978,9 +962,7 @@ static int dsgrpc_remove_service(struct rpc_server *rpc, struct rpc_cmd *cmd)
 //        uloga("'%s()': Remove %s version %d.\n", __func__, lh->name, lh->lock_num  );
 
 
-	if (!dsg->ls) {
-		return 0;
-	}
+	if (!dsg->ls) return 0;
 
 	struct obj_data *od, *t;
 	struct list_head *list;
@@ -995,6 +977,7 @@ static int dsgrpc_remove_service(struct rpc_server *rpc, struct rpc_cmd *cmd)
 			}
 		}
 	}
+
         
 	return 0;
 
@@ -1153,8 +1136,11 @@ static int dsgrpc_obj_update(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
 	 free(str);
  }
 #endif
+	pthread_mutex_lock(&dht_mutex);
         oh->u.o.odsc.owner = cmd->id;
-        err = dht_add_entry(de, &oh->u.o.odsc);
+        pthread_mutex_unlock(&dht_mutex);
+
+	err = dht_add_entry(de, &oh->u.o.odsc);
         if (err < 0)
                 goto err_out;
 
@@ -1210,7 +1196,10 @@ static int obj_put_update_dht(struct ds_gspace *dsg, struct obj_data *od)
 			uloga("'%s()': %s\n", __func__, str);
 			free(str);
 #endif
+			pthread_mutex_lock(&dht_mutex);
 			dht_add_entry(ssd->ent_self, odsc);
+			pthread_mutex_unlock(&dht_mutex);
+
 			if (peer->ptlmap.id == min_rank) {
 				err = cq_check_match(odsc);
 				if (err < 0)
@@ -1243,6 +1232,7 @@ static int obj_put_update_dht(struct ds_gspace *dsg, struct obj_data *od)
 		oh->rank = min_rank;
         memcpy(&oh->gdim, &od->gdim, sizeof(struct global_dimension));
 
+		uloga("%s(DEBUG) send cmd->cmd 18\n",__func__);
 		err = rpc_send(dsg->ds->rpc_s, peer, msg);
 		if (err < 0) {
 			free(msg);
@@ -1261,8 +1251,6 @@ static int obj_put_completion(struct rpc_server *rpc_s, struct msg_buf *msg)
 {
     struct obj_data *od = msg->private;
     ls_add_obj(dsg->ls, od);
-
-  //  uloga("%s(Yubo) obj_put_completion at %f\n",__func__, timer_timestamp_1());
 
     free(msg);
 #ifdef DEBUG
@@ -1283,7 +1271,7 @@ static int dsgrpc_obj_put(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         struct node_id *peer;
         struct msg_buf *msg;
         int err;
-        double time_tol, time_start, time_end;
+	struct dart_server *ds = ds_ref_from_rpc(rpc_s);
 
         odsc->owner = DSG_ID;
 
@@ -1309,35 +1297,27 @@ static int dsgrpc_obj_put(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         uloga("'%s()': server %d start receiving %s, version %d.\n", 
             __func__, DSG_ID, odsc->name, odsc->version);
 #endif
-
-       
-        //time_start = timer_timestamp_1();
-        //uloga("%s(Yubo), server obj_put() at %f\n",__func__, time_start);
-
         rpc_mem_info_cache(peer, msg, cmd); 
         err = rpc_receive_direct(rpc_s, peer, msg);
         rpc_mem_info_reset(peer, msg, cmd);
 
-        //time_end = timer_timestamp_1();
-        //uloga("%s(Yubo), after ds_put(), at time= %f\n",__func__, time_end);
-
-       // time_tol = (time_end - time_start)/1000000;
-       // uloga("%s(Yubo), ds_put() data receive total time= %f\n",__func__, time_tol);
-        //uloga("%f\n", time_tol);
-
         if (err < 0)
                 goto err_free_msg;
+	
+	 //ds_barrier(ds);
 
 	/* NOTE: This  early update, has  to be protected  by external
 	   locks in the client code. */
-
-        //time_start = timer_timestamp_1();
+//	pthread_mutex_lock(&client_mutex);
         err = obj_put_update_dht(dsg, od);
-        //time_end = timer_timestamp_1();
-        //time_tol = (time_end - time_start)/1000000;
-        //uloga("%s(Yubo), server obj put update dht start at %f, end at %f, total time=%f\n",__func__,time_start, time_end, time_tol);
+//	pthread_mutex_unlock(&client_mutex);
+        
+	uloga("%s() wait before ds_barrier\n",__func__);
+	ds_barrier(ds);
+	uloga("%s() after ds_barrier\n",__func__);
 
-        if (err == 0)
+
+	if (err == 0)
 	        return 0;
  err_free_msg:
         free(msg);
@@ -1476,7 +1456,7 @@ static int dsgrpc_obj_send_dht_peers(struct rpc_server *rpc_s, struct rpc_cmd *c
         peer = ds_get_peer(dsg->ds, cmd->id);
 
         peer_num = ssd_hash(ssd, &oh->u.o.odsc.bb, de_tab);
-        peer_id_tab = malloc(sizeof(int) * (peer_num+1));
+        peer_id_tab = malloc(sizeof(int) * (dsg->ds->size_sp+1));
         if (!peer_id_tab)
                 goto err_out;
         for (i = 0; i < peer_num; i++)
@@ -1491,7 +1471,7 @@ static int dsgrpc_obj_send_dht_peers(struct rpc_server *rpc_s, struct rpc_cmd *c
         }
 
         msg->msg_data = peer_id_tab;
-        msg->size = sizeof(int) * (dsg->ds->size_sp + 1);
+        msg->size = sizeof(int) * (dsg->ds->size_sp+1);
         msg->cb = obj_send_dht_peers_completion;
 
         rpc_mem_info_cache(peer, msg, cmd);
@@ -1880,7 +1860,6 @@ static int dsgrpc_obj_get(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         struct obj_data *od, *from_obj;
         int fast_v;
         int err = -ENOENT; 
-        double time_start, time_end, time_tol;
 
         peer = ds_get_peer(dsg->ds, cmd->id);
 
@@ -1941,17 +1920,10 @@ static int dsgrpc_obj_get(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         msg->cb = obj_get_completion;
         msg->private = od;
 
-        time_start = timer_timestamp_1();
 
         rpc_mem_info_cache(peer, msg, cmd); 
         err = (fast_v)? rpc_send_directv(rpc_s, peer, msg) : rpc_send_direct(rpc_s, peer, msg);
         rpc_mem_info_reset(peer, msg, cmd);
-
-        time_end = timer_timestamp_1();
-        time_tol = (time_end - time_start)/1000000;
-       // uloga("%s(Yubo), ds_get() start at %f, end at %f, total time=%f\n",__func__,time_start, time_end, time_tol);
-
-
         if (err == 0)
                 return 0;
 
@@ -2110,7 +2082,6 @@ struct ds_gspace *dsg_alloc(int num_sp, int num_cp, char *conf_name, void *comm)
         rpc_add_service(ss_obj_cq_register, dsgrpc_obj_cq_register);
         rpc_add_service(cp_lock, dsgrpc_lock_service);
         rpc_add_service(cp_remove, dsgrpc_remove_service);
-        rpc_add_service(cp_remove, dsgrpc_remove_service);
         rpc_add_service(ss_info, dsgrpc_ss_info);
 #ifdef DS_HAVE_ACTIVESPACE
         rpc_add_service(ss_code_put, dsgrpc_bin_code_put);
@@ -2176,9 +2147,8 @@ void dsg_free(struct ds_gspace *dsg)
 int dsg_process(struct ds_gspace *dsg)
 {
 	int err;
-
+    
     err = ds_process(dsg->ds);
-
 	if (err < 0)
 		rpc_report_md_usage(dsg->ds->rpc_s);
 
@@ -2232,5 +2202,5 @@ int dsghlp_get_rank(struct ds_gspace *dsg)
 */
 int dsghlp_all_sp_joined(struct ds_gspace *dsg)
 {
-        return (dsg->ds->num_sp == dsg->ds->size_sp);
+	return (dsg->ds->num_sp == dsg->ds->size_sp);
 }

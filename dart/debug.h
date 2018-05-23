@@ -36,6 +36,9 @@
 #include <stdio.h>
 #include <errno.h>
 
+#define DEBUG
+#define TIMING_PERF
+
 #ifdef DEBUG
 #define ulog(f, a...) fprintf(stderr, "'%s()': " f, __func__, ##a)
 #else

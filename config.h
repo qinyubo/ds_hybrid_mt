@@ -12,7 +12,7 @@
 #define DIMES_RDMA_MAX_NUM_CONCURRENT_READ 4
 
 /* uGNI-Aries is enabled */
-#define DS_HAVE_ARIES 1
+/* #undef DS_HAVE_ARIES */
 
 /* DIMES is enabled */
 /* #undef DS_HAVE_DIMES */
@@ -35,10 +35,10 @@
 #define FC_FUNC_(name,NAME) name ## _
 
 /* User-provided cookie */
-#define GNI_COOKIE 0xe3240000
+#define GNI_COOKIE 0x5420000
 
 /* User-provided ptag */
-/* #undef GNI_PTAG */
+#define GNI_PTAG 250
 
 /* Define if you have Cray Portals. */
 /* #undef HAVE_CRAY_PORTALS */
@@ -154,6 +154,9 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
+/* Define to 1 if you have the <"rdmacred.h"> header file. */
+/* #undef HAVE__RDMACRED_H_ */
+
 /* IB Interface option */
 #define IB_INTERFACE "ib0"
 
@@ -180,9 +183,6 @@
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "dataspaces"
-
-/* Define to the home page for this package. */
-#define PACKAGE_URL ""
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "1.6.5"

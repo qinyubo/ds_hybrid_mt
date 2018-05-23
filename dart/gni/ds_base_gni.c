@@ -1063,7 +1063,7 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
 		ds->comm = NULL;
 	}
 
-	ds->rpc_s = rpc_server_init(30, ds->peer_size, ds, DART_SERVER, 0, comm);
+	ds->rpc_s = rpc_server_init(60, ds->peer_size, ds, DART_SERVER, 0, comm);
 	if (!ds->rpc_s)
 		goto err_free_dsrv;
 
@@ -1192,4 +1192,6 @@ int ds_process(struct dart_server *ds)
     }
 	return rpc_process_event_mt(ds->rpc_s);
 }
+
+
 

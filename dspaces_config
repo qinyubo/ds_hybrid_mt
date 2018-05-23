@@ -1,10 +1,10 @@
 #!/bin/bash
 
 DSPACES_INC="-I/usr/local/include  "
-DSPACES_LIB="-L/usr/local/lib -ldspaces -ldscommon -ldart   -lm    "
+DSPACES_LIB="-L/usr/local/lib -ldspaces -ldscommon -ldart   -lm    -lpthread -lm -lstdc++"
 DSPACES_VER="1.6.5"
 DSPACES_ARG="dataspaces 1.6.5 
-              'CC=cc' 'FC=ftn' 'cross_compiling=yes' '--with-gni-cookie=0xe3240000'"
+              'CC=cc' 'CXX=pgc++' 'FC=ftn' 'LIBS=-lpthread -lm -lstdc++'"
 
 OPTIND=1
 
