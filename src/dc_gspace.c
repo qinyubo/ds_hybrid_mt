@@ -1831,18 +1831,21 @@ int dcg_obj_get(struct obj_data *od)
                 }
         }
         else {
+            uloga("%s: Debug #1\n",__func__);
                 err = get_dht_peers(qte);
                 if (err < 0)
                         goto err_qt_free;
                 DC_WAIT_COMPLETION(qte->f_peer_received == 1);
-
+                uloga("%s: Debug #2\n",__func__);
                 err = get_obj_descriptors(qte);
+                uloga("%s: Debug #3\n",__func__);
                 if (err < 0) {
                     if (err == -EAGAIN)
                         goto out_no_data;
                     else	goto err_qt_free;
                 }
                 DC_WAIT_COMPLETION(qte->f_odsc_recv == 1);
+                uloga("%s: Debug #4\n",__func__);
         }
 
         if (qte->f_err != 0) {
@@ -1856,7 +1859,7 @@ int dcg_obj_get(struct obj_data *od)
             od->obj_desc.version, dcg_get_rank(dcg), tm_end-tm_st, log_header);
         tm_st = tm_end;
 #endif
-
+        uloga("%s: Debug #5\n",__func__);
         err = dcg_obj_data_get(qte);
         if (err < 0) {
                 // FIXME: should I jump to err_qt_free ?
@@ -1867,7 +1870,7 @@ int dcg_obj_get(struct obj_data *od)
         /* The request send succeeds, we can post the transaction to
            the list. */
 
-
+        uloga("%s: Debug #6\n",__func__);
         /* Wait for transaction to complete. */
         while (! qte->f_complete) {
                 err = dc_process(dcg->dc);
@@ -1876,6 +1879,7 @@ int dcg_obj_get(struct obj_data *od)
                         break;
                 }
         }
+        uloga("%s: Debug #7\n",__func__);
 
         if (!qte->f_complete) {
                 // !qte->num_req || qte->num_reply != qte->num_od) {

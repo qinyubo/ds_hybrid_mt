@@ -1,7 +1,8 @@
 #!/bin/bash
 
-rm -r conf.*
-rm -r *.err log.*
-rm -r *.out *.log
-rm -r DS_example*
-rm -f profile.*
+rm -rf *.cobaltlog
+rm -rf *.error
+rm -rf *.output
+rm -rf *.log
+rm -rf *.out
+rm -rf *conf*

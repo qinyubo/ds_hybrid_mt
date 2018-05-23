@@ -80,7 +80,7 @@ POST_UNINSTALL = :
 build_triplet = x86_64-unknown-linux-gnu
 host_triplet = x86_64-unknown-linux-gnu
 bin_PROGRAMS = dataspaces_server$(EXEEXT) test_writer$(EXEEXT) \
-	test_reader$(EXEEXT) test_rw$(EXEEXT)
+	test_reader$(EXEEXT)
 subdir = tests/C
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/config/depcomp $(noinst_HEADERS)
@@ -111,10 +111,6 @@ am_test_reader_OBJECTS = common.$(OBJEXT) test_get_run.$(OBJEXT) \
 	test_reader.$(OBJEXT)
 test_reader_OBJECTS = $(am_test_reader_OBJECTS)
 test_reader_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_test_rw_OBJECTS = common.$(OBJEXT) test_get_run.$(OBJEXT) \
-	test_put_run.$(OBJEXT) test_rw.$(OBJEXT)
-test_rw_OBJECTS = $(am_test_rw_OBJECTS)
-test_rw_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_test_writer_OBJECTS = common.$(OBJEXT) test_put_run.$(OBJEXT) \
 	test_writer.$(OBJEXT)
 test_writer_OBJECTS = $(am_test_writer_OBJECTS)
@@ -148,9 +144,9 @@ am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(dataspaces_server_SOURCES) $(test_reader_SOURCES) \
-	$(test_rw_SOURCES) $(test_writer_SOURCES)
+	$(test_writer_SOURCES)
 DIST_SOURCES = $(dataspaces_server_SOURCES) $(test_reader_SOURCES) \
-	$(test_rw_SOURCES) $(test_writer_SOURCES)
+	$(test_writer_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -185,11 +181,11 @@ AUTOCONF = autoconf
 AUTOHEADER = autoheader
 AUTOMAKE = automake-1.13
 AWK = gawk
-CC = mpicc
+CC = cc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
-CONFIG_ARG =  'CC=mpicc' 'FC=mpif90' '--enable-dart-tcp' 'LIBS=-lpthread -lm'
-CPP = mpicc -E
+CONFIG_ARG =  'CC=cc' 'FC=ftn' 'cross_compiling=yes' '--with-gni-cookie=0xe3240000'
+CPP = cc -E
 CPPFLAGS = 
 CXX = g++
 CXXDEPMODE = depmode=gcc3
@@ -203,27 +199,27 @@ DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DRC_CPPFLAGS = 
 DRC_LIBS = 
-DSPACESLIB_CFLAGS =  
-DSPACESLIB_CPPFLAGS =  
-DSPACESLIB_LDADD =  -lm  
-DSPACESLIB_LDFLAGS =  
-DSPACES_EXT_CFLAGS =  
+DSPACESLIB_CFLAGS = 
+DSPACESLIB_CPPFLAGS =  -I/opt/cray/rca/2.2.15-6.0.4.1_13.1__g46acb0f.ari/include -I/opt/cray/alps/6.4.2-6.0.4.1_3.1__gb8adc61.ari/include -I/opt/cray/gni-headers/5.0.11-6.0.4.0_7.2__g7136988.ari/include -I/opt/cray/pe/pmi/5.0.13/include -I/opt/cray/ugni/6.0.14-6.0.4.0_14.1__ge7db4a2.ari/include -I/opt/cray/wlm_detect/1.2.1-6.0.4.0_22.1__gd26a3dc.ari/include -I/opt/cray/krca/2.2.2-6.0.4.1_18.2__g4614cf3.ari/include -I/opt/cray-hss-devel/8.0.0/include  -I/opt/cray/gni-headers/5.0.11-6.0.4.0_7.2__g7136988.ari/include -I/opt/cray/ugni/6.0.14-6.0.4.0_14.1__ge7db4a2.ari/include 
+DSPACESLIB_LDADD =  -lm  -lpmi -lugni
+DSPACESLIB_LDFLAGS =  -L/opt/cray/pe/pmi/5.0.13/lib64  -L/opt/cray/ugni/6.0.14-6.0.4.0_14.1__ge7db4a2.ari/lib64 
+DSPACES_EXT_CFLAGS = 
 DSPACES_EXT_CPPFLAGS = 
-DSPACES_EXT_LDADD =  -lm  
+DSPACES_EXT_LDADD =  -lm 
 DSPACES_EXT_LDFLAGS = 
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
 EGREP = /usr/bin/grep -E
 EXEEXT = 
-FC = mpif90
-FCFLAGS = -g -O2
-FCLIBS =  -L/usr/mpi/gcc/openmpi-1.10.4-hfi/lib64 -L/software/gcc/4.9.4/lib/gcc/x86_64-unknown-linux-gnu/4.9.4 -L/software/gcc/4.9.4/lib/gcc/x86_64-unknown-linux-gnu/4.9.4/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/software/gcc/4.9.4/lib/gcc/x86_64-unknown-linux-gnu/4.9.4/../../.. -lpthread -lgfortran -lm -lmpi_usempi -lmpi_mpifh -lmpi -lquadmath
+FC = ftn
+FCFLAGS = -g
+FCLIBS =  -L/opt/cray/pe/libsci/18.04.1/INTEL/16.0/x86_64/lib -L/opt/cray/dmapp/default/lib64 -L/opt/cray/pe/mpt/7.7.0/gni/mpich-intel/16.0/lib -L/soft/perftools/darshan/darshan-3.1.5/lib -L/opt/cray/rca/2.2.15-6.0.4.1_13.1__g46acb0f.ari/lib64 -L/opt/cray/alps/6.4.2-6.0.4.1_3.1__gb8adc61.ari/lib64 -L/opt/cray/xpmem/2.2.2-6.0.4.1_18.2__g43b0535.ari/lib64 -L/opt/cray/pe/pmi/5.0.13/lib64 -L/opt/cray/ugni/6.0.14-6.0.4.0_14.1__ge7db4a2.ari/lib64 -L/opt/cray/udreg/2.3.2-6.0.4.0_12.2__g2f9c3ee.ari/lib64 -L/opt/cray/pe/atp/2.1.1/libApp -L/lib64 -L/opt/cray/wlm_detect/1.2.1-6.0.4.0_22.1__gd26a3dc.ari/lib64 -L/opt/intel/compilers_and_libraries_2018.0.128/linux/ipp/lib/intel64 -L/opt/intel/compilers_and_libraries_2018.0.128/linux/compiler/lib/intel64 -L/opt/intel/compilers_and_libraries_2018.0.128/linux/mkl/lib/intel64 -L/opt/intel/compilers_and_libraries_2018.0.128/linux/tbb/lib/intel64/gcc4.4 -L/opt/intel/compilers_and_libraries_2018.0.128/linux/daal/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2018.0.128/linux/daal/../compiler/lib/intel64_lin -L/opt/intel/compilers_and_libraries_2018.0.128/linux/compiler/lib/intel64_lin -L/usr/lib64/gcc/x86_64-suse-linux/4.8/ -L/usr/lib64/gcc/x86_64-suse-linux/4.8/../../../../lib64 -L/usr/lib64/gcc/x86_64-suse-linux/4.8/../../../../lib64/ -L/lib/../lib64 -L/lib/../lib64/ -L/usr/lib/../lib64 -L/usr/lib/../lib64/ -L/opt/intel/compilers_and_libraries_2018.0.128/linux/ipp/lib/intel64/ -L/opt/intel/compilers_and_libraries_2018.0.128/linux/compiler/lib/intel64/ -L/opt/intel/compilers_and_libraries_2018.0.128/linux/mkl/lib/intel64/ -L/opt/intel/compilers_and_libraries_2018.0.128/linux/tbb/lib/intel64/gcc4.4/ -L/opt/intel/compilers_and_libraries_2018.0.128/linux/daal/lib/intel64_lin/ -L/opt/intel/compilers_and_libraries_2018.0.128/linux/daal/../compiler/lib/intel64_lin/ -L/usr/lib64/gcc/x86_64-suse-linux/4.8/../../../../x86_64-suse-linux/lib/ -L/usr/lib64/gcc/x86_64-suse-linux/4.8/../../../ -L/lib/ -L/usr/lib64 -L/usr/lib -lfmpich -lmpichcxx -ldarshan -ldarshan-stubs -lz -lAtpSigHandler -lAtpSigHCommData -lpthread -lmpichf90_intel -lrt -lugni -lpmi -limf -lm -ldl -lsci_intel_mpi -lsci_intel -lmpich_intel -lalpslli -lwlm_detect -lalpsutil -lrca -lxpmem -ludreg -lhugetlbfs -lifport -lifcore -lsvml -lipgo -lirc -lirc_s
 GREP = /usr/bin/grep
-INFINIBAND_CFLAGS =  
-INFINIBAND_CPPFLAGS =  
+INFINIBAND_CFLAGS = 
+INFINIBAND_CPPFLAGS = 
 INFINIBAND_LDFLAGS = 
-INFINIBAND_LIBS =  -libverbs 
+INFINIBAND_LIBS = 
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -231,7 +227,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS =  
 LIBOBJS = 
-LIBS = -lpthread -lm
+LIBS = 
 LTLIBOBJS = 
 MAKEINFO = makeinfo
 MKDIR_P = /usr/bin/mkdir -p
@@ -248,7 +244,7 @@ PAMI_CPPFLAGS =
 PAMI_LDFLAGS = 
 PAMI_LIBS = 
 PATH_SEPARATOR = :
-PMI_CPPFLAGS = 
+PMI_CPPFLAGS = -I/opt/cray/rca/2.2.15-6.0.4.1_13.1__g46acb0f.ari/include -I/opt/cray/alps/6.4.2-6.0.4.1_3.1__gb8adc61.ari/include -I/opt/cray/gni-headers/5.0.11-6.0.4.0_7.2__g7136988.ari/include -I/opt/cray/pe/pmi/5.0.13/include -I/opt/cray/ugni/6.0.14-6.0.4.0_14.1__ge7db4a2.ari/include -I/opt/cray/wlm_detect/1.2.1-6.0.4.0_22.1__gd26a3dc.ari/include -I/opt/cray/krca/2.2.2-6.0.4.1_18.2__g4614cf3.ari/include -I/opt/cray-hss-devel/8.0.0/include 
 PMI_LDLAGS = 
 PMI_LIBS = -lpmi
 PORTALS_CFLAGS = 
@@ -258,27 +254,27 @@ PORTALS_LDFLAGS =
 PORTALS_LIBS = 
 PORTALS_NAL_HEADER = 
 PORTALS_RT_HEADER = 
-PTHREAD_CC = mpicc
+PTHREAD_CC = cc
 PTHREAD_CFLAGS = 
 PTHREAD_LIBS = 
 RANLIB = ranlib
 SET_MAKE = 
 SHELL = /bin/sh
-STRIP = 
+STRIP = strip
 TCP_SOCKET_CFLAGS = 
 TCP_SOCKET_CPPFLAGS = 
 TCP_SOCKET_LDFLAGS = 
 TCP_SOCKET_LIBS = 
-UGNI_CPPFLAGS = 
+UGNI_CPPFLAGS = -I/opt/cray/gni-headers/5.0.11-6.0.4.0_7.2__g7136988.ari/include -I/opt/cray/ugni/6.0.14-6.0.4.0_14.1__ge7db4a2.ari/include 
 UGNI_LDLAGS = 
 UGNI_LIBS = -lugni
 VERSION = 1.6.5
-abs_builddir = /home1/yq47/code/dataspace/ds_hybrid_mt/tests/C
-abs_srcdir = /home1/yq47/code/dataspace/ds_hybrid_mt/tests/C
-abs_top_builddir = /home1/yq47/code/dataspace/ds_hybrid_mt
-abs_top_srcdir = /home1/yq47/code/dataspace/ds_hybrid_mt
+abs_builddir = /home/yqin/ds_hybrid_mt/tests/C
+abs_srcdir = /home/yqin/ds_hybrid_mt/tests/C
+abs_top_builddir = /home/yqin/ds_hybrid_mt
+abs_top_srcdir = /home/yqin/ds_hybrid_mt
 ac_ct_AR = ar
-ac_ct_CC = mpicc
+ac_ct_CC = cc
 ac_ct_CXX = g++
 ac_ct_FC = 
 am__include = include
@@ -306,7 +302,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home1/yq47/code/dataspace/ds_hybrid_mt/config/install-sh
+install_sh = ${SHELL} /home/yqin/ds_hybrid_mt/config/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -336,8 +332,6 @@ test_writer_SOURCES = common.c test_put_run.c test_writer.c
 test_writer_LDADD = -L../../src -ldspaces -ldscommon  -L../../dart -ldart $(DSPACESLIB_LDADD)
 test_reader_SOURCES = common.c test_get_run.c test_reader.c
 test_reader_LDADD = -L../../src -ldspaces -ldscommon -L../../dart -ldart $(DSPACESLIB_LDADD)
-test_rw_SOURCES = common.c test_get_run.c test_put_run.c test_rw.c
-test_rw_LDADD = -L../../src -ldspaces -ldscommon -L../../dart -ldart $(DSPACESLIB_LDADD)
 noinst_HEADERS = common.h
 all: all-am
 
@@ -424,10 +418,6 @@ test_reader$(EXEEXT): $(test_reader_OBJECTS) $(test_reader_DEPENDENCIES) $(EXTRA
 	@rm -f test_reader$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_reader_OBJECTS) $(test_reader_LDADD) $(LIBS)
 
-test_rw$(EXEEXT): $(test_rw_OBJECTS) $(test_rw_DEPENDENCIES) $(EXTRA_test_rw_DEPENDENCIES) 
-	@rm -f test_rw$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(test_rw_OBJECTS) $(test_rw_LDADD) $(LIBS)
-
 test_writer$(EXEEXT): $(test_writer_OBJECTS) $(test_writer_DEPENDENCIES) $(EXTRA_test_writer_DEPENDENCIES) 
 	@rm -f test_writer$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_writer_OBJECTS) $(test_writer_LDADD) $(LIBS)
@@ -443,7 +433,6 @@ include ./$(DEPDIR)/dataspaces_server.Po
 include ./$(DEPDIR)/test_get_run.Po
 include ./$(DEPDIR)/test_put_run.Po
 include ./$(DEPDIR)/test_reader.Po
-include ./$(DEPDIR)/test_rw.Po
 include ./$(DEPDIR)/test_writer.Po
 
 .c.o:

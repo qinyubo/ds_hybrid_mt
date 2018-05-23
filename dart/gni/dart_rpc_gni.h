@@ -77,6 +77,9 @@ struct rpc_server;
 struct rpc_cmd;
 struct node_id;
 
+pthread_mutex_t task_mutex;
+pthread_mutex_t cond_mutex;
+
 /*
 typedef unsigned char	__u8;
 typedef unsigned int	__u32;
@@ -227,6 +230,7 @@ struct rpc_cmd {
 	unsigned char			num_msg;        // # accepting messages
 	struct mdh_addr_t	mdh_addr;
 	unsigned int			id;
+	unsigned int           pl; //priority level, so far 0 is low, 1 is high priority
 	// payload of the command
 	unsigned char			pad[RPC_CMD_PAD_SIZE];
 };
@@ -324,6 +328,14 @@ struct rpc_request {
 	//?gni_post_descriptor_t	rdma_data_desc;
 };
 
+//Store tasks request
+struct tasks_request{
+    struct list_head tasks_entry;
+    struct rpc_server *rpc_s;
+    struct rpc_request *rr;
+    struct node_id *peer;
+};
+
 enum rpc_component {
 	DART_SERVER,
 	DART_CLIENT
@@ -378,6 +390,11 @@ struct rpc_server{
 
 	// socket address for init connection
 	struct sock_addr 	address;
+
+	pthread_t task_thread; /* Thread for listening tasks list */
+	pthread_t worker_thread[64];
+	struct list_head tasks_list;
+	int tasks_counter;
 };
 
 enum cmd_type { 
@@ -390,24 +407,24 @@ enum cmd_type {
 	cn_unregister,
 	cn_resume_transfer,     // Hint for server to start async transfers.
 	cn_suspend_transfer,    // Hint for server to stop async transfers.
-	sp_reg_request,
-	sp_reg_reply,
+	sp_reg_request,   //10
+	sp_reg_reply,  
 	sp_announce_cp,
 	cn_timing,
 	// Upper layer credit control Added in Gemini Version
 	cn_ack_credit,
 	// Synchronization primitives.
 	cp_barrier,
-	cp_lock,
+	cp_lock,   //16
 	// Shared spaces specific.
-	ss_obj_put,
+	ss_obj_put,   //17
 	ss_obj_update,
 	ss_obj_get_dht_peers,
-	ss_obj_get_desc,
+	ss_obj_get_desc,   //20
 	ss_obj_query,
 	ss_obj_cq_register,
 	ss_obj_cq_notify,
-	ss_obj_get,
+	ss_obj_get,   //24
 	ss_obj_filter,
 	ss_obj_info,
 	ss_info,
@@ -477,6 +494,7 @@ int rpc_server_get_id(void);
 
 int rpc_process_event(struct rpc_server *rpc_s);
 int rpc_process_event_with_timeout(struct rpc_server *rpc_s, int timeout);
+int rpc_process_event_mt(struct rpc_server *rpc_s);
 
 void rpc_add_service(enum cmd_type rpc_cmd, rpc_service rpc_func);
 int rpc_barrier(struct rpc_server *rpc_s);
@@ -493,5 +511,10 @@ struct msg_buf *msg_buf_alloc(struct rpc_server *rpc_s, const struct node_id *pe
 
 void rpc_mem_info_cache(struct node_id *peer, struct msg_buf *msg, struct rpc_cmd *cmd);
 void rpc_mem_info_reset(struct node_id *peer, struct msg_buf *msg, struct rpc_cmd *cmd);
+
+//Yubo 
+//void* thread_handle_new(void* attr);
+void thread_handle(struct rpc_server* rpc_s);
+void finalize_threads(struct rpc_server* rpc_s_ptr);
 
 #endif

@@ -12,7 +12,7 @@
 #define DIMES_RDMA_MAX_NUM_CONCURRENT_READ 4
 
 /* uGNI-Aries is enabled */
-/* #undef DS_HAVE_ARIES */
+#define DS_HAVE_ARIES 1
 
 /* DIMES is enabled */
 /* #undef DS_HAVE_DIMES */
@@ -34,10 +34,10 @@
 /* As FC_FUNC, but for C identifiers containing underscores. */
 #define FC_FUNC_(name,NAME) name ## _
 
-/* Fixed Gemini cookie */
-/* #undef GNI_COOKIE */
+/* User-provided cookie */
+#define GNI_COOKIE 0xe3240000
 
-/* Fixed Gemini ptag */
+/* User-provided ptag */
 /* #undef GNI_PTAG */
 
 /* Define if you have Cray Portals. */
@@ -50,7 +50,7 @@
 /* #undef HAVE_DCMF_H */
 
 /* Define to 1 if you have the <gni_pub.h> header file. */
-/* #undef HAVE_GNI_PUB_H */
+#define HAVE_GNI_PUB_H 1
 
 /* Define to 1 if you have <rdma/rdma_cma.h>. */
 #define HAVE_IBCM_H 1
@@ -59,7 +59,7 @@
 #define HAVE_IBVERBS_H 1
 
 /* Define if you have the Infiniband. */
-#define HAVE_INFINIBAND 0
+/* #undef HAVE_INFINIBAND */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
@@ -83,7 +83,7 @@
 /* #undef HAVE_PAMI_H */
 
 /* Define to 1 if you have the <pmi.h> header file. */
-/* #undef HAVE_PMI_H */
+#define HAVE_PMI_H 1
 
 /* Define if you have the Portals. */
 /* #undef HAVE_PORTALS */
@@ -146,10 +146,10 @@
 #define HAVE_SYS_TYPES_H 1
 
 /* Define if you have the TCP socket. */
-#define HAVE_TCP_SOCKET 1
+#define HAVE_TCP_SOCKET 0
 
 /* Define if you have the Gemini. */
-/* #undef HAVE_UGNI */
+#define HAVE_UGNI 1
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1

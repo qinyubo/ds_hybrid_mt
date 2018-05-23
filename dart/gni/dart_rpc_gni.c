@@ -44,6 +44,16 @@
 //#include "gni_pub.h"
 //#include "pmi.h"
 
+//MT version library and parameters
+#include <pthread.h>  
+#define MAX_WORKER_THREADS 2
+pthread_cond_t task_cond = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t cond_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t worker_cond_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t worker_self_cond = PTHREAD_COND_INITIALIZER;
+pthread_rwlock_t rw_lock;
+/****END*****/
+
 #define DEVICE_ID	0
 //#define RECVHEADER	sizeof(struct hdr_sys)
 #define RECVHEADER	0
@@ -900,15 +910,13 @@ static int rpc_cb_decode(struct rpc_server *rpc_s, struct rpc_request *rr)
 	struct rpc_cmd *cmd;
 	int err, i;
 
-
-
-
 	cmd = (struct rpc_cmd *) (rr->msg->msg_rpc);
 
 	for (i = 0; i < num_service; i++) 
 	{
 		if (cmd->cmd == rpc_commands[i].rpc_cmd) 
 		{
+			uloga("%s() I am at CPU %d\n", __func__, sched_getcpu());
 			err = rpc_commands[i].rpc_func(rpc_s, cmd);
 			break;
 		}
@@ -923,6 +931,80 @@ static int rpc_cb_decode(struct rpc_server *rpc_s, struct rpc_request *rr)
 		uloga("(%s): err.\n", __func__);
 
 	return err;
+}
+
+/**************************
+	MT version
+*****************************/
+void* rpc_cb_decode_thrd(void *tasks_request)	//Done
+{
+	struct tasks_request *tasks_req = (struct tasks_request*)tasks_request;
+	struct rpc_server *local_rpc_s = tasks_req->rpc_s;
+	struct tasks_request *local_tasks_req;
+	struct rpc_request *local_rr;
+	struct rpc_server *tasks_rpc_s;
+	struct rpc_cmd *cmd;
+	int err, i;
+	int counter=0;
+	int tasks_received = 0;
+	 //uloga("%s(DEBUG) initated decode thrd, rpc_s id %d\n",__func__,local_rpc_s->ptlmap.id);
+
+
+	while(1){
+
+		tasks_received = 0;
+
+		pthread_mutex_lock(&task_mutex);
+
+		if(list_empty(&local_rpc_s->tasks_list)){
+			tasks_received = 0;
+		}
+		else{
+			local_tasks_req = list_entry(local_rpc_s->tasks_list.next, struct tasks_request, tasks_entry);
+        	list_del(&local_tasks_req->tasks_entry); //list_del only remove this object link from list, doesn't destroy it
+        	tasks_received = 1;
+		}
+
+		pthread_mutex_unlock(&task_mutex);
+
+
+		if(tasks_received == 1){
+			local_rr = local_tasks_req->rr;
+        	tasks_rpc_s = local_tasks_req->rpc_s;
+
+
+			cmd = (struct rpc_cmd *) (local_rr->msg->msg_rpc);  
+
+			for (i = 0; i < num_service; i++) 
+			{
+				if (cmd->cmd == rpc_commands[i].rpc_cmd) 
+				{
+					uloga("%s() I am at CPU %d\n", __func__, sched_getcpu());
+					// uloga("%s(DEBUG) ready to execute tasks\n",__func__);
+					err = rpc_commands[i].rpc_func(tasks_rpc_s, cmd);
+					// uloga("%s(DEBUG) finish execute tasks\n",__func__);
+					break;
+				}
+			}
+
+			if (i == num_service) {
+				uloga("Network command unknown %d!\n", cmd->cmd);
+				err = -EINVAL;
+			}
+
+
+		free(local_tasks_req);
+		free(local_rr->msg->msg_rpc);
+    	free(local_rr);
+
+		}
+		else{
+			continue;
+		}
+
+
+
+}
 }
 
 /*
@@ -1026,7 +1108,7 @@ static int rpc_post_request(struct rpc_server *rpc_s, struct node_id *peer, stru
 
 RESEND:
 
-	if (rr->type == 0)
+	if (rr->type == 0)   //0 represents cmd ; 1 for data
 	{
 		remote = rpc_s->ptlmap.id+INDEX_COUNT;
 
@@ -1552,6 +1634,9 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 
       if(event_id == 0)
 	return 0;
+	
+	//mutex
+//	pthread_mutex_lock(&task_mutex);
       list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
 	{
 	  if(rr->index == event_id)
@@ -1560,17 +1645,19 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 	      break;
 	    }
 	}
+//	pthread_mutex_unlock(&task_mutex);
 
       while(!GNI_CQ_STATUS_OK(event_data));
 
       if(check == 0)
 	{
-	  uloga("Rank %d: SRC Indexing err with event_id (%d), rr_num (%d) in (%s).\n", rank_id, event_id, rpc_s->rr_num,  __func__)\
-	    ;
+	  uloga("Rank %d: SRC Indexing err with event_id (%d), rr_num (%d) in (%s).\n", rank_id, event_id, rpc_s->rr_num,  __func__);
+	//    pthread_mutex_lock(&task_mutex);
 	  list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
 	    {
 	      uloga("Rank(%d):rest Index(%d) with rr_num(%d).\n",rank_id, rr->index, rpc_s->rr_num);
 	    }
+	  //  pthread_mutex_unlock(&task_mutex);
 	  goto err_out;
 	}
 
@@ -1592,8 +1679,10 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 
       if(rr->refcont == 0)
 	{
+//		pthread_mutex_lock(&task_mutex);
 	  list_del(&rr->req_entry);
-	  rpc_s->rr_num--;
+//	  pthread_mutex_unlock(&task_mutex);
+	  rpc_s->rr_num--; 
 	  err = rpc_free_index(rr->index);
 	  if(err!=0)
 	    goto err_out;
@@ -1684,6 +1773,7 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 	{
 	  while(!GNI_CQ_STATUS_OK(event_data));
 
+	  pthread_mutex_lock(&task_mutex);
 	  list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
 	    {
 	      if( rr->index == event_id )
@@ -1692,14 +1782,17 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 		  break;
 		}
 	    }
+	    pthread_mutex_unlock(&task_mutex);
 
 	  if(check == 0)
 	    {
-	      uloga("Rank %d: DST Indexing err with event_id (%d), rr_num (%d) in (%s).\n", rank_id, event_id, rpc_s->rr_num,  __func__);
+	      uloga("Rank %d: #1 DST Indexing err with event_id (%d), rr->index (%d), rr_num (%d) in (%s).\n", rank_id, event_id, rr->index, rpc_s->rr_num,  __func__);
+	      pthread_mutex_lock(&task_mutex);
 	      list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
 		{
 		  uloga("Rank(%d):Index(%d) with rr_num(%d).\n",rank_id, rr->index, rpc_s->rr_num);
 		}
+		pthread_mutex_unlock(&task_mutex);
 
 	      goto err_out;
 	    }
@@ -1712,7 +1805,9 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 		goto err_out;
 	      if(rr->refcont == 0)
 		{
+			pthread_mutex_lock(&task_mutex);
 		  list_del(&rr->req_entry);
+		  pthread_mutex_unlock(&task_mutex);
 		  rpc_s->rr_num--;
 		  err = rpc_free_index(rr->index);
 		  if(err!=0)
@@ -1818,6 +1913,7 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 	{
 	  if(event_id == 0)
 	    return 0;
+	//pthread_mutex_lock(&task_mutex);
 	  list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
 	    {
 	      if(rr->index == event_id)
@@ -1826,16 +1922,19 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 		  break;
 		}
 	    }
+	 //   pthread_mutex_unlock(&task_mutex);
 
 	  while(!GNI_CQ_STATUS_OK(event_data));
 
 	  if(check == 0)
 	    {
 	      uloga("Rank %d: SRC Indexing err with event_id (%d), rr_num (%d) in (%s).\n", rank_id, event_id, rpc_s->rr_num,  __func__);
+	 //    pthread_mutex_lock(&task_mutex);
 	      list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
 		{
 		  uloga("Rank(%d):rest Index(%d) with rr_num(%d).\n",rank_id, rr->index, rpc_s->rr_num);
 		}
+		//pthread_mutex_unlock(&task_mutex);
 	      goto err_out;
 	    }
 
@@ -1856,7 +1955,9 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 
 	  if(rr->refcont == 0)
 	    {
+	//    	pthread_mutex_lock(&task_mutex);
 	      list_del(&rr->req_entry);
+	 //     pthread_mutex_unlock(&task_mutex);
 	      rpc_s->rr_num--;
 	      err = rpc_free_index(rr->index);
 	      if(err!=0)
@@ -1959,11 +2060,13 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 		     
 	     if(check == 0)
 	       {
-		 uloga("Rank %d: DST Indexing err with event_id (%d), rr_num (%d) in (%s).\n", rank_id, event_id, rpc_s->rr_num,  __func__);
+		 uloga("Rank %d: #2 DST Indexing err with event_id (%d), rr->index(%d), rr_num (%d) in (%s).\n", rank_id, event_id, rr->index, rpc_s->rr_num,  __func__);
+	//	 pthread_mutex_lock(&task_mutex);
 		 list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
 		   {
 		     uloga("Rank(%d):Index(%d) with rr_num(%d).\n",rank_id, rr->index, rpc_s->rr_num);
 		   }
+	//	   pthread_mutex_unlock(&task_mutex);
 
 		 goto err_out;
 	       }
@@ -1976,7 +2079,9 @@ inline static int __process_event (struct rpc_server *rpc_s, uint64_t timeout)
 		   goto err_out;
 		 if(rr->refcont == 0)
 		   {
+	//	   	pthread_mutex_lock(&task_mutex);
 		     list_del(&rr->req_entry);
+	//	     pthread_mutex_unlock(&task_mutex);
 		     rpc_s->rr_num--;
 		     err = rpc_free_index(rr->index);
 		     if(err!=0)
@@ -2042,6 +2147,397 @@ err_status:
 
 #endif
 
+/*********************************
+/ MT version
+/ Assuming enable DS_HAVE_ARIES
+**********************************/
+inline static int __process_event_mt (struct rpc_server *rpc_s, uint64_t timeout)
+{
+  gni_cq_handle_t cq_array[] = {rpc_s->src_cq_hndl, rpc_s->dst_cq_hndl, rpc_s->sys_cq_hndl};
+  gni_cq_entry_t event_data = 0;
+  uint64_t event_type;
+  int event_id;
+  gni_post_descriptor_t *post_des;
+  gni_return_t status;
+
+  struct node_id *peer;
+  struct rpc_request *rr, *tmp;
+  struct hdr_sys *hs;
+  int err =  -ENOMEM;
+  uint32_t n;
+  int check=0;
+  int cnt=0;
+  void *tmpcmd;
+
+//The CqVectorWaitEvent function polls the specified completion queues for a completion entry. If CqVectorWaitEvent finds a completion entry, it immediately returns event data.
+//If no completion entry is found, the caller is blocked until a completion entry is generated, or until the timeout value expires. The completion queues must be created with the GNI_CQ_BLOCKING mode set in order to be able to block on it.
+  
+
+  status = GNI_CqVectorWaitEvent(cq_array, 3, (uint64_t)timeout, &event_data, &n);
+  if (status == GNI_RC_TIMEOUT)
+    return status;
+
+  else if (status != GNI_RC_SUCCESS)
+    {
+      uloga("%s(DEBUG) I am at CPU %d\n", __func__, sched_getcpu());
+      uloga("(%s): GNI_CqVectorWaitEvent PROCESSING ERROR.\n", __func__);
+/* Debug
+      if(status == GNI_RC_TIMEOUT){
+      	uloga("(%s) error status is GNI_RC_TIMEOUT");
+      }
+      else if(status == GNI_NOT_DONE){
+      	uloga("(%s) error status is GNI_NOT_DONE");
+      }
+      else if(status == GNI_RC_INVALID_PARAM){
+      	uloga("(%s) error status is GNI_RC_INVALID_PARAM");
+      }
+      else if(status == GNI_RC_INVALID_STATE){
+      	uloga("(%s) error status is GNI_RC_INVALID_STATE");
+      }
+      else if(status == GNI_RC_ERROR_RESOURCE){
+      	uloga("(%s) error status is GNI_RC_ERROR_RESOURCE");
+      }
+      else if(status == GNI_RC_TRANSACTION_ERROR){
+      	uloga("(%s) error status is GNI_RC_TRANSACTION_ERROR");
+      }
+      else if(status == GNI_RC_ERROR_NOMEM){
+      	uloga("(%s) error status is GNI_RC_ERROR_NOMEM");
+      }
+      */
+
+      return status;
+    }
+
+  event_type = GNI_CQ_GET_TYPE(event_data);
+  //event_id = GNI_CQ_GET_MSG_ID(event_data);                                                                                           
+
+  if(GNI_CQ_STATUS_OK(event_data) == 0)
+    uloga("Rank %d: receive event_id (%d) not done.\n",rank_id, event_id);
+
+  if(n == 0)
+    {
+      //Modified for Aries                                                                                                                  
+      event_id = 0x00FFFFFF & GNI_CQ_GET_MSG_ID(event_data);
+
+      if(event_id == 0)
+	return 0;
+	pthread_mutex_lock(&task_mutex);
+      list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
+	{
+	  if(rr->index == event_id)
+	    {
+	      check=1;
+	      break;
+	    }
+	}
+	pthread_mutex_unlock(&task_mutex);
+
+      while(!GNI_CQ_STATUS_OK(event_data));
+
+      if(check == 0)
+	{
+	  uloga("Rank %d: SRC Indexing err with event_id (%d), rr_num (%d) in (%s).\n", rank_id, event_id, rpc_s->rr_num,  __func__)\
+	    ;
+	    pthread_mutex_lock(&task_mutex);
+	  list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
+	    {
+	      uloga("Rank(%d):rest Index(%d) with rr_num(%d).\n",rank_id, rr->index, rpc_s->rr_num);
+	    }
+	    pthread_mutex_unlock(&task_mutex);
+	  goto err_out;
+	}
+
+
+      if(rr->type == 1)
+	{
+	  status = GNI_GetCompleted(rpc_s->src_cq_hndl, event_data, &post_des);
+	  if (status != GNI_RC_SUCCESS)
+	    {
+	      uloga("(%s): GNI_GetCompleted PROCESSING ERROR.\n", __func__);
+	      goto err_status;
+	    }
+		free(post_des);
+	}
+
+      err = rpc_cb_req_completion(rpc_s, rr);
+      if(err!=0)
+	goto err_out;
+
+      if(rr->refcont == 0)
+	{
+		pthread_mutex_lock(&task_mutex);
+	  list_del(&rr->req_entry);
+	  pthread_mutex_unlock(&task_mutex);
+	  rpc_s->rr_num--;
+	  err = rpc_free_index(rr->index);
+	  if(err!=0)
+	    goto err_out;
+	  free(rr);
+	}
+    }
+
+  if(n == 1)
+    {
+      event_id = GNI_CQ_GET_REM_INST_ID(event_data);
+
+      if(event_id >= INDEX_COUNT)
+	{
+          rr = rr_comm_alloc(0);
+          if(rr == NULL)
+            {
+              uloga("rr_comm_alloc err (%d).\n", err);
+              goto err_out;
+            }
+
+          peer = rpc_get_peer(rpc_s, (int)event_id-INDEX_COUNT);
+          if(peer == NULL)
+            {
+              uloga("(%s): rpc_get_peer err.\n", __func__);
+              return -ENOMEM;
+            }
+          rr->msg->msg_rpc = calloc(1, sizeof(struct rpc_cmd));
+          if(rr->msg->msg_rpc == NULL)
+            {
+              uloga("Rank %d: calloc error.\n", rank_id);
+              return -ENOMEM;
+            }
+
+          do
+            {
+              status = GNI_SmsgGetNext(peer->ep_hndl, (void **) &tmpcmd);
+              cnt++;
+            } while(status == GNI_RC_NOT_DONE);
+
+          cnt=0;
+
+          if(status == GNI_RC_NOT_DONE){
+            uloga("Rank %d: GNI_RC_NOT_DONE.\n",rank_id);//debug                                                                         
+            return 0;
+          }
+
+          if(status != GNI_RC_SUCCESS)
+            {
+              cnt=0;
+              uloga("Rank %d: receive wrong event.\n", rank_id);//debug                                                                  
+              free(rr);
+              goto err_out;
+            }
+
+          memcpy(rr->msg->msg_rpc, tmpcmd, sizeof(struct rpc_cmd));
+
+          do
+            {
+              status = GNI_SmsgRelease(peer->ep_hndl);
+              if(status != GNI_RC_SUCCESS && status != GNI_RC_NOT_DONE)
+                {
+		  uloga("GNI_SmsgRelease failed with %d.\n", status);
+		  goto err_status;
+                }
+            }while(status == GNI_RC_NOT_DONE);
+
+	  if (rr->msg->msg_rpc->cmd != cn_ack_credit) {
+	    peer->num_msg_recv++;
+	  }
+
+	  if(peer->num_msg_recv == RECVCREDIT)
+	    {
+	      err = rpc_credit_return(rpc_s, peer);
+	      if(err!=0)
+		goto err_out;
+	      peer->num_msg_recv = 0;
+	    }
+
+	//putting rpc request to tasks 
+	struct tasks_request *tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
+    memset(tasks_req, 0, sizeof(struct tasks_request));
+
+    tasks_req->rpc_s = rpc_s;
+    tasks_req->rr = rr;
+    tasks_req->peer = peer;
+
+
+
+    //Add tasks request to tasks queue
+    pthread_mutex_lock(&task_mutex);
+    list_add_tail(&tasks_req->tasks_entry, &rpc_s->tasks_list);
+    pthread_mutex_unlock(&task_mutex);
+
+    //uloga("%s(DEBUG) add tasks to task queue, rpc id %d\n",__func__, rpc_s->ptlmap.id);
+
+    /* Move the following operations to rpc_cb_decode_mt */
+
+/*
+          err = rpc_cb_decode(rpc_s, rr);
+          if(err!=0)
+            goto err_out;
+
+          free(rr->msg->msg_rpc);
+          free(rr);
+*/
+	}
+
+      if( event_id < INDEX_COUNT )
+	{
+	  while(!GNI_CQ_STATUS_OK(event_data));
+	  pthread_mutex_lock(&task_mutex);
+	  list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
+	    {
+	      if( rr->index == event_id )
+		{
+		  check = 1;
+		  break;
+		}
+	    }
+	    pthread_mutex_unlock(&task_mutex);
+
+	  if(check == 0)
+	    {
+	      uloga("Rank %d: #3 DST Indexing err with event_id (%d), rr->index(%d), rr_num (%d) in (%s).\n", rank_id, event_id, rr->index, rpc_s->rr_num,  __func__);
+	      pthread_mutex_lock(&task_mutex);
+	      list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
+		{
+		  uloga("Rank(%d):Index(%d) with rr_num(%d).\n",rank_id, rr->index, rpc_s->rr_num);
+		}
+		pthread_mutex_unlock(&task_mutex);
+
+	      goto err_out;
+	    }
+
+	  if(check == 1)
+	    {
+
+	      err = rpc_cb_req_completion(rpc_s, rr);
+	      if(err!=0)
+		goto err_out;
+	      if(rr->refcont == 0)
+		{
+			pthread_mutex_lock(&task_mutex);
+		  list_del(&rr->req_entry);
+		  pthread_mutex_unlock(&task_mutex);
+		  rpc_s->rr_num--;
+		  err = rpc_free_index(rr->index);
+		  if(err!=0)
+		    goto err_out;
+		  free(rr);
+		}
+	    }
+	}
+    }
+
+  if(n == 2)
+    {
+      if(event_id == rpc_s->ptlmap.id);
+      if(event_id != rpc_s->ptlmap.id)
+	{
+	  peer = rpc_get_peer(rpc_s, (int)event_id);
+	  if(peer == NULL)
+	    {
+	      uloga("(%s): rpc_get_peer err.\n", __func__);
+	      return -ENOMEM;
+	    }
+            do
+              {
+                status = GNI_SmsgGetNext(peer->sys_ep_hndl, (void **) &hs);
+              } while(status != GNI_RC_SUCCESS);
+
+            err = sys_dispatch_event(rpc_s, hs);
+            if(err != 0)
+              goto err_out;
+            do
+              status = GNI_SmsgRelease(peer->sys_ep_hndl);
+            while(status == GNI_RC_NOT_DONE);
+            if(status != GNI_RC_SUCCESS)
+              {
+                uloga("GNI_SmsgRelease failed with (%d).\n", status);
+                goto err_status;
+              }
+
+            peer->sys_msg_recv++;
+            if(peer->sys_msg_recv == RECVCREDIT)
+              {
+                err = sys_credit_return(rpc_s, peer);
+                if(err!=0)
+                  {
+                    uloga("(%s): sys_credit_return failed with err (%d).\n", __func__, err);
+                    return err;
+                  }
+                peer->sys_msg_recv = 0;
+	      }
+	}
+
+    }
+
+  return 0;
+
+ err_out:
+  uloga("(%s): err (%d).\n", __func__, err);
+  return err;
+ err_status:
+  uloga("(%s): status (%d).\n", __func__, status);
+  return status;
+}
+
+int rpc_process_event(struct rpc_server *rpc_s)
+{
+	int err;
+
+	err = __process_event(rpc_s, 300);
+	if(err == 0 || err == GNI_RC_TIMEOUT)
+		return 0;
+
+	uloga("(%s): err (%d).\n", __func__, err);
+	return err;
+}
+
+/****************************
+/	MT version
+/****************************/
+int rpc_process_event_mt(struct rpc_server *rpc_s)
+{
+	int err;
+
+	err = __process_event_mt(rpc_s, 300);
+	if(err == 0 || err == GNI_RC_TIMEOUT)
+		return 0;
+
+	uloga("(%s): err (%d).\n", __func__, err);
+	return err;
+}
+
+void thread_handle(struct rpc_server *rpc_s){
+    int err = 0;
+    int i;
+    struct rpc_server *local_rpc_s = rpc_s;
+    struct tasks_request *local_tasks_req = (struct tasks_request *)malloc(sizeof(struct tasks_request));
+    struct tasks_request *tmp_tr;
+    pthread_attr_t tattr;
+
+
+
+    if( pthread_attr_init(&tattr) != 0 ){
+        uloga("%s(Yubo) Error: pthread attr init failed\n",__func__);
+        return -1;
+    }
+
+    if( pthread_attr_setdetachstate(&tattr, PTHREAD_CREATE_DETACHED) != 0 ){
+        uloga("%s(Yubo) Error: pthread attr init failed\n",__func__);
+        return -1;
+    }
+
+    //pthread_t threadid[2];
+    uloga("%s(Yubo) current # thread=%d\n", __func__, MAX_WORKER_THREADS);
+
+    local_tasks_req->rpc_s = local_rpc_s;
+
+    //create two worker threads
+    for(i=0; i<MAX_WORKER_THREADS; i++){
+        pthread_create(&local_rpc_s->worker_thread[i], &tattr, rpc_cb_decode_thrd, (void*)local_tasks_req);
+    }
+
+    pthread_attr_destroy(&tattr);
+
+}
+
 int rpc_process_msg_resend(struct rpc_server *rpc_s, struct node_id *peer_tab, int num_peer)
 {
     struct node_id *peer;
@@ -2058,17 +2554,7 @@ int rpc_process_msg_resend(struct rpc_server *rpc_s, struct node_id *peer_tab, i
     return 0;
 }
 
-int rpc_process_event(struct rpc_server *rpc_s)
-{
-	int err;
 
-	err = __process_event(rpc_s, 300);
-	if(err == 0 || err == GNI_RC_TIMEOUT)
-		return 0;
-
-	uloga("(%s): err (%d).\n", __func__, err);
-	return err;
-}
 
 int rpc_process_event_with_timeout(struct rpc_server *rpc_s, int timeout)
 {
@@ -2172,6 +2658,10 @@ struct rpc_server *rpc_server_init(int num_buff, int num_rpc_per_buff, void *dar
 	}
 
 	INIT_LIST_HEAD(&rpc_s->rpc_list);
+	//For tasks list
+    INIT_LIST_HEAD(&rpc_s->tasks_list);
+    pthread_mutex_init(&task_mutex, NULL);
+    
 	err = rpc_index_init(rpc_s);
 	if (err != 0)
 		goto err_free;
@@ -2640,4 +3130,24 @@ void sys_smsg_check(struct rpc_server *rpc_s){
 
 void peer_smsg_check(struct rpc_server *rpc_s, struct node_id *peer, gni_smsg_attr_t *smsg_attr){
   uloga("Rank %d: peer(%d) [type(%d),maxcredit(%d),maxsize(%d),buffer(%d),buff_size(%d), mem_hndl(%ld,%ld), offset(%d)]\n", rpc_s->ptlmap.id, peer->ptlmap.id, smsg_attr->msg_type, smsg_attr->mbox_maxcredit, smsg_attr->msg_maxsize, smsg_attr->msg_buffer, smsg_attr->buff_size, smsg_attr->mem_hndl.qword1, smsg_attr->mem_hndl.qword2, smsg_attr->mbox_offset);
+}
+
+
+void finalize_threads(struct rpc_server* rpc_s_ptr)
+{
+    struct rpc_server* rpc_s = (struct rpc_server*) rpc_s_ptr;
+    int i=0;
+
+    for(i=0; i<MAX_WORKER_THREADS; i++){
+        pthread_cancel(rpc_s->worker_thread[i]);
+        pthread_join(rpc_s->worker_thread[i], NULL);
+    }
+
+    pthread_mutex_destroy(&task_mutex);
+    pthread_mutex_destroy(&cond_mutex);
+    pthread_mutex_destroy(&worker_cond_mutex);
+    pthread_cond_destroy(&task_cond);
+    pthread_cond_destroy(&worker_self_cond);
+    pthread_rwlock_destroy(&rw_lock);
+
 }

@@ -587,7 +587,6 @@ void* rpc_process_cmd_mt(void *tasks_request)
     struct rpc_cmd cmd;
     int i;
     double tm_start, tm_end, tm_tot;
-    int cpuid;
     int tasks_received = 0; //0 no task received, 1 task received from low priority queue, 2 task received from high pq
 
     while(1){

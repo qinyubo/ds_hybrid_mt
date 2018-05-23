@@ -125,6 +125,15 @@ int parse_args(int argc, char** argv, enum transport_type *type, int *npapp,
 	else
 		*num_vars = 1;
 
+/*
+    if(argc >= ++count + 1){ //Make sure the number of variables in the arg matchs the num_vars
+        for (i = count, j = 0; j < *num_vars; i++, j++){
+            *(vars_name+j) = atoi(argv[i]);
+        }
+    }
+    else
+        *(vars_name) = 0;
+*/
 	return 0;
 }
 
@@ -168,11 +177,11 @@ int common_put(const char *var_name,
 	unsigned int ver, int size,
 	int ndim,
 	uint64_t *lb, uint64_t *ub,
-	void *data, enum transport_type type)
+	void *data, enum transport_type type, int p_lev)
 {
 	if ( type == USE_DSPACES ) {
 		return dspaces_put(var_name, ver, size,
-                        ndim,lb, ub,data);
+                        ndim,lb, ub, data, p_lev);
 	} else if (type == USE_DIMES) {
 #ifdef DS_HAVE_DIMES
 		return dimes_put(var_name, ver, size, 
@@ -189,11 +198,11 @@ int common_get(const char *var_name,
 	unsigned int ver, int size,
 	int ndim,
 	uint64_t *lb, uint64_t *ub,
-	void *data, enum transport_type type)
+	void *data, enum transport_type type, int p_lev)
 {
 	if ( type == USE_DSPACES ) {
 		return dspaces_get(var_name, ver, size,
-                        ndim,lb, ub,data);
+                        ndim,lb, ub, data, p_lev);
 	} else if (type == USE_DIMES) {
 #ifdef DS_HAVE_DIMES
 		return dimes_get(var_name, ver, size, 
@@ -300,8 +309,6 @@ void check_data(const char *var_name, double *buf, int num_elem, int rank, int t
                 uloga("%s(): var= %s, rank= %d, ts= %d, "
                 "error elem cnt= %d, total elem= %d\n",
                         __func__, var_name, rank, ts, cnt, num_elem);
-                uloga("%s(): var= %s, rank= %d, max= %f, min= %f, avg= %f\n",
-                          __func__, var_name, rank, max, min, avg);
         }
 
         return;

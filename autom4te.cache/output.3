@@ -594,8 +594,6 @@ DSPACESLIB_LDADD
 DSPACESLIB_LDFLAGS
 DSPACESLIB_CPPFLAGS
 DSPACESLIB_CFLAGS
-DATASPACES_LOCATION_AWARE_WRITE_FALSE
-DATASPACES_LOCATION_AWARE_WRITE_TRUE
 BUILD_DIMES_FALSE
 BUILD_DIMES_TRUE
 DIMES_FALSE
@@ -722,7 +720,6 @@ enable_silent_rules
 enable_dependency_tracking
 enable_dart_tcp
 enable_dimes
-enable_dataspaces_location_aware_write
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1364,13 +1361,6 @@ Optional Features:
   --enable-dart-tcp       Build DART over tcp socket.
   --enable-dimes          Include the dimes mechanism. By default this is not
                           included
-  --enable-dataspaces-location-aware-write 
-                          Include experimental feature. DataSpaces client
-                          writes data to servers that running on local compute
-                          node. This feature is useful when co-locating the
-                          execution of DataSpaces servers with application on
-                          the same set of compute nodes. By default this is
-                          not included.
 
 Some influential environment variables:
   CC          C compiler command
@@ -2178,8 +2168,8 @@ test "$program_suffix" != NONE &&
 ac_script='s/[\\$]/&&/g;s/;s,x,x,$//'
 program_transform_name=`$as_echo "$program_transform_name" | sed "$ac_script"`
 
-# expand $ac_aux_dir to an absolute path
-am_aux_dir=`cd $ac_aux_dir && pwd`
+# Expand $ac_aux_dir to an absolute path.
+am_aux_dir=`cd "$ac_aux_dir" && pwd`
 
 if test x"${MISSING+set}" != xset; then
   case $am_aux_dir in
@@ -5556,20 +5546,6 @@ fi
 
 fi
 
-@%:@ Check whether --enable-dataspaces_location_aware_write was given.
-if test "${enable_dataspaces_location_aware_write+set}" = set; then :
-  enableval=$enable_dataspaces_location_aware_write; 
-fi
-
- if test "x$enable_dataspaces_location_aware_write" == "xyes"; then
-  DATASPACES_LOCATION_AWARE_WRITE_TRUE=
-  DATASPACES_LOCATION_AWARE_WRITE_FALSE='#'
-else
-  DATASPACES_LOCATION_AWARE_WRITE_TRUE='#'
-  DATASPACES_LOCATION_AWARE_WRITE_FALSE=
-fi
-
-
 
 if test -z "${HAVE_UGNI_TRUE}"; then
   DSPACESLIB_CPPFLAGS+=" ${PMI_CPPFLAGS}"
@@ -5638,7 +5614,7 @@ fi
 
 ac_config_headers="$ac_config_headers config.h"
 
-ac_config_files="$ac_config_files Makefile dart/Makefile src/Makefile tests/Makefile tests/C/Makefile tests/Fortran/Makefile tests/MT/Makefile tests/3lev/Makefile scripts/dspaces_config.makesrc"
+ac_config_files="$ac_config_files Makefile dart/Makefile src/Makefile tests/Makefile tests/C/Makefile tests/Fortran/Makefile scripts/dspaces_config.makesrc"
 
 
 cat >confcache <<\_ACEOF
@@ -5844,10 +5820,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${BUILD_DIMES_TRUE}" && test -z "${BUILD_DIMES_FALSE}"; then
   as_fn_error $? "conditional \"BUILD_DIMES\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${DATASPACES_LOCATION_AWARE_WRITE_TRUE}" && test -z "${DATASPACES_LOCATION_AWARE_WRITE_FALSE}"; then
-  as_fn_error $? "conditional \"DATASPACES_LOCATION_AWARE_WRITE\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -6450,8 +6422,6 @@ do
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
     "tests/C/Makefile") CONFIG_FILES="$CONFIG_FILES tests/C/Makefile" ;;
     "tests/Fortran/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Fortran/Makefile" ;;
-    "tests/MT/Makefile") CONFIG_FILES="$CONFIG_FILES tests/MT/Makefile" ;;
-    "tests/3lev/Makefile") CONFIG_FILES="$CONFIG_FILES tests/3lev/Makefile" ;;
     "scripts/dspaces_config.makesrc") CONFIG_FILES="$CONFIG_FILES scripts/dspaces_config.makesrc" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
@@ -7178,7 +7148,6 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
-
 
 
 echo "Network transport layer"

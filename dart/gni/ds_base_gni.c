@@ -957,6 +957,14 @@ static int ds_boot_slave(struct dart_server *ds)
         return err;	
 }
 
+int thread_boot(struct dart_server *ds){
+
+    thread_handle(ds->rpc_s);
+    //uloga("%s(Yubo), create thread_handle, id=%lu, the rpc_s->ptlmap.id=%d\n", __func__,ds->rpc_s->task_thread, ds->rpc_s->ptlmap.id);
+    return 0;
+
+}
+
 static int ds_boot(struct dart_server *ds)
 {
 	int i, err = -ENOMEM;
@@ -1093,6 +1101,9 @@ struct dart_server *ds_alloc(int num_sp, int num_cp, void *dart_ref, void *comm)
 	//rpc_add_service(sp_reg_reply, dsrpc_sp_ack_register);// dont need in GNI
 
 	err = ds_boot(ds);
+	//Yubo start thread listener
+    thread_boot(ds);
+
 	if (err < 0)
 		goto err_free_dsrv;
 
@@ -1154,6 +1165,9 @@ void ds_free(struct dart_server *ds)//not done
 
 	int track = ds->self->ptlmap.id;//debug
 
+	//Finalize worker threads
+    finalize_threads(ds->rpc_s);
+
 	err = rpc_server_free(ds->rpc_s, ds->comm);//not done
 	if(err!=0)
 		uloga("(%s): rpc server free failed.\n", __func__);
@@ -1176,6 +1190,6 @@ int ds_process(struct dart_server *ds)
     if (ds->f_reg) {
         rpc_process_msg_resend(ds->rpc_s, ds->peer_tab, ds->num_sp);
     }
-	return rpc_process_event(ds->rpc_s);
+	return rpc_process_event_mt(ds->rpc_s);
 }
 

@@ -153,9 +153,6 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define to 1 if you have the <"rdmacred.h"> header file. */
-#undef HAVE__RDMACRED_H_
-
 /* IB Interface option */
 #undef IB_INTERFACE
 
@@ -182,6 +179,9 @@
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION

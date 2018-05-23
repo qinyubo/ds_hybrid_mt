@@ -29,6 +29,8 @@
 *  zhangfan@cac.rutgers.edu
 *  Qian Sun (2014)  TASSL Rutgers University
 *  qiansun@cac.rutgers.edu
+*  Yubo Qin (2018) RDI2 Rutgers University
+*  yubo.qin@rutgers.edu
 */
 #include <stdio.h>
 #include <stdint.h>
@@ -40,7 +42,7 @@
 
 extern int test_put_run(enum transport_type, int npapp, int dims, 
 	int* npdim, uint64_t *spdim, int timestep, int appid, 
-	size_t elem_size, int num_vars, MPI_Comm gcomm);
+	size_t elem_size, int num_vars, int* vars_name, MPI_Comm gcomm, int lock_num, int p_lev);
 
 int main(int argc, char **argv)
 {
@@ -59,7 +61,12 @@ int main(int argc, char **argv)
     int dims; // number of dimensions
     size_t elem_size; // Optional: size of one element in the global array. Default value is 8 (bytes).
     int num_vars; // Optional: number of variables to be shared in the testing. Default value is 1.
+    //Yubo
+    int vars_name[16] = {1}; //variable names, enable multiple variables
+    int lock_num = 1; //locker number
+    int p_lev = 0; //priority level
 
+    //Yubo
 	if (parse_args(argc, argv, &type, &npapp, &dims, np, sp,
     		&timestep, &appid, &elem_size, &num_vars) != 0) {
 		goto err_out;
@@ -77,9 +84,12 @@ int main(int argc, char **argv)
 
 	// Run as data writer
 	test_put_run(type, npapp, dims, np,
-		sp, timestep, appid, elem_size, num_vars, gcomm);
+		sp, timestep, appid, elem_size, num_vars, vars_name, gcomm, lock_num, p_lev);
 
 	MPI_Barrier(gcomm);
+
+	uloga("DONE\n");
+
 	MPI_Finalize();
 
 	return 0;	
