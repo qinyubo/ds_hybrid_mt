@@ -1232,7 +1232,7 @@ static int obj_put_update_dht(struct ds_gspace *dsg, struct obj_data *od)
 		oh->rank = min_rank;
         memcpy(&oh->gdim, &od->gdim, sizeof(struct global_dimension));
 
-		uloga("%s(DEBUG) send cmd->cmd 18\n",__func__);
+		//uloga("%s(DEBUG) send cmd->cmd 18\n",__func__);
 		err = rpc_send(dsg->ds->rpc_s, peer, msg);
 		if (err < 0) {
 			free(msg);
@@ -1312,9 +1312,9 @@ static int dsgrpc_obj_put(struct rpc_server *rpc_s, struct rpc_cmd *cmd)
         err = obj_put_update_dht(dsg, od);
 //	pthread_mutex_unlock(&client_mutex);
         
-	uloga("%s() wait before ds_barrier\n",__func__);
+	//uloga("%s() wait before ds_barrier\n",__func__);
 	ds_barrier(ds);
-	uloga("%s() after ds_barrier\n",__func__);
+	//uloga("%s() after ds_barrier\n",__func__);
 
 
 	if (err == 0)

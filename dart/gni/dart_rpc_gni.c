@@ -941,13 +941,13 @@ static int rpc_cb_decode(struct rpc_server *rpc_s, struct rpc_request *rr)
 	int err, i;
 
 	cmd = (struct rpc_cmd *) (rr->msg->msg_rpc);
-	uloga("%s: cmd->cmd = %d\n",__func__, cmd->cmd);
+	//uloga("%s: cmd->cmd = %d\n",__func__, cmd->cmd);
 
 	for (i = 0; i < num_service; i++)
 	{
 		if (cmd->cmd == rpc_commands[i].rpc_cmd)
 		{
-			uloga("%s() I am at CPU %d\n", __func__, sched_getcpu());
+			//uloga("%s() I am at CPU %d\n", __func__, sched_getcpu());
 			err = rpc_commands[i].rpc_func(rpc_s, cmd);
 			break;
 		}
@@ -1007,13 +1007,13 @@ void* rpc_cb_decode_thrd(void *tasks_request)	//Done
 
 
 			cmd = (struct rpc_cmd *) (local_rr->msg->msg_rpc);
-			uloga("%s: cmd->cmd = %d\n",__func__, cmd->cmd);
+			//uloga("%s: cmd->cmd = %d\n",__func__, cmd->cmd);
 
 			for (i = 0; i < num_service; i++)
 			{
 				if (cmd->cmd == rpc_commands[i].rpc_cmd)
 				{
-					uloga("%s() I am at CPU %d\n", __func__, sched_getcpu());
+					//uloga("%s() I am at CPU %d\n", __func__, sched_getcpu());
 					// uloga("%s(DEBUG) ready to execute tasks\n",__func__);
 					err = rpc_commands[i].rpc_func(tasks_rpc_s, cmd);
 					// uloga("%s(DEBUG) finish execute tasks\n",__func__);
@@ -1366,7 +1366,7 @@ static int peer_process_send_list(struct rpc_server *rpc_s, struct node_id *peer
 		pthread_mutex_unlock(&peer_req_list_mutex);
 
 		pthread_rwlock_wrlock(&rpcs_rpc_list_rw_lock);
-		uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr_num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index);
+		//uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr_num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index);
 		list_add_tail(&rr->req_entry, &rpc_s->rpc_list);
 		rpc_s->rr_num++;
 		pthread_rwlock_unlock(&rpcs_rpc_list_rw_lock);
@@ -1422,7 +1422,7 @@ static int rpc_credit_return(struct rpc_server *rpc_s, struct node_id *peer)
         goto err_out;
 
  	pthread_rwlock_wrlock(&rpcs_rpc_list_rw_lock);
- 	uloga("%s(Yubo) Rank %d thread %d add to rpc_list, rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
+ 	//uloga("%s(Yubo) Rank %d thread %d add to rpc_list, rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
     list_add_tail(&rr->req_entry, &rpc_s->rpc_list);
     rpc_s->rr_num++;
  	pthread_rwlock_unlock(&rpcs_rpc_list_rw_lock);
@@ -2351,7 +2351,7 @@ status = GNI_CqVectorWaitEvent(cq_array, 3, (uint64_t)timeout, &event_data, &n);
 
       if(check == 0)
 	{
-	  uloga("Rank %d thread %d: SRC Indexing err with event_id (%d), rr_num (%d) in (%s).\n", rank_id, pthread_self(), event_id, rpc_s->rr_num,  __func__);
+	  //uloga("Rank %d thread %d: SRC Indexing err with event_id (%d), rr_num (%d) in (%s).\n", rank_id, pthread_self(), event_id, rpc_s->rr_num,  __func__);
 	  pthread_rwlock_rdlock(&rpcs_rpc_list_rw_lock);
 	  list_for_each_entry_safe(rr, tmp, &rpc_s->rpc_list, struct rpc_request, req_entry)
 	    {
@@ -3139,7 +3139,7 @@ int rpc_send(struct rpc_server *rpc_s, struct node_id *peer, struct msg_buf *msg
 	while(rr->index == -1);
 
 	pthread_mutex_lock(&peer_req_list_mutex);
-	uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
+	//uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
 	list_add_tail(&rr->req_entry, &peer->req_list);
 	peer->num_req++;
 	pthread_mutex_unlock(&peer_req_list_mutex);
@@ -3173,7 +3173,7 @@ inline static int __send_direct(struct rpc_server *rpc_s, struct node_id *peer, 
 	while(rr->index == -1);
 
 	pthread_rwlock_wrlock(&rpcs_rpc_list_rw_lock);
-	uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
+	//uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
 	list_add_tail(&rr->req_entry, &rpc_s->rpc_list);
 	rpc_s->rr_num++;
 	pthread_rwlock_unlock(&rpcs_rpc_list_rw_lock);
@@ -3230,7 +3230,7 @@ int rpc_receive_direct(struct rpc_server *rpc_s, struct node_id *peer, struct ms
 	while(rr->index == -1);
 
 	pthread_rwlock_wrlock(&rpcs_rpc_list_rw_lock);
-	uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
+	//uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
 	list_add_tail(&rr->req_entry, &rpc_s->rpc_list);
 	rpc_s->rr_num++;
 	pthread_rwlock_unlock(&rpcs_rpc_list_rw_lock);
@@ -3265,7 +3265,7 @@ inline static int __receive(struct rpc_server *rpc_s, struct node_id *peer, stru
 	while(rr->index == -1);
 
 	pthread_mutex_lock(&peer_req_list_mutex);
-	uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
+	//uloga("%s(Yubo) Rank %d thread %d add to rpc_list rpc_s.id %d, rr->num %d, rr->index %d\n", __func__, rank_id, pthread_self(), rpc_s->ptlmap.id, rpc_s->rr_num, rr->index, rr->index);
 	list_add_tail(&rr->req_entry, &peer->req_list);
 	peer->num_req++;
 	pthread_mutex_unlock(&peer_req_list_mutex);
